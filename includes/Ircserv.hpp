@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:44:07 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/11 21:50:55 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/12 22:00:24 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,17 @@
 
 class Ircserv
 {
-        std::string port;
+        int socket_fd;
+        int port;
         std::string password;
+        const char *ipAdress;
+        struct sockaddr_in addr;
+        int initialize();
+        int createServerSocket();
     public:
-        Ircserv( std::string port, std::string password );
+        Ircserv( int port, std::string password );
         ~Ircserv();
+        int waitForConnection();
 };
 
 #endif
