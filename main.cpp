@@ -6,11 +6,11 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/12 22:08:27 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:04:38 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/Ircserv.hpp"
+#include "irc/includes/Ircserv.hpp"
 
 int isNumber(std::string str)
 {
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 		else
 		{
 	        Ircserv ircserv = Ircserv(atoi(argv[1]), argv[2]);
-			ircserv.waitForConnection();
+			ircserv.createServerSocket();
 		}
     }
     else

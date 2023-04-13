@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Ircserv.cpp                                        :+:      :+:    :+:   */
+/*   Tcp.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/12 21:30:08 by ykhadiri         ###   ########.fr       */
+/*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
+/*   Updated: 2023/04/13 21:51:30 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Ircserv.hpp"
+#include "../includes/Tcp.hpp"
 
-Ircserv::Ircserv( int port, std::string password ): port(port), password(password)
+Tcp::Tcp( int port ): port(port)
 {
 };
 
-Ircserv::~Ircserv()
+Tcp::~Tcp()
 {
 };
 
-int Ircserv::initialize()
+int Tcp::initialize()
 {
     if ((this->socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -30,12 +30,12 @@ int Ircserv::initialize()
 
     this->addr.sin_family = AF_INET;
     this->addr.sin_port = htons(this->port);
-    this->addr.sin_addr.s_addr = inet_addr(this->ipAdress);
+    this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     return EXIT_SUCCESS;
 };
 
-int Ircserv::createServerSocket()
+int Tcp::createServerSocket()
 {
     if (!this->initialize())
     {
@@ -55,26 +55,28 @@ int Ircserv::createServerSocket()
     return EXIT_FAILURE;
 };
 
-int Ircserv::waitForConnection()
-{
-    int socketClient;
-    struct sockaddr_in clientAddr;
-    socklen_t clientAddrSize = sizeof(clientAddr);
-    char buff[1024];
+// int Tcp::createClientSocket()
+// {
+//     std::string _val;
+//     char buff[1024];
 
-    std::cout << "Waiting For Uncoming Connection...!" << std::endl;
-    socketClient = accept(this->socket_fd, (sockaddr *)&clientAddr, &clientAddrSize);
-    while(1)
-    {
-        if (recv(socketClient, buff, 1024, 0) > 0)
-        {
-            if (send(socketClient, buff, 1024, 0) < 0)
-            {
-                std::cout << "httpResponse" << std::endl;
-                // return EXIT_FAILURE;
-            }
-        }
-    }
-    return EXIT_SUCCESS;
-};
+//     if (!this->initialize())
+//     {
+//         if (!(connect(this->socket_fd, (const sockaddr *)&this->addr, sizeof(this->addr))))
+//         {
+//             while (1)
+//             {
+//                 if(getline(std::cin, _val) && _val.length())
+//                 {   
+//                     if (send(this->socket_fd, _val.c_str(), _val.length() + 1, 0) > 0)
+//                     {
+//                         if (recv(this->socket_fd, buff, 1024, 0) > 0)
+//                             std::cout << "SERVER SAID: " << buff << std::endl;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     return EXIT_FAILURE;
+// };
 

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Ircserv.hpp                                        :+:      :+:    :+:   */
+/*   Tcp.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 21:44:07 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/12 22:00:24 by ykhadiri         ###   ########.fr       */
+/*   Created: 2023/03/05 15:20:55 by ykhadiri          #+#    #+#             */
+/*   Updated: 2023/04/13 17:37:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IRCSERV_HPP
-#define IRCSERV_HPP
+#ifndef TCP_HPP
+#define TCP_HPP
 
 #include <iostream>
 #include <string>
@@ -26,19 +26,19 @@
 //  For the inet_addr function
 #include <arpa/inet.h>
 
-class Ircserv
+class Tcp
 {
-        int socket_fd;
-        int port;
-        std::string password;
-        const char *ipAdress;
-        struct sockaddr_in addr;
-        int initialize();
-        int createServerSocket();
-    public:
-        Ircserv( int port, std::string password );
-        ~Ircserv();
-        int waitForConnection();
+protected:
+    int socket_fd;
+    int port;
+    struct sockaddr_in addr;
+public:
+    Tcp( int port );
+    ~Tcp();
+    int initialize();
+    int createServerSocket();
+    // int createClientSocket();
+    virtual int waitForConnection() = 0;
 };
 
 #endif
