@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/16 22:18:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:22:43 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int Ircserv::waitForConnection()
             // std::string tmp(buff);
             // getline(ss,tmp);
             std::cout << buff << std::endl;
-            if(strncmp(buff,"JOIN",4) == 0)/
+            if(strncmp(buff,"JOIN",4) == 0)
             {
                  std::string tmp1 = ":yassine JOIN #test \r\n";
                 if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
