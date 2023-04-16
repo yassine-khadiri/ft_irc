@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/13 21:51:30 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/14 21:10:49 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int Tcp::initialize()
         std::cerr << "Error Creating Socket...!" << std::endl;
         return EXIT_FAILURE;
     }
-
+    int optval = 1;
+    setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     this->addr.sin_family = AF_INET;
     this->addr.sin_port = htons(this->port);
     this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
