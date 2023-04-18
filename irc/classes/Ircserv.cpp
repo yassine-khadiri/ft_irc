@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/16 22:22:43 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/18 20:37:42 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,41 @@ int Ircserv::checkMessageInfos( std::string recvMessage )
 };
 
 int Ircserv::waitForConnection()
+{
+    int socketClient, client_sockets[MAX_CLIENTS];
+    struct sockaddr_in clientAddr;
+    socklen_t clientAddrSize = sizeof(clientAddr);
+    fd_set readfds;
+    char buff[1024] = {0};
+
+    std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
+    socketClient = accept(this->socket_fd, (sockaddr *)&clientAddr, &clientAddrSize);
+    while(1)
+    {
+        FD_ZERO(&readfds);
+        FD_SET();
+        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
+        {
+            std::cout << "recv :";
+            // std::stringstream ss( buff);
+            // std::string tmp(buff);
+            // getline(ss,tmp);
+            std::cout << buff << std::endl;
+            // if(strncmp(buff,"JOIN",4) == 0)
+            // {
+                //  std::string tmp1 = ":yassine JOIN #test \r\n";
+                // if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
+                    // close(socketClient);
+            // }
+            // std::string tmp1 = ":127.0.0.1 001 rgatnaou Welcome to the Internet Relay Network rgatnaou!rgatnaou@127.0.0.1";
+            // this->checkMessageInfos(buff);
+            // exit(0);
+        }
+            // exit(0);
+    }
+    return EXIT_SUCCESS;
+};
+
 {
     int socketClient;
     struct sockaddr_in clientAddr;
