@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/18 20:37:42 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/18 21:24:53 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,68 +48,49 @@ int Ircserv::checkMessageInfos( std::string recvMessage )
 
 int Ircserv::waitForConnection()
 {
-    int socketClient, client_sockets[MAX_CLIENTS];
+    int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd;
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
     fd_set readfds;
     char buff[1024] = {0};
 
     std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
-    socketClient = accept(this->socket_fd, (sockaddr *)&clientAddr, &clientAddrSize);
     while(1)
     {
         FD_ZERO(&readfds);
-        FD_SET();
-        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
+        FD_SET(this->socket_fd, &readfds);
+
+        for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            std::cout << "recv :";
-            // std::stringstream ss( buff);
-            // std::string tmp(buff);
-            // getline(ss,tmp);
-            std::cout << buff << std::endl;
-            // if(strncmp(buff,"JOIN",4) == 0)
-            // {
-                //  std::string tmp1 = ":yassine JOIN #test \r\n";
-                // if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
-                    // close(socketClient);
-            // }
-            // std::string tmp1 = ":127.0.0.1 001 rgatnaou Welcome to the Internet Relay Network rgatnaou!rgatnaou@127.0.0.1";
-            // this->checkMessageInfos(buff);
-            // exit(0);
+            sd = client_sockets[i];
+            if (sd > 0)
+                FD_SET(sd, &readfds);
         }
-            // exit(0);
-    }
-    return EXIT_SUCCESS;
-};
 
-{
-    int socketClient;
-    struct sockaddr_in clientAddr;
-    socklen_t clientAddrSize = sizeof(clientAddr);
-    char buff[1024] = {0};
+        int activity = select(FD_SETSIZE, &readfds, NULL, NULL, NULL);
+        if ((activity < 0) && (errno != EINTR))
+            std::cout << "Select Error!" << std::endl;
 
-    std::cout << "Waiting For Incoming Connection...!" << std::endl;
-    socketClient = accept(this->socket_fd, (sockaddr *)&clientAddr, &clientAddrSize);
-    while(1)
-    {
-        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
+        if (FD_ISSET(this->socket_fd, &readfds))
         {
-            std::cout << "recv :";
-            // std::stringstream ss( buff);
-            // std::string tmp(buff);
-            // getline(ss,tmp);
-            std::cout << buff << std::endl;
-            if(strncmp(buff,"JOIN",4) == 0)
+            if ((socketClient = accept(this->socket_fd, (struct sockaddr *)&clientAddr, (socklen_t*)&clientAddrSize)) < 0)
             {
-                 std::string tmp1 = ":yassine JOIN #test \r\n";
-                if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
+                std::cout << "Accept Failed!" << std::endl;
+                return EXIT_FAILURE;
             }
-
-            // std::string tmp1 = ":127.0.0.1 001 rgatnaou Welcome to the Internet Relay Network rgatnaou!rgatnaou@127.0.0.1";
-            // this->checkMessageInfos(buff);
-            // exit(0);
         }
-            // exit(0);
+
+        for (int i = 0; i < MAX_CLIENTS; i++)
+        {
+            if (client_sockets[i] == 0)
+            {
+                client_sockets[i] = socketClient;
+                break;
+            }
+        }
+
+        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
+            std::cout << buff << std::endl;
     }
     return EXIT_SUCCESS;
 };
