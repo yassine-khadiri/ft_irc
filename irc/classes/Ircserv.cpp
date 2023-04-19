@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/18 21:24:53 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/19 21:30:39 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ int Ircserv::checkMessageInfos( std::string recvMessage )
 
 int Ircserv::waitForConnection()
 {
-    int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd;
+    int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd, num_clients = 0;
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
     fd_set readfds;
     char buff[1024] = {0};
+    int max_sd;
 
     std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
     while(1)
@@ -60,16 +61,22 @@ int Ircserv::waitForConnection()
         FD_ZERO(&readfds);
         FD_SET(this->socket_fd, &readfds);
 
+        max_sd = this->socket_fd;
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
             sd = client_sockets[i];
             if (sd > 0)
                 FD_SET(sd, &readfds);
+            if (sd > max_sd)
+                max_sd = sd;
         }
 
-        int activity = select(FD_SETSIZE, &readfds, NULL, NULL, NULL);
-        if ((activity < 0) && (errno != EINTR))
+        int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+        if (activity < 0)
+        {
             std::cout << "Select Error!" << std::endl;
+            return EXIT_FAILURE;
+        }
 
         if (FD_ISSET(this->socket_fd, &readfds))
         {
@@ -78,19 +85,28 @@ int Ircserv::waitForConnection()
                 std::cout << "Accept Failed!" << std::endl;
                 return EXIT_FAILURE;
             }
+            if (num_clients < MAX_CLIENTS)
+                client_sockets[num_clients++] = socketClient;
+            else
+                close(socketClient);
         }
-
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            if (client_sockets[i] == 0)
-            {
-                client_sockets[i] = socketClient;
-                break;
+            // if (client_sockets[i] == 0)
+            // {
+            //     client_sockets[i] = socketClient;
+            //     break;
+            // }
+            if (FD_ISSET(client_sockets[i], &readfds))
+            {                
+                if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
+                {
+                    std::cout << buff << std::endl;
+                    memset(buff, 0, sizeof(buff));
+                }
             }
         }
-
-        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
-            std::cout << buff << std::endl;
     }
+    
     return EXIT_SUCCESS;
 };
