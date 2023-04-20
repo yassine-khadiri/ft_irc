@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/19 21:30:39 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/20 17:44:17 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,11 @@ int Ircserv::waitForConnection()
                 return EXIT_FAILURE;
             }
             if (num_clients < MAX_CLIENTS)
-                client_sockets[num_clients++] = socketClient;
+            {
+                this->_clients[num_clients] = Client(socketClient);
+                client_sockets[num_clients] = socketClient;
+                num_clients++;
+            }
             else
                 close(socketClient);
         }
@@ -101,6 +105,7 @@ int Ircserv::waitForConnection()
             {                
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
+                    commad(buff,this->_clients[i]);
                     std::cout << buff << std::endl;
                     memset(buff, 0, sizeof(buff));
                 }
