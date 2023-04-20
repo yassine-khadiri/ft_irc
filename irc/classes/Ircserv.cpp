@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 17:44:17 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/20 18:09:01 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,15 @@ int Ircserv::waitForConnection()
             {                
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
-                    commad(buff,this->_clients[i]);
-                    std::cout << buff << std::endl;
-                    memset(buff, 0, sizeof(buff));
+                    std::string str(buff);
+                    str.erase(str.find_last_not_of("\n") + 1);
+                    str.erase(str.find_last_not_of("\r") + 1);
+                    if(str != "")
+                    {
+                        // Commad(buff,this->_clients[i]);
+                        std::cout << buff << std::endl;
+                        memset(buff, 0, sizeof(buff));
+                    }
                 }
             }
         }

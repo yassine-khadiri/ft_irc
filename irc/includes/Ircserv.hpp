@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 17:43:30 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/20 17:53:44 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #define MAX_CLIENTS 30
 #include "../../tcp/includes/Tcp.hpp"
 #include <sys/select.h>
+#include "Client.hpp"
 #include <vector>
 
 class Ircserv : public Tcp
