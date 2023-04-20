@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command.cpp                                        :+:      :+:    :+:   */
+/*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/20 18:06:50 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/20 22:28:44 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 {
 	if(msg == "")
 		return (-1);
-	std::string tmp ;
+	std::string tmp = msg;
 	int tab = msg.find(':');
 	if(tab > 0)
 		tmp = msg.substr(0, tab);
 	std::stringstream ss(tmp);
 	std::getline(ss, cmd, ' ');
+	std::cout << "cmd = " << cmd << " | " << std::endl; 
 	if(cmd.empty() || this->findCommand(cmd) == -1)
 		return (-1);
 	this->toUpper(cmd);
@@ -67,18 +68,39 @@ Command::Command()
 {
 }
 
-Command::Command( Client &client,std::string &msg )
+Command::Command( Client &client,std::string &msg ,std::string &pass)
 {
+	this->_pass = pass;
 	this->_client = client;
+	std::cout << "msg: " << msg << std::endl;
 	if (splitParams(msg, _args, _command) == -1)
 		send(_client.getFd(), "ERROR :Invalid command\r\n", 24, 0);
-	// switch (expression)
+	
+	// switch (this->_indexCmd)
 	// {
 	// case (USER):
+		 
+	// 	break;
+	// case (NICK):
 		
 	// 	break;
-	
+	// case (PASS):
+		
+	// 	break;
+	// case (PRIVMSG):
+		
+	// 	break;
+	// case (JOIN):
+		
+	// 	break;
+	// case (PART):
+		
+	// 	break;
+	// case (QUIT):
+		
+	// 	break;
 	// default:
+	
 	// 	break;
 	// }
 	

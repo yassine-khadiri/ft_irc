@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command.hpp                                        :+:      :+:    :+:   */
+/*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/20 18:04:42 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/20 22:21:45 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef enum
 	JOIN,
 	PART,
 	QUIT,
+	MSG,
 } e_Command;
 
 
@@ -42,7 +43,7 @@ class Command
 		std::string					_pass;
 	public :
 		Command();
-		Command(Client &client,std::string &msg);
+		Command(Client &client,std::string &msg,std::string &pass);
 		void						toUpper(std::string &str);
 		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);
 		void						initBasicCommand();

@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 18:09:01 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/20 22:09:09 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int Ircserv::waitForConnection()
             }
             if (num_clients < MAX_CLIENTS)
             {
-                this->_clients[num_clients] = Client(socketClient);
+                this->_clients.push_back(Client(socketClient));
                 client_sockets[num_clients] = socketClient;
                 num_clients++;
             }
@@ -110,10 +110,9 @@ int Ircserv::waitForConnection()
                     str.erase(str.find_last_not_of("\r") + 1);
                     if(str != "")
                     {
-                        // Commad(buff,this->_clients[i]);
-                        std::cout << buff << std::endl;
-                        memset(buff, 0, sizeof(buff));
+                        Command cmd(this->_clients[i], str, this->password);
                     }
+                    memset(buff, 0, sizeof(buff));
                 }
             }
         }
