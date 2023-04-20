@@ -6,11 +6,12 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/16 22:28:46 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/04/20 12:46:25 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Ircserv.hpp"
+#include "../includes/IrcClient.hpp"
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password)
 {
@@ -45,9 +46,31 @@ int Ircserv::checkMessageInfos( std::string recvMessage )
     std::cout << "content: " << recvMessage << std::endl;
     return 0;  
 };
+void getClientInfos(Client &_client, char *buff)
+{
+    std::string buffer(buff);
+    size_t NickIndex = buffer.find("NICK");
+    size_t PassIndex = buffer.find("PASS");
+    if(NickIndex != -1)
+    {
+        std::string  nickname = buffer.substr(NickIndex + 5);
+        _client.setNickname(nickname);
+    }
+    if(PassIndex != -1)
+    {
+        std::string password = buffer.substr(PassIndex + 5);
+        _client.setPassword(password);
+    }
+    // std::cout << "NICK IS: " << _client.getNickname() << "\n" << "PASS IS: " << _client.getPassword();
+}
+std::string replyToServer(Client& client, const std::string& str)
+{
+    return ":" + client.getNickname() + " JOIN " + str + "\r\n";
+}
 
 int Ircserv::waitForConnection()
 {
+    Client client;
     int socketClient;
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
@@ -59,14 +82,12 @@ int Ircserv::waitForConnection()
     {
         if (recv(socketClient, buff, sizeof(buff), 0) > 0)
         {
-            std::cout << "recv :";
-            // std::stringstream ss( buff);
-            // std::string tmp(buff);
-            // getline(ss,tmp);
             std::cout << buff << std::endl;
+            getClientInfos(client, buff);
+            
             if(strncmp(buff,"JOIN",4) == 0)
             {
-                 std::string tmp1 = ":yassine JOIN #test \r\n";
+                 std::string tmp1 = "Hello";
                 if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
             }
 
