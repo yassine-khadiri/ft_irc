@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 19:10:04 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:21:24 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 	std::string tmp = msg;
 	int tab = msg.find(':');
 	if(tab > 0)
-		tmp = msg.substr(0, tab);
+		tmp = msg.substr(0, tab -1);
 	std::stringstream ss(tmp);
 	std::getline(ss, cmd, ' '); 
 	this->toUpper(cmd);
@@ -62,7 +62,7 @@ int Command::findCommand(std::string cmd)
 		i++;
 	}
 	this->_indexCmd = i;
-	if (i > (int)_basicCommand.size())
+	if (i > (int)_basicCommand.size() -1)
 		i = -1;
 	return (i);
 }
@@ -80,6 +80,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	std::cout << "command : " << msg << std::endl;
 	if (splitParams(msg, _args, _command) == -1)
 	{
+		std::cout << "error" << std::endl;
 		send(_client.getFd(), "ERROR :Invalid command\r\n", 24, 0);
 		return ;
 	}
