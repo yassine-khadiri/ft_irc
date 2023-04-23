@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/13 18:04:38 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:55:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
     if (argc == 3)
     {
         int port  = isNumber(argv[1]);
-		if (!port)
-			std::cerr << "The Port Must Be A Positive Integer :)" << std::endl;
+		if (!port || atof(argv[1]) > 65536)
+			std::cerr << "The Port Must Be A Positive Integer Between 0 && 65536 :)" << std::endl;
 		else
 		{
 	        Ircserv ircserv = Ircserv(atoi(argv[1]), argv[2]);
