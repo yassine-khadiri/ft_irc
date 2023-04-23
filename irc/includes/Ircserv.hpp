@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 17:53:44 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/20 20:51:50 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "../../tcp/includes/Tcp.hpp"
 #include <sys/select.h>
 #include "Client.hpp"
+#include "Command.hpp"
 #include <vector>
 
 class Ircserv : public Tcp
