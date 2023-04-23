@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 19:04:52 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:10:04 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		break;
 	case (PASS):
 		passCommand();
+		break;
+	case (JOIN):
+		joinCommand();
 		break;
 	case (PRIVMSG):
 		// privmsgCommand();
@@ -196,6 +199,13 @@ void Command::passCommand()
 			sendReply(":localhost 464 Password incorrect\r\n");
 	}
 }
+
+void Command::joinCommand()
+{
+	std::cout << this->_command << std::endl;
+	std::cout << this->_args[0] << std::endl;
+	std::cout << "okhh " << this->_args.size() << std::endl;
+};
 
 void Command::nickCommand()
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 17:55:48 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:10:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "Client.hpp"
 #include "Ircserv.hpp"
+#include "Client.hpp"
+#include "Channel.hpp"
 
 typedef enum
 {
@@ -65,6 +66,7 @@ class Command
 		void						userCommand();
 		void						nickCommand();
 		void						privmsgCommand();
+		void						joinCommand();
 };
 
 

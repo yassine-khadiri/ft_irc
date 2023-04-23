@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+         #
+#    By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/04/20 18:01:31 by rgatnaou         ###   ########.fr        #
+#    Updated: 2023/04/23 19:08:19 by ykhadiri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,13 +17,15 @@ RM = rm -f
 INCLUDES = tcp/includes/Tcp.hpp \
 		irc/includes/Ircserv.hpp \
 		irc/includes/Client.hpp \
-		irc/includes/Command.hpp \ 
+		irc/includes/Command.hpp \
+		irc/includes/Channel.hpp
 
 SRC = main.cpp \
 	tcp/classes/Tcp.cpp \
 	irc/classes/Ircserv.cpp \
 	irc/classes/Client.cpp \
-	irc/classes/Command.cpp
+	irc/classes/Command.cpp \
+	irc/classes/Channel.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
