@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 13:47:08 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 17:55:48 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum
 	PART,
 	QUIT,
 	MODE,
+	PONG,
 } e_Command;
 
 
@@ -63,6 +64,7 @@ class Command
 		void						passCommand();
 		void						userCommand();
 		void						nickCommand();
+		void						privmsgCommand();
 };
 
 

@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 14:51:02 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:04:52 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 		return (-1);
 	while(std::getline(ss, tmp, ' ') && tmp.empty() == false)
 		arg.push_back(tmp);
-	arg.push_back(msg.substr(tab + 1, msg.length()));
+	if(tab > 0)
+		arg.push_back(msg.substr(tab + 1, msg.length()));
 	return (arg.size()); 
 }
 
@@ -43,9 +44,12 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("NICK");
 	_basicCommand.push_back("PASS");
 	_basicCommand.push_back("PRIVMSG");
+	_basicCommand.push_back("NOTICE");
 	_basicCommand.push_back("JOIN");
 	_basicCommand.push_back("PART");
 	_basicCommand.push_back("QUIT");
+	_basicCommand.push_back("MODE");
+	_basicCommand.push_back("PONG");
 }
 
 int Command::findCommand(std::string cmd)
@@ -58,7 +62,7 @@ int Command::findCommand(std::string cmd)
 		i++;
 	}
 	this->_indexCmd = i;
-	if (i > 6)
+	if (i > (int)_basicCommand.size())
 		i = -1;
 	return (i);
 }
@@ -73,10 +77,10 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	this->_client = clients[nbClient];
 	this->_clients = clients;
 	initBasicCommand();
+	std::cout << "command : " << msg << std::endl;
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		send(_client.getFd(), "ERROR :Invalid command\r\n", 24, 0);
-		std::cout << "ERROR :Invalid command" << std::endl;
 		return ;
 	}
 	// std::cout << "Command: " << _command << std::endl;
@@ -90,6 +94,11 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		break;
 	case (PASS):
 		passCommand();
+		break;
+	case (PRIVMSG):
+		// privmsgCommand();
+		break;
+	case (PONG):
 		break;
 	}
 	clients[nbClient] = this->_client;
@@ -179,7 +188,7 @@ void Command::passCommand()
 		sendReply(":localhost 462 You are already give me password\r\n");
 	else
 	{
-		if(this->_args.size() != 2 || this->_args[0] == "")
+		if(this->_args.size() != 1 || this->_args[0] == "")
 			sendReply(":localhost 461 PASS <password>\r\n");
 		else if (this->_args[0] == this->_pass)
 			this->_client.setPassword(this->_args[0]);
@@ -190,17 +199,18 @@ void Command::passCommand()
 
 void Command::nickCommand()
 {
+	std::cout<< this->_args.size() << std::endl;
 	if(this->_client.getPassword() == "")
 	{
-		sendReply("You must enter a password first\r\n");
+		sendReply("ERROR :You must enter a password first\r\n");
 		return ;
 	}
-	if (this->_args.size() != 2 || this->_args[0] == "")
-		sendReply(":localhost 431  NICK <nickname>\r\n");
+	if (this->_args.size() != 1 || this->_args[0] == "")
+		sendReply(":localhost 431 " + _client.getNickname() + ": NICK <nickname>\r\n");
 	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
-		sendReply(":localhost 432 Nickname invalid\r\n");
+		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
 	else if(nickExist(this->_args[0]) != -1)
-		sendReply(":localhost 433 Nickname already in use\r\n");
+		sendReply(":localhost 433 " + _client.getNickname()+ " Nickname already in use\r\n");
 	else
 	{
 		if (_client.getNickname() == "" && _client.getUsername() != "")
@@ -212,7 +222,7 @@ void Command::nickCommand()
 			this->_client.setIsRegistered(true);
 		}
 		else if(_client.getNickname() != "" && _client.getUsername() != "")
-			sendReply(":you are now known as " + this->_args[0] + "\r\n");
+			sendReply(":" + this->_args[0] + "!" + _client.getUsername() + "@localhost" + " NICK " + this->_args[0] + "\r\n"); 
 		this->_client.setNickname(this->_args[0]); 
 	}
 }
@@ -221,13 +231,13 @@ void	Command::userCommand()
 {
 	if(this->_client.getPassword() == "")
 	{
-		sendReply("You must enter a password first\r\n");
+		sendReply("ERROR :You must enter a password first\r\n");
 		return ;
 	}
-	if (this->_args.size() != 5)
-		sendReply(":localhost 461 : USER <username> <hostname> <servername> <realname>\r\n");
+	if (this->_args.size() != 4)
+		sendReply(":localhost 461 " + _client.getNickname() + ": USER <username> <hostname> <servername> <realname>\r\n");
 	else if (this->_client.getUsername() != "" && this->_client.getNickname() != "")
-		sendReply(":localhost 462 :You are already registered\r\n");
+		sendReply(":localhost 462 " + _client.getNickname() + ":You are already registered\r\n");
 	else
 	{
 		if (_client.getNickname() != "" && _client.getUsername() == "")
@@ -238,8 +248,21 @@ void	Command::userCommand()
 			sendReply(":localhost 004 " + _client.getNickname() + " :localhost 0.1\r\n");
 			this->_client.setIsRegistered(true);
 		}
-		else if(_client.getNickname() != "" && _client.getUsername() != "")
-			sendReply(":you are now known as " + this->_args[0] + "\r\n");
 		this->_client.setUsername(this->_args[0]);
+	}
+}
+
+void	Command::privmsgCommand()
+{
+	if (this->_args.size() != 2 || this->_args[0] == "" )
+		sendReply(":localhost 461 " + _client.getNickname() + ": PRIVMSG <nickname> <message>\r\n");
+	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
+		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
+	else if(nickExist(this->_args[0]) == -1)
+		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
+	else
+	{
+		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+		sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 }
