@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 22:09:09 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 13:45:24 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int Ircserv::waitForConnection()
                     str.erase(str.find_last_not_of("\r") + 1);
                     if(str != "")
                     {
-                        Command cmd(this->_clients[i], str, this->password);
+                        Command cmd(i, str, this->password, this->_clients);
                     }
                     memset(buff, 0, sizeof(buff));
                 }

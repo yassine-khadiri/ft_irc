@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/20 22:21:45 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 13:47:08 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ typedef enum
 	NICK,
 	PASS,
 	PRIVMSG,
+	NOTICE,
 	JOIN,
 	PART,
 	QUIT,
-	MSG,
+	MODE,
 } e_Command;
 
 
@@ -40,10 +41,11 @@ class Command
 		std::vector<std::string>	_basicCommand;
 		int							_indexCmd;
 		Client						_client;
+		std::vector<Client>			_clients;
 		std::string					_pass;
 	public :
 		Command();
-		Command(Client &client,std::string &msg,std::string &pass);
+		Command(int nbClient,std::string &msg,std::string &pass,std::vector<Client> &clients);
 		void						toUpper(std::string &str);
 		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);
 		void						initBasicCommand();
@@ -55,9 +57,14 @@ class Command
 		void						setCommand(std::string Command);
 		void						setArgs(std::vector<std::string> args);
 		void						setPass(std::string pass);
-		void						setClient(Client &client);	
+		void						setClient(Client &client);
+		void						sendReply(std::string msg);
+		int							nickExist(std::string nick);
 		void						passCommand();
+		void						userCommand();
+		void						nickCommand();
 };
+
 
 
 // int		splitCommand(std::string str, std::vector<std::string> &v);

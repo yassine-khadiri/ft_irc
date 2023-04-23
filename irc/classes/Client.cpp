@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/20 22:07:31 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:55:49 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,11 @@ std::string	Client::getUsername()
 void Client::setIsRegistered(bool isRegistered)
 {
 	this->_isRegistered = isRegistered;
+	if(isRegistered == true)
+	{
+		std::cout << "Client " << this->_nickname << " is now registered" << std::endl;
+		send(this->_fdsocket, "localhost 001 " + this->_nickname + " :Welcome to the Internet Relay Network " + this->_nickname + "!" + this->_username + "@" + "localhost\r\n", 100, 0);")
+	}
 }
 
 bool Client::getIsRegistered()
