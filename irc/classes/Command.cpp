@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/24 15:33:11 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/24 17:36:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	this->_client = clients[nbClient];
 	this->_clients = clients;
 	initBasicCommand();
-	std::cout << "command : " << msg << std::endl;
+	// std::cout << "command : " << msg << std::endl;
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
@@ -142,7 +142,6 @@ std::string Command::getPass() const
 	return _pass;
 }
 
-
 Client& Command::getClient()
 {
 	return _client;
@@ -204,9 +203,16 @@ void Command::passCommand()
 
 void Command::joinCommand()
 {
-	std::cout << this->_command << std::endl;
-	std::cout << this->_args[0] << std::endl;
-	std::cout << "okhh " << this->_args.size() << std::endl;
+	std::stringstream splitter(this->_args[0]);
+	std::string channelName;
+
+	while (std::getline(splitter, channelName, ','))
+	{
+		// std::cout << channelName << std::endl;
+		sendReply(":" + this->_client.getNickname() + "!@localhost JOIN " + channelName + "\r\n");
+	}
+	// std::cout << this->_args[0] << std::endl;
+	// std::cout << this->_args.size() << std::endl;
 };
 
 void Command::nickCommand()
