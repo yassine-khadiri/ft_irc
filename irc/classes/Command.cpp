@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 19:21:24 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:33:11 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 {
 	if(msg == "")
 		return (-1);
+	msg.erase(0, msg.find_first_not_of(' '));
 	std::string tmp = msg;
 	int tab = msg.find(':');
 	if(tab > 0)
-		tmp = msg.substr(0, tab -1);
+		tmp = msg.substr(0, tab);
 	std::stringstream ss(tmp);
 	std::getline(ss, cmd, ' '); 
 	this->toUpper(cmd);
@@ -80,8 +81,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	std::cout << "command : " << msg << std::endl;
 	if (splitParams(msg, _args, _command) == -1)
 	{
-		std::cout << "error" << std::endl;
-		send(_client.getFd(), "ERROR :Invalid command\r\n", 24, 0);
+		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
 		return ;
 	}
 	// std::cout << "Command: " << _command << std::endl;
@@ -100,7 +100,10 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		joinCommand();
 		break;
 	case (PRIVMSG):
-		// privmsgCommand();
+		privmsgCommand();
+		break;
+	case (NOTICE):
+		noticeCommand();
 		break;
 	case (PONG):
 		break;
@@ -122,9 +125,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	
 	// 	break;
 	// }
-	
 }
-
 
 std::string Command::getCommand() const
 {
@@ -187,17 +188,17 @@ int	Command::nickExist(std::string nick)
 void Command::passCommand()
 {
 	if (this->_client.getIsRegistered())
-		sendReply(":localhost 462 You are already registered\r\n");
+		sendReply(":localhost 462 * :You are already registered\r\n");
 	else if(this->_client.getPassword() != "")
-		sendReply(":localhost 462 You are already give me password\r\n");
+		sendReply(":localhost 462 * :You are already give me password\r\n");
 	else
 	{
 		if(this->_args.size() != 1 || this->_args[0] == "")
-			sendReply(":localhost 461 PASS <password>\r\n");
+			sendReply(":localhost 461 * :PASS <password>\r\n");
 		else if (this->_args[0] == this->_pass)
 			this->_client.setPassword(this->_args[0]);
 		else
-			sendReply(":localhost 464 Password incorrect\r\n");
+			sendReply(":localhost 464 * :Password incorrect\r\n");
 	}
 }
 
@@ -210,10 +211,9 @@ void Command::joinCommand()
 
 void Command::nickCommand()
 {
-	std::cout<< this->_args.size() << std::endl;
 	if(this->_client.getPassword() == "")
 	{
-		sendReply("ERROR :You must enter a password first\r\n");
+		sendReply(":localhost ERROR * :You must enter a password first\r\n");
 		return ;
 	}
 	if (this->_args.size() != 1 || this->_args[0] == "")
@@ -242,7 +242,7 @@ void	Command::userCommand()
 {
 	if(this->_client.getPassword() == "")
 	{
-		sendReply("ERROR :You must enter a password first\r\n");
+		sendReply(":localhost ERROR * :You must enter a password first\r\n");
 		return ;
 	}
 	if (this->_args.size() != 4)
@@ -273,7 +273,39 @@ void	Command::privmsgCommand()
 		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
-		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
-		sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
+		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
+		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
+	}
+}
+
+void	Command::noticeCommand()
+{
+	if (this->_args.size() != 2 || this->_args[0] == "" )
+		sendReply(":localhost 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");
+	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
+		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
+	else if(nickExist(this->_args[0]) == -1)
+		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
+	else
+	{
+		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
+		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
+	}
+}
+
+void	Command::quitCommand()
+{
+	if (this->_args.size() != 1 || this->_args[0] == "")
+		sendReply(":localhost 461 " + _client.getNickname() + ": QUIT <message>\r\n");
+	else
+	{
+		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " QUIT :" + this->_args[0] + "\r\n");
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].getIsRegistered() == true)
+				send(_clients[i].getFd(), tmp.c_str(), tmp.length(), 0);
+		}
 	}
 }

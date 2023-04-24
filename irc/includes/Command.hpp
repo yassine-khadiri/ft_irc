@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 19:10:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:34:58 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef enum
 	MODE,
 	PONG,
 } e_Command;
-
 
 class Command
 {
@@ -67,9 +66,9 @@ class Command
 		void						nickCommand();
 		void						privmsgCommand();
 		void						joinCommand();
+		void						noticeCommand();
+		void						quitCommand();
 };
-
-
 
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);
