@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/24 15:34:58 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:45:00 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ class Command
 		void						nickCommand();
 		void						privmsgCommand();
 		void						joinCommand();
+		void						partCommand();
 		void						noticeCommand();
 		void						quitCommand();
 };

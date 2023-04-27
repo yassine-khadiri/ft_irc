@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/24 17:36:50 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/25 16:29:23 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		break;
 	case (JOIN):
 		joinCommand();
+		break;
+	case (PART):
+		partCommand();
 		break;
 	case (PRIVMSG):
 		privmsgCommand();
@@ -209,10 +212,20 @@ void Command::joinCommand()
 	while (std::getline(splitter, channelName, ','))
 	{
 		// std::cout << channelName << std::endl;
-		sendReply(":" + this->_client.getNickname() + "!@localhost JOIN " + channelName + "\r\n");
+		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+		// std::string t(":localhost JOIN " + this->_client.getNickname() + " " + channelName + " : No topic is set." + "\r\n");
+		// std::string t(":localhost 331 " + this->_client.getNickname() + " " + channelName + " : No topic is set." + "\r\n");
+		// std::cout << t << std::endl;
+		// sendReply(t);
 	}
+		// sendReply(":localhost 331 " + this->_client.getNickname() + "!@localhost JOIN #test56 key1" + "\r\n");
 	// std::cout << this->_args[0] << std::endl;
 	// std::cout << this->_args.size() << std::endl;
+};
+
+void Command::partCommand()
+{
+	sendReply(":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n");
 };
 
 void Command::nickCommand()
