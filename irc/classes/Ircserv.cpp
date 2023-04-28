@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/28 16:38:32 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/04/28 17:17:17 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int Ircserv::checkMessageInfos( std::string recvMessage )
 void getClientInfos(Client &_client, char *buff)
 {
     std::string buffer(buff);
-    size_t NickIndex = buffer.find("NICK");
-    size_t PassIndex = buffer.find("PASS");
+    int NickIndex = buffer.find("NICK");
+    int PassIndex = buffer.find("PASS");
     if(NickIndex != -1)
     {
         std::string  nickname = buffer.substr(NickIndex + 5);

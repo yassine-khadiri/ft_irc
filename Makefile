@@ -6,13 +6,13 @@
 #    By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/04/28 16:54:02 by hbouqssi         ###   ########.fr        #
+#    Updated: 2023/04/28 17:15:17 by hbouqssi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
-CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CPP = c++
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -f
 INCLUDES = tcp/includes/Ircserv.hpp \
 		irc/includes/Tcp.hpp\
@@ -30,10 +30,10 @@ SRC = main.cpp \
 OBJ = $(SRC:.cpp=.o)
 
 %.o: %.cpp $(INCLUDES)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CPP) $(OBJ) -o $(NAME)
 
 all : $(NAME)
 
