@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/20 18:13:50 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/28 13:29:48 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
+#define MAP std::map<std::string, Channel>
 class Client
 {
 	private :
@@ -25,6 +27,7 @@ class Client
 		std::string	_username;
 		bool		_isRegistered;
 		int			_fdsocket;
+		int Operator;
 	public :
 		Client();
 		Client( int fdSocket );
@@ -40,8 +43,12 @@ class Client
 		std::string	getUsername();
 		void		setIsRegistered(bool isRegistered);
 		bool		getIsRegistered();
-		// void		eraseClient();
-		// void		joinChannel(std::string channel);
+		void		setOpPrivilegePermission(int privilege);
+		int			getOpPriviligePermission() const;
+		void		channelSegment(Channel &_channel);
+		void		joinChannel(Channel &_channel);
 		void		setFd(int fdsocket);
 		int			getFd();
+		MAP			joined;
+		int			isMemberOfChannel(std::string channelName);
 };

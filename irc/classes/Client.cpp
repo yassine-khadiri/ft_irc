@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/23 15:01:38 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/28 13:30:50 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,36 @@ void Client::setFd(int fdsocket)
 int Client::getFd()
 {
 	return (this->_fdsocket);
+}
+
+void Client::setOpPrivilegePermission(int OpPrivilege)
+{
+	this->Operator = OpPrivilege;
+}
+
+int Client::getOpPriviligePermission() const
+{
+	return(this->Operator);
+}
+
+void Client::joinChannel(Channel &_Channel)
+{
+	joined.insert(std::make_pair(_Channel.getChannelName(), _Channel));
+}
+
+void Client::channelSegment(Channel &_Channel)
+{
+	joined.erase(_Channel.getChannelName());
+}
+
+int Client::isMemberOfChannel(std::string channelName)
+{
+	MAP::iterator it = joined.begin();
+	while(it != joined.end())
+	{
+		if(channelName == it->first)
+			return 1;
+		it++;
+	}
+	return 0;
 }
