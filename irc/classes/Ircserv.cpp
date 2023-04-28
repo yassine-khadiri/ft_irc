@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 12:46:25 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/04/23 13:45:24 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,33 +70,76 @@ std::string replyToServer(Client& client, const std::string& str)
 
 int Ircserv::waitForConnection()
 {
-    Client client;
-    int socketClient;
+    int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd, num_clients = 0;
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
+    fd_set readfds;
     char buff[1024] = {0};
+    int max_sd;
 
-    std::cout << "Waiting For Incoming Connection...!" << std::endl;
-    socketClient = accept(this->socket_fd, (sockaddr *)&clientAddr, &clientAddrSize);
+    std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
     while(1)
     {
-        if (recv(socketClient, buff, sizeof(buff), 0) > 0)
-        {
-            std::cout << buff << std::endl;
-            getClientInfos(client, buff);
-            
-            if(strncmp(buff,"JOIN",4) == 0)
-            {
-                 std::string tmp1 = "Hello";
-                if (send(socketClient, tmp1.c_str(), tmp1.length(), 0) < 0)  return EXIT_FAILURE;
-            }
+        FD_ZERO(&readfds);
+        FD_SET(this->socket_fd, &readfds);
 
-            // std::string tmp1 = ":127.0.0.1 001 rgatnaou Welcome to the Internet Relay Network rgatnaou!rgatnaou@127.0.0.1";
-            // this->checkMessageInfos(buff);
-            // exit(0);
+        max_sd = this->socket_fd;
+        for (int i = 0; i < MAX_CLIENTS; i++)
+        {
+            sd = client_sockets[i];
+            if (sd > 0)
+                FD_SET(sd, &readfds);
+            if (sd > max_sd)
+                max_sd = sd;
         }
-            // exit(0);
+
+        int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+        if (activity < 0)
+        {
+            std::cout << "Select Error!" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        if (FD_ISSET(this->socket_fd, &readfds))
+        {
+            if ((socketClient = accept(this->socket_fd, (struct sockaddr *)&clientAddr, (socklen_t*)&clientAddrSize)) < 0)
+            {
+                std::cout << "Accept Failed!" << std::endl;
+                return EXIT_FAILURE;
+            }
+            if (num_clients < MAX_CLIENTS)
+            {
+                this->_clients.push_back(Client(socketClient));
+                client_sockets[num_clients] = socketClient;
+                num_clients++;
+            }
+            else
+                close(socketClient);
+        }
+        for (int i = 0; i < MAX_CLIENTS; i++)
+        {
+            // if (client_sockets[i] == 0)
+            // {
+            //     client_sockets[i] = socketClient;
+            //     break;
+            // }
+            if (FD_ISSET(client_sockets[i], &readfds))
+            {                
+                if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
+                {
+                    std::string str(buff);
+                    str.erase(str.find_last_not_of("\n") + 1);
+                    str.erase(str.find_last_not_of("\r") + 1);
+                    if(str != "")
+                    {
+                        Command cmd(i, str, this->password, this->_clients);
+                    }
+                    memset(buff, 0, sizeof(buff));
+                }
+            }
+        }
     }
+    
     return EXIT_SUCCESS;
 };
 
