@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/28 14:12:23 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/04/28 16:43:17 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 #define CHANNEL_HPP
 
 #include "../../tcp/includes/Tcp.hpp"
-
-#define USER std::map<int, Client>
+#include "Client.hpp"
+class Client;
+#define USERMAP std::map<int, Client>
 #define OPERATOR 1
 #define CLIENT  0
 
@@ -24,7 +25,7 @@ class Channel
         std::string channelName;
         std::string topic;
         std::string key;
-        USER        users;
+        USERMAP       users;
     public:
         Channel();
         ~Channel();

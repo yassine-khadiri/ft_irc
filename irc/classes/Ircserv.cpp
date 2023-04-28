@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/23 13:45:24 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/04/28 16:38:32 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Ircserv.hpp"
-#include "../includes/IrcClient.hpp"
+#include "../includes/Client.hpp"
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password)
 {
