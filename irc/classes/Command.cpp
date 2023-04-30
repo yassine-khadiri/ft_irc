@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/30 00:00:48 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/04/30 15:51:49 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,8 +218,8 @@ void Command::joinCommand()
 	{
 		 if(channelName.empty() || channelName[0] != '#')
 		 {
-			std::cout << "This is the invalid channle name :  " + channelName << std::endl;
-			sendReply(":localhost 476" + channelName + "Invalid channel name\r\n"); // i don't know why this message is not printing in the client
+			// std::cout << "This is the invalid channle name :  " + channelName << std::endl;
+			sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
         	continue;
 		 }
 		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
