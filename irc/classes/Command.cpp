@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/25 16:29:23 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/04/30 00:00:48 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,22 +206,26 @@ void Command::passCommand()
 
 void Command::joinCommand()
 {
+	if (this->_args.size() < 1)
+	{
+        sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+        return;
+    }
 	std::stringstream splitter(this->_args[0]);
 	std::string channelName;
 
 	while (std::getline(splitter, channelName, ','))
 	{
-		// std::cout << channelName << std::endl;
+		 if(channelName.empty() || channelName[0] != '#')
+		 {
+			std::cout << "This is the invalid channle name :  " + channelName << std::endl;
+			sendReply(":localhost 476" + channelName + "Invalid channel name\r\n"); // i don't know why this message is not printing in the client
+        	continue;
+		 }
 		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-		// std::string t(":localhost JOIN " + this->_client.getNickname() + " " + channelName + " : No topic is set." + "\r\n");
-		// std::string t(":localhost 331 " + this->_client.getNickname() + " " + channelName + " : No topic is set." + "\r\n");
-		// std::cout << t << std::endl;
-		// sendReply(t);
 	}
-		// sendReply(":localhost 331 " + this->_client.getNickname() + "!@localhost JOIN #test56 key1" + "\r\n");
-	// std::cout << this->_args[0] << std::endl;
-	// std::cout << this->_args.size() << std::endl;
 };
+
 
 void Command::partCommand()
 {
