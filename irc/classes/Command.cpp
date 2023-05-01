@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/30 00:00:48 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/01 02:19:11 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,18 @@ void Command::passCommand()
 			sendReply(":localhost 464 * :Password incorrect\r\n");
 	}
 }
-
+_iterator Command::searchForUser(std::string _Nickname, int fd)
+{
+	_iterator begin = _users.begin();
+	_iterator end = _users.end();
+	while(begin != end)
+	{
+		if(begin->second.getNickname() == _Nickname && begin->first != fd)
+			return(begin);
+		++begin;
+	}
+	return (end);
+}
 void Command::joinCommand()
 {
 	if (this->_args.size() < 1)
@@ -211,18 +222,50 @@ void Command::joinCommand()
         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
         return;
     }
-	std::stringstream splitter(this->_args[0]);
+	std::stringstream channelSplitter(this->_args[0]);
 	std::string channelName;
+	std::vector<std::string> channelKeys;
+	_iterator _clients;
 
-	while (std::getline(splitter, channelName, ','))
+	if(this->_args.size() > 1)
 	{
-		 if(channelName.empty() || channelName[0] != '#')
-		 {
+		std::stringstream keySplitter(this->_args[1]);
+		std::string key;
+		while(std::getline(keySplitter, key, ','))
+			channelKeys.push_back(key);
+	}
+
+	while (std::getline(channelSplitter, channelName, ','))
+	{
+		if(channelName.empty() || channelName[0] != '#')
+		{
 			std::cout << "This is the invalid channle name :  " + channelName << std::endl;
 			sendReply(":localhost 476" + channelName + "Invalid channel name\r\n"); // i don't know why this message is not printing in the client
-        	continue;
-		 }
-		sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			continue;
+		}
+		
+		channelMap::iterator it = _channelMap.find(channelName);
+		std::string chKey = "";
+		if(it == _channelMap.end())
+		{
+			if(channelKeys.size() > 0)
+			{
+				int index = _channelMap.size() %  chKey.size();
+				chKey = channelKeys[index];
+			}
+			Channel _Channel(channelName, chKey, _clients->second);
+			_Channel.addUser(_clients->second, true);
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			//must print the other messages ...
+			_channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
+		}
+		else
+		{
+			Channel &_Channel = it->second;
+			if(!_Channel.verifyKey(chKey))
+			{}
+				//replytoClientWith a specific message
+		}
 	}
 };
 

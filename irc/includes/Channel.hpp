@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/28 16:43:17 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/01 02:11:43 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ class Channel
         std::string topic;
         std::string key;
         USERMAP       users;
+        Client        op;
     public:
         Channel();
+        Channel(std::string channelName, std::string key, Client op);
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
         std::string getKey() const;
+        int  verifyKey(std::string &key)const;
         void setChannelName(std::string _channelName);
         void setTopic(std::string _topic);
         void setKey(std::string _key);
