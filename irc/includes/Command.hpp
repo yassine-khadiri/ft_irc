@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/25 15:45:00 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/01 01:54:07 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+#define channelMap std::map<std::string, Channel>
+#define Map		   std::map<int, Client>
+#define _iterator   Map::iterator
 typedef enum
 {
 	USER,
@@ -44,6 +47,8 @@ class Command
 		Client						_client;
 		std::vector<Client>			_clients;
 		std::string					_pass;
+		channelMap					_channelMap;
+		Map							_users;
 	public :
 		Command();
 		Command(int nbClient,std::string &msg,std::string &pass,std::vector<Client> &clients);
@@ -51,6 +56,7 @@ class Command
 		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);
 		void						initBasicCommand();
 		int							findCommand(std::string cmd);
+		_iterator					searchForUser(std::string name, int fd);
 		std::string 				getCommand() const;
 		std::vector<std::string>	getArgs() const;
 		std::string					getPass() const;
