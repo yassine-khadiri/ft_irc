@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/28 16:41:24 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:40:20 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Channel.hpp"
 
-#define MAP std::map<std::string, Channel>
 class Channel;
+#define MAP std::map<std::string, Channel>
 class Client
 {
 	private :

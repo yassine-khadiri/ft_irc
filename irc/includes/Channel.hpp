@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/01 02:11:43 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:39:58 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "../../tcp/includes/Tcp.hpp"
 #include "Client.hpp"
-class Client;
 #define USERMAP std::map<int, Client>
 #define OPERATOR 1
 #define CLIENT  0
