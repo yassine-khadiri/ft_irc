@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/01 23:35:33 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/02 18:08:14 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,28 @@ void Command::joinCommand()
 
 void Command::partCommand()
 {
-	sendReply(":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n");
+	std::string message = "";
+	int i = -1;
+	while (++i < (int)this->_args.size())
+		std::cout << this->_args[i] << std::endl;
+	std::cout << this->_args.size() << std::endl;
+	switch (this->_args.size())
+	{
+	case 1:
+		// Parting With No Reason:
+		message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
+		break;
+	case 2:
+		{
+			// Parting With A Reason:
+			if (this->_args[1][0] == ':')
+				message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + ' ' + this->_args[1] + "\r\n";
+			break;
+		}
+	default:
+		break;
+	}
+	sendReply(message);
 };
 
 void Command::nickCommand()
