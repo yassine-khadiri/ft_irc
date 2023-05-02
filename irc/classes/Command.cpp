@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/02 18:08:14 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/02 21:27:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,25 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	
 	// 	break;
 	// }
+}
+
+
+std::string Command::joinVectorValues()
+{
+	std::string joinedValues = "\"";
+
+	if (this->_args.size() > 2)
+	{
+		std::vector<std::string>::iterator it = this->_args.begin() + 1;
+		while (it != this->_args.end())
+		{
+			joinedValues += *it + ' ';
+			++it;
+		}
+	}
+	else
+		joinedValues = this->_args[1];
+	return joinedValues;
 }
 
 std::string Command::getCommand() const
@@ -277,23 +296,25 @@ void Command::joinCommand()
 void Command::partCommand()
 {
 	std::string message = "";
+
 	int i = -1;
 	while (++i < (int)this->_args.size())
 		std::cout << this->_args[i] << std::endl;
 	std::cout << this->_args.size() << std::endl;
+
 	switch (this->_args.size())
 	{
-	case 1:
-		// Parting With No Reason:
-		message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
-		break;
-	case 2:
+		case 1:
+			// Parting With No Reason:
+			message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
+			break;
+		case 2:
 		{
 			// Parting With A Reason:
 			if (this->_args[1][0] == ':')
-				message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + ' ' + this->_args[1] + "\r\n";
+				message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + " " + this->joinVectorValues() + "\r\n";
 			break;
-		}
+	}
 	default:
 		break;
 	}

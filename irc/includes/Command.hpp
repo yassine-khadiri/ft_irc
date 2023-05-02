@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/01 01:54:07 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/02 20:24:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <iterator>
 #include <vector>
 #include "Ircserv.hpp"
 #include "Client.hpp"
@@ -57,6 +58,7 @@ class Command
 		void						initBasicCommand();
 		int							findCommand(std::string cmd);
 		_iterator					searchForUser(std::string name, int fd);
+		std::string					joinVectorValues();
 		std::string 				getCommand() const;
 		std::vector<std::string>	getArgs() const;
 		std::string					getPass() const;
