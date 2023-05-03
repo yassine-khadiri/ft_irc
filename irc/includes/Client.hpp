@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/01 18:40:20 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/03 19:14:57 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@
 
 class Channel;
 #define MAP std::map<std::string, Channel>
+
 class Client
 {
-	private :
 		std::string	_password;
 		std::string	_nickname;
 		std::string	_username;
 		bool		_isRegistered;
 		int			_fdsocket;
-		int Operator;
+		int			Operator;
 	public :
 		Client();
 		Client( int fdSocket );
@@ -51,5 +51,6 @@ class Client
 		void		setFd(int fdsocket);
 		int			getFd();
 		MAP			joined;
-		int			isMemberOfChannel(std::string channelName);
+		int			isExistedChannel( std::string channelName );
+		int			isMemberOfChannel( std::string nickName, std::string channelName );
 };

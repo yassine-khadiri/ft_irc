@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/04/28 16:39:59 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/03 19:29:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,35 @@ void Client::channelSegment(Channel &_Channel)
 	joined.erase(_Channel.getChannelName());
 }
 
-int Client::isMemberOfChannel(std::string channelName)
+int Client::isExistedChannel( std::string channelName )
 {
 	MAP::iterator it = joined.begin();
+
 	while(it != joined.end())
 	{
 		if(channelName == it->first)
 			return 1;
 		it++;
 	}
+	return 0;
+}
+
+int Client::isMemberOfChannel( std::string nickName, std::string channelName )
+{
+	// std::cout << nickName << std::endl;
+	std::cout << this->isExistedChannel(channelName) << std::endl;
+	if (this->isExistedChannel(channelName))
+	{
+		_iterator it = this->joined[channelName].getUsersMap().begin();
+
+		while(it != this->joined[channelName].getUsersMap().end())
+		{
+			if (it->second.getNickname() == nickName)
+				return 1;
+			++it;
+		}
+	}
+	else
+		return -1;
 	return 0;
 }

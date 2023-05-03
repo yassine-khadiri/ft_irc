@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/02 20:24:50 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/03 19:15:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef enum
 
 class Command
 {
-	private :
 		std::string 				_command;
 		std::vector<std::string> 	_args;
 		std::vector<std::string>	_basicCommand;

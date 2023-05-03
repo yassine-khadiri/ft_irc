@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/02 21:27:13 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:12:59 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 	while(std::getline(ss, tmp, ' ') && tmp.empty() == false)
 		arg.push_back(tmp);
 	if(tab > 0)
-		arg.push_back(msg.substr(tab + 1, msg.length()));
+		arg.push_back(msg.substr(tab , msg.length()));
 	return (arg.size()); 
 }
 
@@ -131,23 +131,23 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 }
 
 
-std::string Command::joinVectorValues()
-{
-	std::string joinedValues = "\"";
+// std::string Command::joinVectorValues()
+// {
+// 	std::string joinedValues = "\"";
 
-	if (this->_args.size() > 2)
-	{
-		std::vector<std::string>::iterator it = this->_args.begin() + 1;
-		while (it != this->_args.end())
-		{
-			joinedValues += *it + ' ';
-			++it;
-		}
-	}
-	else
-		joinedValues = this->_args[1];
-	return joinedValues;
-}
+// 	if (this->_args.size() > 2)
+// 	{
+// 		std::vector<std::string>::iterator it = this->_args.begin() + 1;
+// 		while (it != this->_args.end())
+// 		{
+// 			joinedValues += *it + ' ';
+// 			++it;
+// 		}
+// 	}
+// 	else
+// 		joinedValues = this->_args[1];
+// 	return joinedValues;
+// }
 
 std::string Command::getCommand() const
 {
@@ -235,8 +235,67 @@ _iterator Command::searchForUser(std::string _Nickname, int fd)
 	return (end);
 }
 
-void Command::joinCommand()
+// void Command::joinCommand()
+// {
+// 	// _iterator
+//     if (this->_args.size() < 1)
+//     {
+//         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+//         return;
+//     }
+
+//     std::stringstream channelSplitter(this->_args[0]);
+//     std::string channelName;
+//     std::vector<std::string> channelKeys;
+
+//     if (this->_args.size() > 1)
+//     {
+//         std::stringstream keySplitter(this->_args[1]);
+//         std::string key;
+//         while (std::getline(keySplitter, key, ','))
+//             channelKeys.push_back(key);
+//     }
+
+//     while (std::getline(channelSplitter, channelName, ','))
+//     {
+//         if (channelName.empty() || channelName[0] != '#')
+//         {
+//             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
+//             continue;
+//         }
+
+//         channelMap::iterator it = _channelMap.find(channelName);
+//         std::string chKey = "";
+
+//         if (it == _channelMap.end())
+//         {
+//             if (channelKeys.size() > 0)
+//             {
+//                 int index = _channelMap.size() % channelKeys.size();
+//                 chKey = channelKeys[index];
+//             }
+//             Channel _Channel(channelName, chKey, _client);
+//             _Channel.addUser(_client, 1);
+//             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+//             _channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
+//         }
+//         else
+//         {
+//             Channel &_Channel = it->second;
+//             if (!_Channel.verifyKey(chKey))
+//                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+//             // else
+//             // {
+//             //     _Channel.addUser(_client, 1);
+//             //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+//             // }
+//         }
+//     }
+// }
+
+void Command::joinCommand() 
 {
+    _iterator client;
     if (this->_args.size() < 1)
     {
         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
@@ -272,7 +331,7 @@ void Command::joinCommand()
                 int index = _channelMap.size() % channelKeys.size();
                 chKey = channelKeys[index];
             }
-            Channel _Channel(channelName, chKey, _client);
+            Channel _Channel(channelName, chKey, client->second);
             _Channel.addUser(_client, 1);
             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
             _channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
@@ -281,14 +340,12 @@ void Command::joinCommand()
         {
             Channel &_Channel = it->second;
             if (!_Channel.verifyKey(chKey))
-            {
                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
-            }
-            else
-            {
-                _Channel.addUser(_client, 1);
-                sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-            }
+            // else
+            // {
+            //     _Channel.addUser(_client, 1);
+            //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+            // }
         }
     }
 }
@@ -297,28 +354,37 @@ void Command::partCommand()
 {
 	std::string message = "";
 
-	int i = -1;
-	while (++i < (int)this->_args.size())
-		std::cout << this->_args[i] << std::endl;
-	std::cout << this->_args.size() << std::endl;
+	// int i = -1;
+	// while (++i < (int)this->_args.size())
+	// 	std::cout << this->_args[i] << std::endl;
+	// std::cout << this->_args.size() << std::endl;
 
-	switch (this->_args.size())
+	if (!this->getClient().isMemberOfChannel(this->_client.getNickname(), this->_args[0]))
+		message = ":localhost 442 " + this->_client.getNickname() + this->_args[0] + " :You're not on that channel." + "\r\n";
+	else
 	{
-		case 1:
-			// Parting With No Reason:
-			message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
-			break;
-		case 2:
+		switch (this->_args.size())
 		{
-			// Parting With A Reason:
-			if (this->_args[1][0] == ':')
-				message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + " " + this->joinVectorValues() + "\r\n";
+			case 1:
+			{
+				// Parting With No Reason (Already Joined!):
+				// if ()
+					message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
+				// else
+				break;
+			}	
+			case 2:
+			{
+				// Parting With A Reason:
+				if (this->_args[1][0] == ':')
+					message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + " " + this->_args[1] + "\r\n";
+				break;
+			}
+		default:
 			break;
+		}
+		sendReply(message);
 	}
-	default:
-		break;
-	}
-	sendReply(message);
 };
 
 void Command::nickCommand()

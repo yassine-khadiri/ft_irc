@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/01 18:39:58 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/03 18:38:04 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "Client.hpp"
 #define USERMAP std::map<int, Client>
 #define OPERATOR 1
-#define CLIENT  0
+#define CLIENT 0
 
 class Channel
 {
@@ -39,7 +39,7 @@ class Channel
         void setKey(std::string _key);
         void addUser(Client &_client, int Privilege);
         void removeUser(Client &_client);
-        
+        USERMAP getUsersMap() const;
 };
 
 #endif
