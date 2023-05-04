@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/03 19:15:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:47:05 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,10 @@ class Command
 		std::vector<std::string> 	_args;
 		std::vector<std::string>	_basicCommand;
 		int							_indexCmd;
+		Channel						_channelObj;
 		Client						_client;
 		std::vector<Client>			_clients;
 		std::string					_pass;
-		channelMap					_channelMap;
-		Map							_users;
 	public :
 		Command();
 		Command(int nbClient,std::string &msg,std::string &pass,std::vector<Client> &clients);
@@ -77,6 +76,5 @@ class Command
 		void						noticeCommand();
 		void						quitCommand();
 };
-
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);

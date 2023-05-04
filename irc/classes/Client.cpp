@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/03 19:29:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:48:37 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,38 +113,30 @@ int Client::getOpPriviligePermission() const
 	return(this->Operator);
 }
 
-void Client::joinChannel(Channel &_Channel)
-{
-	joined.insert(std::make_pair(_Channel.getChannelName(), _Channel));
-}
+// void Client::joinChannel(Channel &_Channel)
+// {
+// 	Channel channel;
+// 	channel._channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
+// }
 
-void Client::channelSegment(Channel &_Channel)
-{
-	joined.erase(_Channel.getChannelName());
-}
-
-int Client::isExistedChannel( std::string channelName )
-{
-	MAP::iterator it = joined.begin();
-
-	while(it != joined.end())
-	{
-		if(channelName == it->first)
-			return 1;
-		it++;
-	}
-	return 0;
-}
+// void Client::channelSegment(Channel &_Channel)
+// {
+// 	joined.erase(_Channel.getChannelName());
+// }
 
 int Client::isMemberOfChannel( std::string nickName, std::string channelName )
 {
+	Channel channelObj;
+	// channelMap _channelMap = channel.getChannelMap();
 	// std::cout << nickName << std::endl;
-	std::cout << this->isExistedChannel(channelName) << std::endl;
-	if (this->isExistedChannel(channelName))
+	// std::cout << channelName << std::endl;
+	// std::cout << this->isExistedChannel(channelName) << std::endl;
+	channelMap::iterator it = channelObj._channelMap.begin();
+	if (it != channelObj._channelMap.end())
 	{
-		_iterator it = this->joined[channelName].getUsersMap().begin();
+		_iterator it = channelObj._channelMap[channelName].getUserMap().begin();
 
-		while(it != this->joined[channelName].getUsersMap().end())
+		while(it != channelObj._channelMap[channelName].getUserMap().end())
 		{
 			if (it->second.getNickname() == nickName)
 				return 1;

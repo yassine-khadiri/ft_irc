@@ -6,82 +6,108 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/03 20:11:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:45:52 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Channel.hpp"
-#include "../includes/Client.hpp"
 
-Channel::Channel()
+channelMap Channel::_channelMap;
+
+Channel::Channel() : _channelName(""), _topic(""), _key("")
 {
-    this->channelName = "";
-    this->topic = "";
-    this->key = "";
 };
 
-Channel::Channel(std::string _channelName, std::string _key, Client _op)
+Channel::Channel( std::string _channelName, std::string _topic, std::string _key, Client _operator )
 {
-    this->channelName = _channelName;
-    this->key = _key;
-    this->op = _op;
-    this->topic = "";
+    this->_channelName = _channelName;
+    this->_topic = _topic;
+    this->_key = _key;
+    this->_operator = _operator;
 };
 
 Channel::~Channel()
 {
-
 };
 
 std::string Channel::getChannelName() const
 {
-    return this->channelName;
+    return this->_channelName;
 };
 
 std::string Channel::getTopic() const
 {
-    return this->topic;
+    return this->_topic;
 };
 
 std::string Channel::getKey() const
 {
-    return this->key;
+    return this->_key;
 };
 
-void Channel::setChannelName(std::string _ChannelName)
+userMap Channel::getUserMap() const
 {
-    this->channelName = _ChannelName;
+    return this->_userMap;
 };
 
-void Channel::setTopic(std::string _topic)
+void Channel::setChannelName( std::string _ChannelName )
 {
-    this->topic = _topic;
+    this->_channelName = _ChannelName;
 };
 
-void Channel::setKey(std::string _key)
+void Channel::setTopic( std::string _topic )
 {
-    this->key = _key;
+    this->_topic = _topic;
 };
 
-int Channel::verifyKey(std::string &_key) const
+void Channel::setKey( std::string _key )
 {
-   return (this->key == _key) ? 1 : 0;
+    this->_key = _key;
 };
 
-void Channel::addUser(Client &_client, int privilege)
+void Channel::joinChannel()
 {
-    users.insert(std::make_pair(_client.getFd(), _client));
-    _client.joinChannel(*this);
+	this->_channelMap.insert(std::make_pair(this->getChannelName(), *this));
+};
+
+int Channel::verifyKey( std::string &_key ) const
+{
+   return (this->_key == _key) ? 1 : 0;
+};
+
+void Channel::addUserToChannelMap( Client &_client, int privilege )
+{
+    this->_userMap.insert(std::make_pair(_client.getFd(), _client));
+    // userMap::iterator it = this->_userMap.begin();
+    // while (it != this->_userMap.end())
+    // {
+    //     std::cout << "fd: " << it->first << std::endl;
+    //     std::cout << "Clinet Name: " << it->second.getNickname() << std::endl;
+    //     ++it;
+    // }
+    std::cout << "Users Map Size: " <<this->_userMap.size() << std::endl;
     _client.setOpPrivilegePermission(privilege ? OPERATOR : CLIENT);
 };
 
-void Channel::removeUser(Client &_client)
-{
-    users.erase(_client.getFd());
-    _client.channelSegment(*this);
-}
+// void Channel::removeUser( Client &_client )
+// {
+//     this->_userMap.erase(_client.getFd());
+//     _client.channelSegment(*this);
+// };
 
-USERMAP Channel::getUsersMap() const
-{
-    return this->users;
-}
+
+// int Channel::channelFound( std::string channelName )
+// {
+// 	channelMap::iterator it = this->_channelMap.begin();
+
+// 	std::cout << this->_channelMap.size() << std::endl;
+// 	while(it != this->_channelMap.end())
+// 	{
+// 		std::cout << "key: " << it->first << std::endl;
+// 		std::cout <<  "value: " << it->second.getChannelName() << std::endl;
+// 		if(channelName == it->first)
+// 			return 1;
+// 		it++;
+// 	}
+// 	return 0;
+// };

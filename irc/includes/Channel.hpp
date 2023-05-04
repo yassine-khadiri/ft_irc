@@ -6,40 +6,48 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/03 18:38:04 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:45:06 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "../../tcp/includes/Tcp.hpp"
-#include "Client.hpp"
-#define USERMAP std::map<int, Client>
+#define channelMap std::map<std::string, Channel>
+#define userMap std::map<int, Client>
 #define OPERATOR 1
 #define CLIENT 0
 
+#include "../../tcp/includes/Tcp.hpp"
+#include "Client.hpp"
+
 class Channel
 {
-        std::string channelName;
-        std::string topic;
-        std::string key;
-        USERMAP       users;
-        Client        op;
+        std::string         _channelName;
+        std::string         _topic;
+        std::string         _key;
+        Client              _operator;
     public:
+        userMap              _userMap;
+        static channelMap   _channelMap;
+
+		// ############################################################### //
+
         Channel();
-        Channel(std::string channelName, std::string key, Client op);
+        Channel( std::string channelName, std::string _topic, std::string key, Client _operator);
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
         std::string getKey() const;
-        int  verifyKey(std::string &key)const;
-        void setChannelName(std::string _channelName);
-        void setTopic(std::string _topic);
-        void setKey(std::string _key);
-        void addUser(Client &_client, int Privilege);
-        void removeUser(Client &_client);
-        USERMAP getUsersMap() const;
+        userMap getUserMap() const;
+        void setChannelName( std::string _channelName );
+        void setTopic( std::string _topic );
+        void setKey( std::string _key );
+        void joinChannel();
+        int  verifyKey( std::string &key )const;
+        void addUserToChannelMap( Client &_client, int Privilege );
+        void removeUser( Client &_client );
+        int channelFound( std::string channelName );
 };
 
 #endif

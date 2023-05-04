@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+         #
+#    By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/04/28 17:15:17 by hbouqssi         ###   ########.fr        #
+#    Updated: 2023/05/04 19:34:42 by ykhadiri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME = ircserv
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -f
-INCLUDES = tcp/includes/Ircserv.hpp \
-		irc/includes/Tcp.hpp\
-		irc/includes/Client.hpp\
-		irc/includes/Channel.hpp\
-		irc/includes/Command.hpp
+INCLUDES = tcp/includes/Tcp.hpp \
+		irc/includes/Ircserv.hpp \
+		irc/includes/Client.hpp \
+		irc/includes/Channel.hpp \
+		irc/includes/Command.hpp 
 
 SRC = main.cpp \
 	tcp/classes/Tcp.cpp \

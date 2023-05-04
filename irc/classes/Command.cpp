@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/03 20:12:59 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:47:11 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,86 +222,27 @@ void Command::passCommand()
 			sendReply(":localhost 464 * :Password incorrect\r\n");
 	}
 }
-_iterator Command::searchForUser(std::string _Nickname, int fd)
-{
-	_iterator begin = _users.begin();
-	_iterator end = _users.end();
-	while(begin != end)
-	{
-		if(begin->second.getNickname() == _Nickname && begin->first != fd)
-			return(begin);
-		++begin;
-	}
-	return (end);
-}
 
-// void Command::joinCommand()
+// _iterator Command::searchForUser(std::string _Nickname, int fd)
 // {
-// 	// _iterator
-//     if (this->_args.size() < 1)
-//     {
-//         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
-//         return;
-//     }
-
-//     std::stringstream channelSplitter(this->_args[0]);
-//     std::string channelName;
-//     std::vector<std::string> channelKeys;
-
-//     if (this->_args.size() > 1)
-//     {
-//         std::stringstream keySplitter(this->_args[1]);
-//         std::string key;
-//         while (std::getline(keySplitter, key, ','))
-//             channelKeys.push_back(key);
-//     }
-
-//     while (std::getline(channelSplitter, channelName, ','))
-//     {
-//         if (channelName.empty() || channelName[0] != '#')
-//         {
-//             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
-//             continue;
-//         }
-
-//         channelMap::iterator it = _channelMap.find(channelName);
-//         std::string chKey = "";
-
-//         if (it == _channelMap.end())
-//         {
-//             if (channelKeys.size() > 0)
-//             {
-//                 int index = _channelMap.size() % channelKeys.size();
-//                 chKey = channelKeys[index];
-//             }
-//             Channel _Channel(channelName, chKey, _client);
-//             _Channel.addUser(_client, 1);
-//             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-//             _channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
-//         }
-//         else
-//         {
-//             Channel &_Channel = it->second;
-//             if (!_Channel.verifyKey(chKey))
-//                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
-//             // else
-//             // {
-//             //     _Channel.addUser(_client, 1);
-//             //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-//             // }
-//         }
-//     }
+// 	_iterator begin = _users.begin();
+// 	_iterator end = _users.end();
+// 	while(begin != end)
+// 	{
+// 		if(begin->second.getNickname() == _Nickname && begin->first != fd)
+// 			return(begin);
+// 		++begin;
+// 	}
+// 	return (end);
 // }
 
 void Command::joinCommand() 
 {
-    _iterator client;
     if (this->_args.size() < 1)
     {
         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
         return;
     }
-
     std::stringstream channelSplitter(this->_args[0]);
     std::string channelName;
     std::vector<std::string> channelKeys;
@@ -321,29 +262,38 @@ void Command::joinCommand()
             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
             continue;
         }
-
-        channelMap::iterator it = _channelMap.find(channelName);
+        channelMap::iterator it = _channelObj._channelMap.find(channelName);
         std::string chKey = "";
-        if (it == _channelMap.end())
+
+        if (it == _channelObj._channelMap.end())
         {
             if (channelKeys.size() > 0)
             {
-                int index = _channelMap.size() % channelKeys.size();
+                int index = _channelObj._channelMap.size() % channelKeys.size();
                 chKey = channelKeys[index];
             }
-            Channel _Channel(channelName, chKey, client->second);
-            _Channel.addUser(_client, 1);
+            _channelObj = Channel(channelName, "", chKey, _client);
+            _channelObj.addUserToChannelMap(_client, 1);
+			_channelObj.joinChannel();
             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-            _channelMap.insert(std::make_pair(_Channel.getChannelName(), _Channel));
+			// std::map<std::string, Channel>::iterator it = _channelObj._channelMap.begin();
+			// while (it != _channelObj._channelMap.end())
+			// {
+			// 	std::cout << "Key: " << it->first << std::endl;
+			// 	std::cout << "Channel Name: " << it->second.getChannelName() << std::endl;
+			// 	++it;
+			// }
+			// std::cout << _channelObj._channelMap.size() << std::endl;
         }
         else
         {
-            Channel &_Channel = it->second;
-            if (!_Channel.verifyKey(chKey))
+            Channel &_channel = it->second;
+            if (!_channel.verifyKey(chKey))
                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+			_channel.addUserToChannelMap(_client, 0);
             // else
             // {
-            //     _Channel.addUser(_client, 1);
+            //     _channelObj.addUser(_client, 1);
             //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
             // }
         }
