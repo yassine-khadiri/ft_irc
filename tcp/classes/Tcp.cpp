@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Tcp.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/16 22:28:37 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/05 19:58:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int Tcp::initialize()
     setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     this->addr.sin_family = AF_INET;
     this->addr.sin_port = htons(this->port);
-    this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
+    // this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    this->addr.sin_addr.s_addr = INADDR_ANY;
     return EXIT_SUCCESS;
 };
 

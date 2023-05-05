@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/04 16:56:11 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/05 17:54:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,5 @@ class Client
 		void		setOpPrivilegePermission( int privilege );
 		void		channelSegment( Channel &_channel );
 		void		joinChannel( Channel &_channel );
-		int			isMemberOfChannel( std::string nickName, std::string channelName );
+		int			isMemberOfChannel( std::string channelName, int clientFd );
 };

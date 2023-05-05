@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/04 20:45:52 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:10:44 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,20 @@ void Channel::addUserToChannelMap( Client &_client, int privilege )
     //     std::cout << "Clinet Name: " << it->second.getNickname() << std::endl;
     //     ++it;
     // }
-    std::cout << "Users Map Size: " <<this->_userMap.size() << std::endl;
+    // std::cout << "Users Map Size: " << this->_userMap.size() << std::endl;
     _client.setOpPrivilegePermission(privilege ? OPERATOR : CLIENT);
+};
+
+int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
+{
+	channelMap::iterator it = this->_channelMap.find(channelName);
+
+	if (it != this->_channelMap.end())
+	{
+		it->second._userMap.erase(clientFd);
+		return 1;
+	}
+	return 0;
 };
 
 // void Channel::removeUser( Client &_client )
@@ -95,19 +107,17 @@ void Channel::addUserToChannelMap( Client &_client, int privilege )
 //     _client.channelSegment(*this);
 // };
 
+int Channel::channelFound( std::string channelName )
+{
+	channelMap::iterator it = this->_channelMap.begin();
 
-// int Channel::channelFound( std::string channelName )
-// {
-// 	channelMap::iterator it = this->_channelMap.begin();
-
-// 	std::cout << this->_channelMap.size() << std::endl;
-// 	while(it != this->_channelMap.end())
-// 	{
-// 		std::cout << "key: " << it->first << std::endl;
-// 		std::cout <<  "value: " << it->second.getChannelName() << std::endl;
-// 		if(channelName == it->first)
-// 			return 1;
-// 		it++;
-// 	}
-// 	return 0;
-// };
+	while(it != this->_channelMap.end())
+	{
+		// std::cout << "key: " << it->first << std::endl;
+		// std::cout <<  "value: " << it->second.getChannelName() << std::endl;
+		if(channelName == it->first)
+			return 1;
+		it++;
+	}
+	return 0;
+};

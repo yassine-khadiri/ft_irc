@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/04 20:48:37 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/05 19:36:36 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,24 +124,20 @@ int Client::getOpPriviligePermission() const
 // 	joined.erase(_Channel.getChannelName());
 // }
 
-int Client::isMemberOfChannel( std::string nickName, std::string channelName )
+int Client::isMemberOfChannel( std::string channelName, int clientFd )
 {
 	Channel channelObj;
-	// channelMap _channelMap = channel.getChannelMap();
 	// std::cout << nickName << std::endl;
 	// std::cout << channelName << std::endl;
-	// std::cout << this->isExistedChannel(channelName) << std::endl;
-	channelMap::iterator it = channelObj._channelMap.begin();
-	if (it != channelObj._channelMap.end())
+	// std::cout << channelObj.channelFound(channelName) << std::endl;
+	
+	// channelMap::iterator it = channelObj._channelMap.begin();
+	channelMap::iterator it1 = channelObj._channelMap.find(channelName);
+	if (it1 != channelObj._channelMap.end())
 	{
-		_iterator it = channelObj._channelMap[channelName].getUserMap().begin();
-
-		while(it != channelObj._channelMap[channelName].getUserMap().end())
-		{
-			if (it->second.getNickname() == nickName)
-				return 1;
-			++it;
-		}
+		userMap::iterator it2 = it1->second._userMap.find(clientFd);
+		if (it2 != it1->second._userMap.end())
+			return 1;
 	}
 	else
 		return -1;

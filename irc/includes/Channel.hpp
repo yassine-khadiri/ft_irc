@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/04 20:45:06 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:13:37 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ class Channel
         void joinChannel();
         int  verifyKey( std::string &key )const;
         void addUserToChannelMap( Client &_client, int Privilege );
-        void removeUser( Client &_client );
+        int removeUserFromUserMap( std::string channelName, int clientFd );
+        // void removeUser( Client &_client );
         int channelFound( std::string channelName );
 };
 

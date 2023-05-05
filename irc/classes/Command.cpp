@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/04 20:47:11 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/05 20:05:39 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,36 +303,33 @@ void Command::joinCommand()
 void Command::partCommand()
 {
 	std::string message = "";
+    std::stringstream channelSplitter(this->_args[0]);
+    std::string channelName;
 
 	// int i = -1;
 	// while (++i < (int)this->_args.size())
 	// 	std::cout << this->_args[i] << std::endl;
 	// std::cout << this->_args.size() << std::endl;
-
-	if (!this->getClient().isMemberOfChannel(this->_client.getNickname(), this->_args[0]))
-		message = ":localhost 442 " + this->_client.getNickname() + this->_args[0] + " :You're not on that channel." + "\r\n";
-	else
-	{
-		switch (this->_args.size())
+ 	while (std::getline(channelSplitter, channelName, ','))
+    {
+		// std::cout << channelName << std::endl;
+		// Parting A Channel You’re Not Joined To: (ERR_NOTONCHANNEL (442))
+		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
+			message = ":localhost 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
+		else if (this->getClient().isMemberOfChannel(channelName, _client.getFd()) == -1)
+		// Parting A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
+			message = ":localhost 443 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n";
+		else
 		{
-			case 1:
-			{
-				// Parting With No Reason (Already Joined!):
-				// if ()
-					message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + "\r\n";
-				// else
-				break;
-			}	
-			case 2:
-			{
-				// Parting With A Reason:
-				if (this->_args[1][0] == ':')
-					message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + " " + this->_args[1] + "\r\n";
-				break;
-			}
-		default:
-			break;
-		}
+			// Parting With No Reason (Already Joined!):
+			message = ":" + this->_client.getNickname() + "!@localhost PART " + channelName + "\r\n";
+			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
+			// Parting With A Reason:
+			// 		if (this->_args[1][0] == ':')
+			// 			message = ":" + this->_client.getNickname() + "!@localhost PART " + this->_args[0] + " " + this->_args[1] + "\r\n";
+			// 		break;
+			// 	}
+		}																			
 		sendReply(message);
 	}
 };
