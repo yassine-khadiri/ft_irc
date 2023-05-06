@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/05 17:54:35 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 05:27:36 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ class Client
 		Client &operator=( Client const &src );
 		Client( std::string pass, std::string nick, std::string user );
 		~Client();
-		std::string	getPassword();
-		std::string	getNickname();
-		std::string	getUsername();
-		bool		getIsRegistered();
-		int			getFd();
+		std::string	getPassword() const;
+		std::string	getNickname() const;
+		std::string	getUsername() const;
+		bool		getIsRegistered() const;
+		int			getFd() const;
 		int			getOpPriviligePermission() const;
 		void		setPassword( std::string pass );
 		void		setNickname( std::string nick );
