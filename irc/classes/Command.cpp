@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 06:16:03 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/06 07:28:21 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("QUIT");
 	_basicCommand.push_back("MODE");
 	_basicCommand.push_back("PONG");
+	_basicCommand.push_back("KICK");
+	_basicCommand.push_back("BOT");
 }
 
 int Command::findCommand(std::string cmd)
@@ -87,6 +89,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	// std::cout << "Command: " << _command << std::endl;
 	switch (this->_indexCmd)
 	{
+	case(BOT):
+		botCommand();
+		break;
 	case (KICK):
 		kickCommand();
 		break;
@@ -344,15 +349,15 @@ void Command::partCommand()
 
 void Command::kickCommand()
 {
-	std::string message = "";
-    std::stringstream channelSplitter(this->_args[0]);
-    std::string channelName;
-	
 	if (this->_args.size() < 3)
     {
         sendReply(":localhost 461 " + _client.getNickname() + " KICK :Not enough parameters\r\n");
         return;
     }
+	std::string message = "";
+    std::stringstream channelSplitter(this->_args[0]);
+    std::string channelName;
+	
 	if(this->_client.getOpPriviligePermission() == CLIENT)
 		sendReply(":localhost 482" + _client.getNickname() + " " + channelName + " :You're not channel operator");
 	while (std::getline(channelSplitter, channelName, ','))
@@ -370,6 +375,47 @@ void Command::kickCommand()
 		sendReply(message);
 	}
 	
+}
+
+
+
+std::string getJokeQuote()
+{
+	std::vector<std::string>nokat_7amdin; // link : http://nokat-mawadi3-amtal.blogspot.com/2011/10/nokat-maghribiya-bi-darija-l-maghribiya.html
+	nokat_7amdin.push_back("galek hadou wahed jouj bnat mchaw ychoufou natija nta3 lbac wehda l9at rasseha sa9ta wlokhra saroute");
+	nokat_7amdin.push_back("galk hada wa7d zizoun ila bgha igoul gar3a tigoul liha ga3a");
+	nokat_7amdin.push_back("hada wahed dar ouhowa itekra");
+	nokat_7amdin.push_back("Hada wahd 9ta3 chanti .. ohowa ykhrej lih zaft");
+	nokat_7amdin.push_back("hadi wahed nokta b me9lob iwa dehako o ne3awedalkom hhhhhhh loool");
+	nokat_7amdin.push_back("aaa ch77aaal 7amd hhhhhhhhh");
+    std::srand(std::time(0));
+    int randIndex = std::rand() % nokat_7amdin.size();
+    return nokat_7amdin[randIndex];
+}
+std::string getTime() {
+    std::time_t t = std::time(NULL);
+    char time_str[20];
+    std::strftime(time_str, sizeof(time_str), "%H:%M:%S", std::localtime(&t));
+    return std::string(time_str) + "\r\n";
+}
+
+void Command::botCommand()
+{
+	if(this->_args.size() < 1)
+	{
+        sendReply(":localhost 461 " + _client.getNickname() + " BOT :Not enough parameters\r\n");
+        return;
+    }
+	std::stringstream channelSplitter(this->_args[0]);
+	std::string cmd = channelSplitter.str();
+	std::cout << cmd << std::endl;
+	if (cmd != "time")
+		sendReply(":Available Bots Now : [time - nokta]>\r\n");
+	if (cmd == "time")
+			sendReply(":The Current time is " + getTime());
+	if(cmd == "nokta")
+			sendReply(":" + getJokeQuote() + "\r\n");
+	 
 }
 void Command::nickCommand()
 {

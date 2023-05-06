@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 06:11:36 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/06 06:42:04 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <sstream>
 #include <iterator>
 #include <vector>
+#include <ctime>
 #include "Ircserv.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
@@ -37,6 +38,7 @@ typedef enum
 	MODE,
 	PONG,
 	KICK,
+	BOT,
 } e_Command;
 
 class Command
@@ -78,6 +80,7 @@ class Command
 		void						noticeCommand();
 		void						quitCommand();
 		void						kickCommand();
+		void						botCommand();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);

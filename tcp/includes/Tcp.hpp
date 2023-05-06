@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Tcp.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:20:55 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/13 17:37:18 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 06:47:54 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@
 #include <cstring>
 #include <unistd.h>
 #include <fcntl.h>
+#include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <sys/types.h> 
 #include <sys/socket.h>
+
 // For the sockaddr_in structure
 #include <netinet/in.h>
 //  For the inet_addr function

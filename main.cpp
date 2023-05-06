@@ -6,11 +6,12 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/28 12:08:16 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/06 06:46:53 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc/includes/Ircserv.hpp"
+#include <cstdlib>
 
 int isNumber(std::string str)
 {
