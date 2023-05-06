@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/05 20:05:39 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 05:27:02 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,8 +274,10 @@ void Command::joinCommand()
             }
             _channelObj = Channel(channelName, "", chKey, _client);
             _channelObj.addUserToChannelMap(_client, 1);
-			_channelObj.joinChannel();
             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
+			_channelObj.joinChannel();
 			// std::map<std::string, Channel>::iterator it = _channelObj._channelMap.begin();
 			// while (it != _channelObj._channelMap.end())
 			// {
@@ -285,12 +287,16 @@ void Command::joinCommand()
 			// }
 			// std::cout << _channelObj._channelMap.size() << std::endl;
         }
+		
         else
         {
             Channel &_channel = it->second;
             if (!_channel.verifyKey(chKey))
                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
 			_channel.addUserToChannelMap(_client, 0);
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
             // else
             // {
             //     _channelObj.addUser(_client, 1);
@@ -299,7 +305,6 @@ void Command::joinCommand()
         }
     }
 }
-
 void Command::partCommand()
 {
 	std::string message = "";

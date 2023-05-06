@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/05 18:10:44 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 04:12:50 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,3 +121,18 @@ int Channel::channelFound( std::string channelName )
 	}
 	return 0;
 };
+
+std::string Channel::usersList() const
+{
+	std::string userslist = ":";
+	userMap::const_iterator it = _userMap.begin();
+    while(it != _userMap.end())
+    {
+        if(it->second.getNickname() == _operator.getNickname())
+            userslist += "@" + it->second.getNickname() + " ";
+        else
+            userslist += it->second.getNickname() + " ";
+    }
+    userslist += "\r\n";
+    return userslist;
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/05 19:36:36 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 04:53:59 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void		Client::setPassword(std::string pass)
 	this->_password = pass;
 }
 
-std::string	Client::getPassword()
+std::string	Client::getPassword() const
 {
 	return (this->_password);
 }
@@ -64,7 +64,7 @@ void		Client::setNickname(std::string nick)
 	this->_nickname = nick;
 }
 
-std::string	Client::getNickname()
+std::string	Client::getNickname() const
 {
 	return (this->_nickname);
 }
@@ -74,7 +74,7 @@ void		Client::setUsername(std::string user)
 	this->_username = user;
 }
 
-std::string	Client::getUsername()
+std::string	Client::getUsername() const
 {
 	return (this->_username);
 }
@@ -88,7 +88,7 @@ void Client::setIsRegistered(bool isRegistered)
 	}
 }
 
-bool Client::getIsRegistered()
+bool Client::getIsRegistered() const
 {
 	return (this->_isRegistered);
 }
@@ -98,7 +98,7 @@ void Client::setFd(int fdsocket)
 	this->_fdsocket = fdsocket;
 }
 
-int Client::getFd()
+int Client::getFd() const
 {
 	return (this->_fdsocket);
 }

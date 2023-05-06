@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/05 18:13:37 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/06 04:02:06 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class Channel
         std::string getTopic() const;
         std::string getKey() const;
         userMap getUserMap() const;
+        std::string	usersList() const;
         void setChannelName( std::string _channelName );
         void setTopic( std::string _topic );
         void setKey( std::string _key );
