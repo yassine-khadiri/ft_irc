@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 05:27:02 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/06 06:16:03 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	// std::cout << "Command: " << _command << std::endl;
 	switch (this->_indexCmd)
 	{
+	case (KICK):
+		kickCommand();
+		break;
 	case (USER):
 		userCommand();
 		break;
@@ -310,7 +313,7 @@ void Command::partCommand()
 	std::string message = "";
     std::stringstream channelSplitter(this->_args[0]);
     std::string channelName;
-
+	//####################################################=====> CHECK THE ARGUMENTS | if the user typed just KICK or if he typed a lot of Params !!!!!!!!
 	// int i = -1;
 	// while (++i < (int)this->_args.size())
 	// 	std::cout << this->_args[i] << std::endl;
@@ -323,7 +326,7 @@ void Command::partCommand()
 			message = ":localhost 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
 		else if (this->getClient().isMemberOfChannel(channelName, _client.getFd()) == -1)
 		// Parting A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
-			message = ":localhost 443 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n";
+			message = ":localhost 403 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n"; //403 not 443!
 		else
 		{
 			// Parting With No Reason (Already Joined!):
@@ -339,6 +342,35 @@ void Command::partCommand()
 	}
 };
 
+void Command::kickCommand()
+{
+	std::string message = "";
+    std::stringstream channelSplitter(this->_args[0]);
+    std::string channelName;
+	
+	if (this->_args.size() < 3)
+    {
+        sendReply(":localhost 461 " + _client.getNickname() + " KICK :Not enough parameters\r\n");
+        return;
+    }
+	if(this->_client.getOpPriviligePermission() == CLIENT)
+		sendReply(":localhost 482" + _client.getNickname() + " " + channelName + " :You're not channel operator");
+	while (std::getline(channelSplitter, channelName, ','))
+    {
+		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
+			message = ":localhost 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
+		else if (this->getClient().isMemberOfChannel(channelName, _client.getFd()) == -1)
+			message = ":localhost 403 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n";
+		else
+		{
+			message = ":" + this->_client.getNickname() + "!@localhost PART " + channelName + "\r\n";
+			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
+			//kick a user by specifying the reason why ...
+		}																			
+		sendReply(message);
+	}
+	
+}
 void Command::nickCommand()
 {
 	if(this->_client.getPassword() == "")

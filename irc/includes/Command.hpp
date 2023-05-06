@@ -6,7 +6,7 @@
 /*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 05:28:46 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/06 06:11:36 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef enum
 	QUIT,
 	MODE,
 	PONG,
+	KICK,
 } e_Command;
 
 class Command
@@ -76,6 +77,7 @@ class Command
 		void						partCommand();
 		void						noticeCommand();
 		void						quitCommand();
+		void						kickCommand();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);
