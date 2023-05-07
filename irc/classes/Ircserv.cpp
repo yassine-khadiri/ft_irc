@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/04 17:51:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/07 18:19:33 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,12 +130,9 @@ int Ircserv::waitForConnection()
                     std::string str(buff);
                     str.erase(str.find_last_not_of("\n") + 1);
                     str.erase(str.find_last_not_of("\r") + 1);
-                    if(str != "")
-                    {
-                    // std::cout << "here1" << std::endl;
+                        // std::cout << str << std::endl;
+                    if(!str.empty())
                         Command cmd(i, str, this->password, this->_clients);
-                    // std::cout << "here2" << std::endl;
-                    }
                     memset(buff, 0, sizeof(buff));
                 }
             }

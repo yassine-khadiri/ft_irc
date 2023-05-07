@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 06:42:04 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:48:02 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ class Command
 		std::vector<std::string>	_basicCommand;
 		int							_indexCmd;
 		Channel						_channelObj;
-		Client						_client;
+		Client&						_client;
 		Map							_users;
-		std::vector<Client>			_clients;
+		std::vector<Client>			&_clients;
 		std::string					_pass;
 	public :
-		Command();
 		Command(int nbClient,std::string &msg,std::string &pass,std::vector<Client> &clients);
 		void						toUpper(std::string &str);
 		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);

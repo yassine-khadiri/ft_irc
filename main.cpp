@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/06 06:46:53 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/07 19:29:31 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "irc/includes/Ircserv.hpp"
-#include <cstdlib>
 
 int isNumber(std::string str)
 {
