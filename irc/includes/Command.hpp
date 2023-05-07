@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/07 17:48:02 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/07 20:02:56 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef enum
 	MODE,
 	PONG,
 	KICK,
+	TOPIC,
 	BOT,
 } e_Command;
 
@@ -79,6 +80,7 @@ class Command
 		void						noticeCommand();
 		void						quitCommand();
 		void						kickCommand();
+		void						topicCommand();
 		void						botCommand();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);

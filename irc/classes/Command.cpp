@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/07 18:27:56 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/07 21:17:56 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("MODE");
 	_basicCommand.push_back("PONG");
 	_basicCommand.push_back("KICK");
+	_basicCommand.push_back("TOPIC");
 	_basicCommand.push_back("BOT");
 }
 
@@ -112,6 +113,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		noticeCommand();
 		break;
 	case (PONG):
+		break;
+	case (TOPIC):
+		topicCommand();
 		break;
 	case (QUIT):
 		quitCommand();
@@ -337,8 +341,8 @@ void Command::joinCommand()
             _channelObj.addUserToChannelMap(_client, 1);
 			_channelObj.joinChannel();
             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
+			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
+			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
 			// std::map<std::string, Channel>::iterator it = _channelObj._channelMap.begin();
 			// while (it != _channelObj._channelMap.end())
 			// {
@@ -365,6 +369,13 @@ void Command::joinCommand()
 
 void Command::partCommand()
 {
+	// For NetCat FuCking Tests:
+	if (!this->_args.size())
+	{
+		// ERR_NEEDMOREPARAMS (461)
+        sendReply(":localhost 461 " + _client.getNickname() + " PART :Not enough parameters\r\n");
+		return;
+	}
 	std::string message = "";
     std::stringstream channelSplitter(this->_args[0]);
     std::string channelName;
@@ -385,7 +396,6 @@ void Command::partCommand()
 				message = ":localhost 403 " + this->_client.getNickname() + " * No such channel\r\n";
 			else
 				message = ":localhost 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
-			
 		}
 		else
 		{
@@ -398,6 +408,13 @@ void Command::partCommand()
 		}																			
 		sendReply(message);
 	}
+};
+
+void Command::topicCommand()
+{
+	// :dan!d@Clk-830D7DDC TOPIC #v3 :This is a cool channel!!
+	sendReply(":" + this->_client.getNickname() + + "!" + this->_client.getUsername() + "@localhost TOPIC " + this->_args[1] + this->_args[0] + "\r\n");
+	
 };
 
 void Command::kickCommand()
@@ -443,16 +460,19 @@ std::string getJokeQuote()
     int randIndex = std::rand() % nokat_7amdin.size();
     return nokat_7amdin[randIndex];
 }
+
 std::string getTime()
 {
     std::time_t t = std::time(NULL);
     char time_str[20];
     std::strftime(time_str, sizeof(time_str), "%H:%M:%S", std::localtime(&t));
-    return std::string(time_str) + "\r\n";
+    return std::string(time_str) + " \r\n";
 }
 
 void Command::botCommand()
 {
+	// std::cout << this->_args.size() << std::endl;
+	std::string message = "The current time is " + getTime();
 	if(this->_args.size() < 1)
 	{
         sendReply(":localhost 461 " + _client.getNickname() + " BOT :Not enough parameters\r\n");
@@ -462,13 +482,15 @@ void Command::botCommand()
 	std::string cmd = channelSplitter.str();
 	std::cout << cmd << std::endl;
 	if (cmd != "time")
-		sendReply(":Available Bots Now : [time - nokta]>\r\n");
+	{
+		sendReply(":localhost Available Bots Now : [time - nokta]>\r\n");
+	}
 	if (cmd == "time")
-			sendReply(":The Current time is " + getTime());
+		sendReply("PRIVMSG" + message);
 	if(cmd == "nokta")
-			sendReply(":" + getJokeQuote() + "\r\n");
-	 
+		sendReply(":" + getJokeQuote() + "\r\n");	 
 }
+
 void Command::nickCommand()
 {
 	if(this->_client.getPassword() == "")
