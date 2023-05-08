@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/07 21:18:56 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/08 18:46:05 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
+		return ;
+	}
+	if (!_client.getIsRegistered() &&  this->_indexCmd != USER  && this->_indexCmd != NICK && this->_indexCmd != PASS)
+	{
+		sendReply(":localhost 451 * :You have not registered\r\n");
 		return ;
 	}
 	// std::cout << "Command: " << _command << std::endl;
@@ -412,9 +417,37 @@ void Command::partCommand()
 
 void Command::topicCommand()
 {
-	// :dan!d@Clk-830D7DDC TOPIC #v3 :This is a cool channel!!
-	sendReply(":" + this->_client.getNickname() + + "!" + this->_client.getUsername() + "@localhost TOPIC " + this->_args[1] + this->_args[0] + "\r\n");
-	
+	// Set A Topic To A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
+	if (_channelObj.channelFound(this->_args[0]) == -1)
+	{
+		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " No such channel\r\n");
+		return;
+	}
+	// Setting A Topic
+	if (_client.isMemberOfChannel(this->_args[0], _client.getFd()) == 1 && this->_args.size() > 1)
+	{
+		// Add The Topic To The Channel Map
+		std::string topic;
+		if (this->_args[1].length() == 1 && this->_args[1][0] == ':')
+			topic = ":";
+		else
+			topic = this->_args[1];
+		_channelObj._channelMap[this->_args[0]].setTopic(topic);
+		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost TOPIC " + this->_args[0] + " " + this->_args[1] + "\r\n");
+	}
+	else if (this->_args.size() == 1)
+	{
+		if (_channelObj._channelMap[this->_args[0]].getTopic().empty())
+			sendReply(":localhost 331 " + this->_client.getNickname() + " " + this->_args[0] + " :No topic is set\r\n");
+		else
+		{
+			//RPL_TOPIC (332)
+			std::cout << _channelObj._channelMap[this->_args[0]].getTopic() << std::endl;
+			sendReply(":localhost 332 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getTopic() + "\r\n");
+			// RPL_TOPICTIME (333)
+			sendReply(":localhost 333 " + this->_client.getNickname() + " " + this->_args[0] + " " + "1212121212" + "\r\n"); // time stamp topic date
+		}
+	}
 };
 
 void Command::kickCommand()
@@ -595,4 +628,3 @@ void	Command::quitCommand()
 		++it;
 	}
 }
-

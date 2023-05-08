@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/06 04:12:50 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:33:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,11 @@ int Channel::channelFound( std::string channelName )
 	{
 		// std::cout << "key: " << it->first << std::endl;
 		// std::cout <<  "value: " << it->second.getChannelName() << std::endl;
-		if(channelName == it->first)
-			return 1;
+		if (channelName == it->first)
+			return std::distance(this->_channelMap.begin(), it);
 		it++;
 	}
-	return 0;
+	return -1;
 };
 
 std::string Channel::usersList() const
