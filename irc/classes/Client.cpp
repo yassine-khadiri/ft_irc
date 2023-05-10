@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/06 04:53:59 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:43:46 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,6 @@ int Client::isMemberOfChannel( std::string channelName, int clientFd )
 			return 1;
 	}
 	else
-		return -1;
-	return 0;
+		return -1; // channel not found
+	return 0; // channel found but the client doesn't belong to this channel
 }

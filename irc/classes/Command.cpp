@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/08 18:46:05 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:51:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,16 +415,25 @@ void Command::partCommand()
 	}
 };
 
+std::string Command::getCurrentUnixTimestamp()
+{
+	std::time_t now = std::time(NULL);
+	std::stringstream ss;
+	ss << now;
+	return ss.str();
+};
+
 void Command::topicCommand()
 {
 	// Set A Topic To A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
-	if (_channelObj.channelFound(this->_args[0]) == -1)
+	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
 		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " No such channel\r\n");
 		return;
 	}
 	// Setting A Topic
-	if (_client.isMemberOfChannel(this->_args[0], _client.getFd()) == 1 && this->_args.size() > 1)
+	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1
+		&& this->_args.size() > 1)
 	{
 		// Add The Topic To The Channel Map
 		std::string topic;
@@ -433,6 +442,7 @@ void Command::topicCommand()
 		else
 			topic = this->_args[1];
 		_channelObj._channelMap[this->_args[0]].setTopic(topic);
+		_channelObj._channelMap[this->_args[0]].setTopicTime(this->getCurrentUnixTimestamp());
 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost TOPIC " + this->_args[0] + " " + this->_args[1] + "\r\n");
 	}
 	else if (this->_args.size() == 1)
@@ -442,10 +452,9 @@ void Command::topicCommand()
 		else
 		{
 			//RPL_TOPIC (332)
-			std::cout << _channelObj._channelMap[this->_args[0]].getTopic() << std::endl;
 			sendReply(":localhost 332 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getTopic() + "\r\n");
 			// RPL_TOPICTIME (333)
-			sendReply(":localhost 333 " + this->_client.getNickname() + " " + this->_args[0] + " " + "1212121212" + "\r\n"); // time stamp topic date
+			sendReply(":localhost 333 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_client.getNickname() + " " + _channelObj._channelMap[this->_args[0]].getTopicTime() + "\r\n");
 		}
 	}
 };
@@ -582,12 +591,12 @@ void	Command::privmsgCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
 		sendReply(":localhost 461 " + _client.getNickname() + ": PRIVMSG <nickname> <message>\r\n");
-	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
-		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
-	else if(nickExist(this->_args[0]) == -1)
+	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == - 1)
 		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
+		if ((this->_args[0][0] == '#' || this->_args[0][0] == '@') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
+				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
 		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
 		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
@@ -598,12 +607,12 @@ void	Command::noticeCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
 		sendReply(":localhost 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");
-	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
-		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
-	else if(nickExist(this->_args[0]) == -1)
+	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
+		if ((this->_args[0][0] == '#' || this->_args[0][0] == '@') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
+				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
 		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
 		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");

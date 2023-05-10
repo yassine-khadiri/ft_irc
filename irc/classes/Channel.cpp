@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/08 16:33:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:47:09 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ std::string Channel::getTopic() const
     return this->_topic;
 };
 
+std::string Channel::getTopicTime()
+{
+    return this->_topicTime;  
+};
+
 std::string Channel::getKey() const
 {
     return this->_key;
@@ -58,6 +63,11 @@ void Channel::setChannelName( std::string _ChannelName )
 void Channel::setTopic( std::string _topic )
 {
     this->_topic = _topic;
+};
+
+void Channel::setTopicTime( std::string _topicTime )
+{
+    this->_topicTime = _topicTime;
 };
 
 void Channel::setKey( std::string _key )
@@ -107,20 +117,20 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 //     _client.channelSegment(*this);
 // };
 
-int Channel::channelFound( std::string channelName )
-{
-	channelMap::iterator it = this->_channelMap.begin();
+// int Channel::channelFound( std::string channelName )
+// {
+// 	channelMap::iterator it = this->_channelMap.begin();
 
-	while(it != this->_channelMap.end())
-	{
-		// std::cout << "key: " << it->first << std::endl;
-		// std::cout <<  "value: " << it->second.getChannelName() << std::endl;
-		if (channelName == it->first)
-			return std::distance(this->_channelMap.begin(), it);
-		it++;
-	}
-	return -1;
-};
+// 	while(it != this->_channelMap.end())
+// 	{
+// 		// std::cout << "key: " << it->first << std::endl;
+// 		// std::cout <<  "value: " << it->second.getChannelName() << std::endl;
+// 		if (channelName == it->first)
+// 			return std::distance(this->_channelMap.begin(), it);
+// 		it++;
+// 	}
+// 	return -1;
+// };
 
 std::string Channel::usersList() const
 {

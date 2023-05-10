@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/07 20:02:56 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/10 16:39:40 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ class Command
 		void						kickCommand();
 		void						topicCommand();
 		void						botCommand();
+		std::string					getCurrentUnixTimestamp();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/06 04:02:06 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:47:14 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Channel
 {
         std::string         _channelName;
         std::string         _topic;
+        std::string         _topicTime;
         std::string         _key;
         Client              _operator;
     public:
@@ -38,18 +39,20 @@ class Channel
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
+        std::string getTopicTime();
         std::string getKey() const;
         userMap getUserMap() const;
         std::string	usersList() const;
         void setChannelName( std::string _channelName );
         void setTopic( std::string _topic );
+        void setTopicTime( std::string _topicTime );
         void setKey( std::string _key );
         void joinChannel();
         int  verifyKey( std::string &key )const;
         void addUserToChannelMap( Client &_client, int Privilege );
         int removeUserFromUserMap( std::string channelName, int clientFd );
         // void removeUser( Client &_client );
-        int channelFound( std::string channelName );
+        // int channelFound( std::string channelName );
 };
 
 #endif
