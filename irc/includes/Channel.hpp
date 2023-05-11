@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/10 17:47:14 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:49:57 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ class Channel
 {
         std::string         _channelName;
         std::string         _topic;
+        std::string 		_mode;
         std::string         _topicTime;
+        std::string         _channelCreationTime;
         std::string         _key;
         Client              _operator;
     public:
@@ -39,13 +41,17 @@ class Channel
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
-        std::string getTopicTime();
+        std::string getMode() const;
+        std::string getTopicTime() const;
+        std::string getChannelCreationTime() const;
         std::string getKey() const;
         userMap getUserMap() const;
         std::string	usersList() const;
         void setChannelName( std::string _channelName );
         void setTopic( std::string _topic );
+        void setMode( std::string _mode );
         void setTopicTime( std::string _topicTime );
+        void setChannelCreationTime( std::string _channelCreationTime );
         void setKey( std::string _key );
         void joinChannel();
         int  verifyKey( std::string &key )const;

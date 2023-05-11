@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/10 17:47:09 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:51:20 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,19 @@ std::string Channel::getTopic() const
     return this->_topic;
 };
 
-std::string Channel::getTopicTime()
+std::string Channel::getMode() const
+{
+    return this->_mode;
+};
+
+std::string Channel::getTopicTime() const
 {
     return this->_topicTime;  
+};
+
+std::string Channel::getChannelCreationTime() const
+{
+	return this->_channelCreationTime;
 };
 
 std::string Channel::getKey() const
@@ -65,9 +75,19 @@ void Channel::setTopic( std::string _topic )
     this->_topic = _topic;
 };
 
+void Channel::setMode( std::string _mode )
+{
+	this->_mode = _mode;
+};
+
 void Channel::setTopicTime( std::string _topicTime )
 {
     this->_topicTime = _topicTime;
+};
+
+void Channel::setChannelCreationTime( std::string _channelCreationTime )
+{
+	this->_channelCreationTime = _channelCreationTime;
 };
 
 void Channel::setKey( std::string _key )
