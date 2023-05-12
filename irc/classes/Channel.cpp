@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/11 18:51:20 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:12:55 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ Channel::Channel() : _channelName(""), _topic(""), _key("")
 {
 };
 
-Channel::Channel( std::string _channelName, std::string _topic, std::string _key, Client _operator )
+Channel::Channel( std::string _channelName, std::string _topic, std::string _key, Client _member )
 {
     this->_channelName = _channelName;
     this->_topic = _topic;
     this->_key = _key;
-    this->_operator = _operator;
+    this->_member = _member;
 };
 
 Channel::~Channel()
@@ -58,6 +58,11 @@ std::string Channel::getChannelCreationTime() const
 std::string Channel::getKey() const
 {
     return this->_key;
+};
+
+Client Channel::getOperator() const
+{
+    return this->_operator;
 };
 
 userMap Channel::getUserMap() const
@@ -116,7 +121,9 @@ void Channel::addUserToChannelMap( Client &_client, int privilege )
     //     ++it;
     // }
     // std::cout << "Users Map Size: " << this->_userMap.size() << std::endl;
-    _client.setOpPrivilegePermission(privilege ? OPERATOR : CLIENT);
+    _client.setOpPrivilegePermission(privilege);
+    if (privilege)
+        this->_operator = _client;
 };
 
 int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
@@ -152,6 +159,7 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 // 	return -1;
 // };
 
+
 std::string Channel::usersList() const
 {
 	std::string userslist = ":";
@@ -165,4 +173,4 @@ std::string Channel::usersList() const
     }
     userslist += "\r\n";
     return userslist;
-}
+};

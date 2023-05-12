@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/11 18:49:57 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:03:52 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Channel
         std::string         _channelCreationTime;
         std::string         _key;
         Client              _operator;
+        Client              _member;
     public:
         userMap              _userMap;
         static channelMap   _channelMap;
@@ -37,7 +38,7 @@ class Channel
 		// ############################################################### //
 
         Channel();
-        Channel( std::string channelName, std::string _topic, std::string key, Client _operator);
+        Channel( std::string channelName, std::string _topic, std::string key, Client _member);
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
@@ -45,6 +46,7 @@ class Channel
         std::string getTopicTime() const;
         std::string getChannelCreationTime() const;
         std::string getKey() const;
+        Client getOperator() const;
         userMap getUserMap() const;
         std::string	usersList() const;
         void setChannelName( std::string _channelName );
@@ -57,6 +59,7 @@ class Channel
         int  verifyKey( std::string &key )const;
         void addUserToChannelMap( Client &_client, int Privilege );
         int removeUserFromUserMap( std::string channelName, int clientFd );
+
         // void removeUser( Client &_client );
         // int channelFound( std::string channelName );
 };

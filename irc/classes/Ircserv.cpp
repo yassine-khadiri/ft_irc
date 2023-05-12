@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/07 18:19:33 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:12:12 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,33 +40,6 @@ int Ircserv::createServerSocket()
     }
     return EXIT_FAILURE;
 };
-
-int Ircserv::checkMessageInfos( std::string recvMessage )
-{
-    std::cout << "content: " << recvMessage << std::endl;
-    return 0;  
-};
-void getClientInfos(Client &_client, char *buff)
-{
-    std::string buffer(buff);
-    int NickIndex = buffer.find("NICK");
-    int PassIndex = buffer.find("PASS");
-    if(NickIndex != -1)
-    {
-        std::string  nickname = buffer.substr(NickIndex + 5);
-        _client.setNickname(nickname);
-    }
-    if(PassIndex != -1)
-    {
-        std::string password = buffer.substr(PassIndex + 5);
-        _client.setPassword(password);
-    }
-    // std::cout << "NICK IS: " << _client.getNickname() << "\n" << "PASS IS: " << _client.getPassword();
-}
-std::string replyToServer(Client& client, const std::string& str)
-{
-    return ":" + client.getNickname() + " JOIN " + str + "\r\n";
-}
 
 int Ircserv::waitForConnection()
 {
@@ -128,8 +101,7 @@ int Ircserv::waitForConnection()
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
                     std::string str(buff);
-                    str.erase(str.find_last_not_of("\n") + 1);
-                    str.erase(str.find_last_not_of("\r") + 1);
+                    str.erase(str.find_last_not_of("\r\n") + 1);
                         // std::cout << str << std::endl;
                     if(!str.empty())
                         Command cmd(i, str, this->password, this->_clients);
@@ -138,7 +110,5 @@ int Ircserv::waitForConnection()
             }
         }
     }
-    
     return EXIT_SUCCESS;
 };
-

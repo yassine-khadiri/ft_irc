@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/12 14:40:58 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:09:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 	if(tab > 0)
 		arg.push_back(msg.substr(tab , msg.length()));
 	return (arg.size()); 
-}
+};
 
 void Command::toUpper(std::string &str)
 {
 	for (int i = 0; i < (int)str.length(); i++)
 		str[i] = toupper(str[i]);
-}
+};
 
 void	Command::initBasicCommand()
 {
@@ -54,7 +54,7 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("KICK");
 	_basicCommand.push_back("TOPIC");
 	_basicCommand.push_back("BOT");
-}
+};
 
 int Command::findCommand(std::string cmd)
 {
@@ -69,7 +69,7 @@ int Command::findCommand(std::string cmd)
 	if (i > (int)_basicCommand.size() -1)
 		i = -1;
 	return (i);
-}
+};
 
 Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Client> &clients):_client(clients[nbClient]), _clients(clients)
 {
@@ -130,8 +130,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		break;
 	}
 	// std::cout << "AFTER: " << this->_clients.size() << std::endl;
-}
-
+};
 
 // std::string Command::joinVectorValues()
 // {
@@ -154,47 +153,47 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 std::string Command::getCommand() const
 {
 	return _command;
-}
+};
 
 std::vector<std::string> Command::getArgs() const
 {
 	return _args;
-}
+};
 
 std::string Command::getPass() const
 {
 	return _pass;
-}
+};
 
 Client& Command::getClient()
 {
 	return _client;
-}
+};
 
 void Command::setCommand(std::string command)
 {
 	this->_command = command;
-}
+};
 
 void Command::setArgs(std::vector<std::string> args)
 {
 	this->_args = args;
-}
+};
 
 void Command::setPass(std::string pass)
 {
 	this->_pass = pass;
-}
+};
 
 void Command::setClient( Client &client )
 {
 	this->_client = client;
-}
+};
 
 void	Command::sendReply(std::string msg)
 {
 	send(this->_client.getFd(), msg.c_str(), msg.length(), 0);
-}
+};
 
 int	Command::nickExist(std::string nick)
 {
@@ -208,7 +207,7 @@ int	Command::nickExist(std::string nick)
 		i++;
 	}
 	return (-1);
-}
+};
 
 void Command::passCommand()
 {
@@ -225,7 +224,7 @@ void Command::passCommand()
 		else
 			sendReply(":localhost 464 * :Password incorrect\r\n");
 	}
-}
+};
 
 // _iterator Command::searchForUser(std::string _Nickname, int fd)
 // {
@@ -309,72 +308,113 @@ void Command::passCommand()
 //         }
 //     }
 // }
-void Command::joinCommand() 
+
+// :dan!~d@0::1 JOIN #test
+
+
+// S <-   :irc.example.com MODE #test +nt
+// S <-   :irc.example.com 353 dan = #test :@dan
+// S <-   :irc.example.com 366 dan #test :End of /NAMES list.
+
+// S <-   :alice!~a@localhost JOIN #test
+
+
+// S <-   :irc.example.com 333 alice #test dan!~d@localhost 1547691506
+// S <-   :irc.example.com 353 alice @ #test :alice @dan
+// S <-   :irc.example.com 366 alice #test :End of /NAMES list.
+
+void Command::joinCommand()
 {
-    if (this->_args.size() < 1)
-    {
-        sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
-        return;
-    }
-    std::stringstream channelSplitter(this->_args[0]);
-    std::string channelName;
-    std::vector<std::string> channelKeys;
-
-    if (this->_args.size() > 1)
-    {
-        std::stringstream keySplitter(this->_args[1]);
-        std::string key;
-        while (std::getline(keySplitter, key, ','))
-            channelKeys.push_back(key);
-    }
-
-    while (std::getline(channelSplitter, channelName, ','))
-    {
-        if (channelName.empty() || channelName[0] != '#')
-        {
-            sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
-            continue;
-        }
-        channelMap::iterator it = _channelObj._channelMap.find(channelName);
-        std::string chKey = "";
-
-        if (it == _channelObj._channelMap.end())
-        {
-            if (channelKeys.size() > 0)
-            {
-                int index = _channelObj._channelMap.size() % channelKeys.size();
-                chKey = channelKeys[index];
-            }
-            _channelObj = Channel(channelName, "", chKey, _client);
-            _channelObj.addUserToChannelMap(_client, 1);
+	if (this->_args.size() == 1 && _client.isMemberOfChannel(this->_args[0], _client.getFd()) != 1) // Joining A New Channel
+	{
+        sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + this->_args[0] + "\r\n");
+		int privilege;
+		if (_client.isMemberOfChannel(this->_args[0], _client.getFd()) == -1)
+		{
+        	sendReply(":localhost MODE " + this->_args[0] + " +nt\r\n");
+        	sendReply(":localhost 353 " + _client.getNickname() + " = " + this->_args[0] + " :@" + this->_client.getNickname() + "\r\n");
+			_channelObj = Channel(this->_args[0], "", "", _client);
 			_channelObj.joinChannel();
-            sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-			_channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
-			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
-			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
-			// std::map<std::string, Channel>::iterator it = _channelObj._channelMap.begin();
-			// while (it != _channelObj._channelMap.end())
-			// {
-			// 	std::cout << "Key: " << it->first << std::endl;
-			// 	std::cout << "Channel Name: " << it->second.getChannelName() << std::endl;
-			// 	++it;
-			// }
-			// std::cout << _channelObj._channelMap.size() << std::endl;
-        }
-        else
-        {
-            Channel &_channel = it->second;
-            if (!_channel.verifyKey(chKey))
-                sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
-			_channel.addUserToChannelMap(_client, 0);
-            // else
-            // {
-            //     _channelObj.addUser(_client, 1);
-            //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-            // }
-        }
-    }
+			privilege = OPERATOR;
+		}
+		else // 0
+		{
+			this->_channelObj._channelMap[this->_args[0]].setChannelCreationTime(this->getCurrentUnixTimestamp());
+        	sendReply(":localhost 333 " + _client.getNickname() + " " + this->_args[0] + " " + _channelObj.getOperator().getNickname() + "!localhost " + this->_channelObj._channelMap[this->_args[0]].getChannelCreationTime() + "\r\n");
+        	sendReply(":localhost 353 " + _client.getNickname() + " @ " + this->_args[0] + " :" + this->_client.getNickname() + " " + _channelObj.getOperator().getNickname() + "\r\n");
+			privilege = CLIENT;
+		}
+		sendReply(":localhost 366 " + _client.getNickname() + " " + this->_args[0] + " :End of /NAMES list.\r\n");
+		_channelObj.addUserToChannelMap(this->_client, privilege);
+	}
 };
+
+// void Command::joinCommand() 
+// {
+//     if (this->_args.size() < 1)
+//     {
+//         sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+//         return;
+//     }
+//     std::stringstream channelSplitter(this->_args[0]);
+//     std::string channelName;
+//     std::vector<std::string> channelKeys;
+
+//     if (this->_args.size() > 1)
+//     {
+//         std::stringstream keySplitter(this->_args[1]);
+//         std::string key;
+//         while (std::getline(keySplitter, key, ','))
+//             channelKeys.push_back(key);
+//     }
+
+//     while (std::getline(channelSplitter, channelName, ','))
+//     {
+//         if (channelName.empty() || channelName[0] != '#')
+//         {
+//             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
+//             continue;
+//         }
+//         channelMap::iterator it = _channelObj._channelMap.find(channelName);
+//         std::string chKey = "";
+
+//         if (it == _channelObj._channelMap.end())
+//         {
+//             if (channelKeys.size() > 0)
+//             {
+//                 int index = _channelObj._channelMap.size() % channelKeys.size();
+//                 chKey = channelKeys[index];
+//             }
+//             _channelObj = Channel(channelName, "", chKey, _client);
+//             _channelObj.addUserToChannelMap(_client, 1);
+// 			_channelObj.joinChannel();
+//             sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+// 			_channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
+// 			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353" + _channelObj.usersList());
+// 			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366" + " :End of /NAMES list.\r\n");
+// 			// std::map<std::string, Channel>::iterator it = _channelObj._channelMap.begin();
+// 			// while (it != _channelObj._channelMap.end())
+// 			// {
+// 			// 	std::cout << "Key: " << it->first << std::endl;
+// 			// 	std::cout << "Channel Name: " << it->second.getChannelName() << std::endl;
+// 			// 	++it;
+// 			// }
+// 			// std::cout << _channelObj._channelMap.size() << std::endl;
+//         }
+//         else
+//         {
+//             Channel &_channel = it->second;
+//             if (!_channel.verifyKey(chKey))
+//                 sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+// 			_channel.addUserToChannelMap(_client, 0);
+//             // else
+//             // {
+//             //     _channelObj.addUser(_client, 1);
+//             //     sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+//             // }
+//         }
+//     }
+// };
 
 void Command::partCommand()
 {
@@ -490,8 +530,7 @@ void Command::kickCommand()
 		}																			
 		sendReply(message);
 	}
-	
-}
+};
 
 std::string getJokeQuote()
 {
@@ -505,7 +544,7 @@ std::string getJokeQuote()
     std::srand(std::time(0));
     int randIndex = std::rand() % nokat_7amdin.size();
     return nokat_7amdin[randIndex];
-}
+};
 
 std::string getTime()
 {
@@ -513,7 +552,7 @@ std::string getTime()
     char time_str[20];
     std::strftime(time_str, sizeof(time_str), "%H:%M:%S", std::localtime(&t));
     return std::string(time_str) + " \r\n";
-}
+};
 
 void Command::botCommand()
 {
@@ -535,7 +574,7 @@ void Command::botCommand()
 		sendReply("PRIVMSG" + message);
 	if(cmd == "nokta")
 		sendReply(":" + getJokeQuote() + "\r\n");	 
-}
+};
 
 void Command::nickCommand()
 {
@@ -564,7 +603,7 @@ void Command::nickCommand()
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NICK " + this->_args[0] + "\r\n"); 
 		this->_client.setNickname(this->_args[0]); 
 	}
-}
+};
 
 void	Command::userCommand()
 {
@@ -589,7 +628,7 @@ void	Command::userCommand()
 		}
 		this->_client.setUsername(this->_args[0]);
 	}
-}
+};
 
 void	Command::privmsgCommand()
 {
@@ -606,7 +645,7 @@ void	Command::privmsgCommand()
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 }
-
+;
 void	Command::noticeCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
@@ -621,7 +660,7 @@ void	Command::noticeCommand()
 		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
-}
+};
 
 void	Command::quitCommand()
 {
@@ -640,12 +679,10 @@ void	Command::quitCommand()
 		}
 		++it;
 	}
-}
-
+};
 
 void	Command::modeCommand()
 {
-
 	// std::cout << "nick :" << this->_args[0] << ":" << std::endl;
 	// std::cout << "nick :" <<nickExist(this->_args[0])<< ":" << std::endl;
 	std::string mode;
@@ -699,4 +736,4 @@ void	Command::modeCommand()
 			// sendReply(":Guest45756!~usr@5c8c-aff4-7127-3c3-1c20.230.197.ip MODE #rgatnaou +b usr2!*@*");
 		}
 	}
-}
+};
