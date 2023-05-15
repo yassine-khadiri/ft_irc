@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/15 03:03:50 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:46:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void Channel::setKey( std::string _key )
     this->_key = _key;
 };
 
-void Channel::joinChannel()
+void Channel::addChannelToChannelMap()
 {
 	this->_channelMap.insert(std::make_pair(this->getChannelName(), *this));
 };
@@ -110,9 +110,9 @@ int Channel::verifyKey( std::string &_key ) const
    return (this->_key == _key) ? 1 : 0;
 };
 
-void Channel::addUserToChannelMap( Client &_client, int privilege )
+void Channel::addUserToUserMap( Client &_client, int privilege )
 {
-    this->_userMap.insert(std::make_pair(_client.getFd(), _client));
+    this->_channelMap[this->getChannelName()]._userMap.insert(std::make_pair(_client.getFd(), _client));
     
     _client.setOpPrivilegePermission(privilege);
     if (privilege)
@@ -154,11 +154,18 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 
 std::string Channel::usersList() const
 {
-    std::string userList = ":";
+    std::string userList = ":",
+                userOper;
     userMap::const_iterator it;
-    for (it = _userMap.begin(); it != _userMap.end(); ++it)
+
+    for (it = this->_channelMap[this->getChannelName()]._userMap.begin(); it != this->_channelMap[this->getChannelName()]._userMap.end(); ++it)
     {
-        userList += " " + it->second.getNickname();
+        if (it->second.getOpPriviligePermission())
+            userOper = it->second.getNickname();
+        else
+            userList += it->second.getNickname() + " ";
     }
+    userList += "@" + userOper;
+    std::cout << userList << std::endl;
     return userList;
 }

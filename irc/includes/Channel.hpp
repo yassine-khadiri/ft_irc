@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/12 19:03:52 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:47:15 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,10 @@ class Channel
         void setTopicTime( std::string _topicTime );
         void setChannelCreationTime( std::string _channelCreationTime );
         void setKey( std::string _key );
-        void joinChannel();
+        void addChannelToChannelMap();
         int  verifyKey( std::string &key )const;
-        void addUserToChannelMap( Client &_client, int Privilege );
+        void addUserToUserMap( Client &_client, int Privilege );
         int removeUserFromUserMap( std::string channelName, int clientFd );
-
         // void removeUser( Client &_client );
         // int channelFound( std::string channelName );
 };

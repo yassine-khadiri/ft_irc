@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/11 18:49:19 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:34:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-#define channelMap std::map<std::string, Channel>
-#define Map		   std::map<int, Client>
+// #define channelMap std::map<std::string, Channel>
+// #define Map		   std::map<int, Client>
 #define _iterator   Map::iterator
 typedef enum
 {
@@ -50,7 +50,6 @@ class Command
 		int							_indexCmd;
 		Channel						_channelObj;
 		Client&						_client;
-		Map							_users;
 		std::vector<Client>			&_clients;
 		std::string					_pass;
 	public :
@@ -59,7 +58,7 @@ class Command
 		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);
 		void						initBasicCommand();
 		int							findCommand(std::string cmd);
-		_iterator					searchForUser(std::string name, int fd);
+		userMap::iterator			searchForUser(std::string name, int fd);
 		std::string					joinVectorValues();
 		std::string 				getCommand() const;
 		std::vector<std::string>	getArgs() const;
@@ -84,6 +83,7 @@ class Command
 		void						botCommand();
 		void						modeCommand();
 		std::string					getCurrentUnixTimestamp();
+		void broadcast( std::string const &channel, std::string const &msg );
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);

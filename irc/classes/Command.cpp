@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/15 03:29:09 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:48:05 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,32 +289,33 @@ void Command::joinCommand()
             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
             continue;
         }
-        channelMap::iterator it = _channelObj._channelMap.find(channelName);
-		if (it == _channelObj._channelMap.end())
+		if (_client.isMemberOfChannel(channelName, _client.getFd()) == -1)
 		{
-			Channel tmpChannel(channelName, "", getChannelKey(channelKeys, _channelObj._channelMap.size()), _client);
-			tmpChannel.addUserToChannelMap(_client, OPERATOR);
-			std::string userList = tmpChannel.usersList();
-			tmpChannel.joinChannel();
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n"); //DONE: printing that the user has joined the channel
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353 " + userList + "\r\n"); //DONE: printing the list of users exist in the channel
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366 " + channelName + " :End of /NAMES list.\r\n"); //DONE: ENDOFLIST as mentioned in The reference
+			_channelObj = Channel(channelName, "", getChannelKey(channelKeys, _channelObj._channelMap.size()), _client);
+			_channelObj.addChannelToChannelMap();
+			_channelObj.addUserToUserMap(_client, OPERATOR);
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+        	sendReply(":localhost MODE " + channelName + " +nt\r\n");
+        	sendReply(":localhost 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
+			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
+
 			// _channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
 		}
-		else
+		else if (!_client.isMemberOfChannel(channelName, _client.getFd())) // 0
 		{
-			Channel &_channel = it->second;
+			_channelObj = _channelObj._channelMap[channelName];
 			std::string  checkKey = getChannelKey(channelKeys, _channelObj._channelMap.size());
-			if (!_channel.verifyKey(checkKey))
+			if (!_channelObj.verifyKey(checkKey))
 			{
 				sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
 				return ;
 			}
-			_channel.addUserToChannelMap(_client, CLIENT);
-			std::string userList = _channel.usersList();
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n"); //DONE: printing that the user has joined the channel
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 353 " + userList + "\r\n"); //DONE: printing the list of users exist in the channel
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost 366 " + channelName + " :End of /NAMES list.\r\n"); //DONE: ENDOFLIST as mentioned in The reference
+			_channelObj.addUserToUserMap(_client, CLIENT);
+			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+
+			this->broadcast(channelName, ":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + _channelObj.usersList() + "\r\n");
+			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 			// YASSIN : We have to add the broadcast here to inform other users that a new user is joined !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
     }
@@ -537,19 +538,25 @@ void	Command::userCommand()
 void	Command::privmsgCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
-		sendReply(":localhost 461 " + _client.getNickname() + ": PRIVMSG <nickname> <message>\r\n");
+		sendReply(":localhost 461 " + _client.getNickname() + ": PRIVMSG <nick/channel> <message>\r\n");
 	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == - 1)
 		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
-		if ((this->_args[0][0] == '#' || this->_args[0][0] == '@') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
+		if ((this->_args[0][0] == '#') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
 				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
-		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
-		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
+		else
+		{
+			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+			if (this->_args[0][0] == '#')
+				this->broadcast(this->_args[0],tmp);
+			else
+				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
+		}
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 }
-;
+
 void	Command::noticeCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
@@ -558,14 +565,19 @@ void	Command::noticeCommand()
 		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
-		if ((this->_args[0][0] == '#' || this->_args[0][0] == '@') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
+		if ((this->_args[0][0] == '#') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
 				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
-		std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
-		send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
+		else
+		{
+			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+			if (this->_args[0][0] == '#')
+				this->broadcast(this->_args[0],tmp);
+			else
+				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);	
+		}
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 };
-
 void	Command::quitCommand()
 {
 	std::vector<Client>::iterator it = this->_clients.begin();
@@ -597,7 +609,7 @@ void	Command::modeCommand()
 	}
 	if (this->_args.size() == 1)
 	{
-		if (this->_args[0][0] == '#' || this->_args[0][0] == '@' ) // Channel Modes
+		if (this->_args[0][0] == '#' ) // Channel Modes
 		{
 			sendReply(":localhost 324 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getMode() + " \r\n");
 			sendReply(":localhost 329 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getChannelCreationTime() + " \r\n");
@@ -639,5 +651,16 @@ void	Command::modeCommand()
 			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -b " + this->_args[2] + "!*@*\r\n");
 			// sendReply(":Guest45756!~usr@5c8c-aff4-7127-3c3-1c20.230.197.ip MODE #rgatnaou +b usr2!*@*");
 		}
+	}
+};
+
+void Command::broadcast( std::string const &channel, std::string const &msg)
+{
+	userMap::iterator it = this->_channelObj._channelMap[channel]._userMap.begin();
+
+	while (it != this->_channelObj._channelMap[channel]._userMap.end())
+	{
+			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+		++it;
 	}
 };
