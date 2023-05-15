@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/15 18:48:05 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:51:26 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,6 @@ void Command::joinCommand()
 			this->broadcast(channelName, ":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
 			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + _channelObj.usersList() + "\r\n");
 			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
-			// YASSIN : We have to add the broadcast here to inform other users that a new user is joined !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
     }
 };
