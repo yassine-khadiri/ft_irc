@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/12 19:12:55 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/15 03:03:50 by hbouqssi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,7 @@ int Channel::verifyKey( std::string &_key ) const
 void Channel::addUserToChannelMap( Client &_client, int privilege )
 {
     this->_userMap.insert(std::make_pair(_client.getFd(), _client));
-    // userMap::iterator it = this->_userMap.begin();
-    // while (it != this->_userMap.end())
-    // {
-    //     std::cout << "fd: " << it->first << std::endl;
-    //     std::cout << "Clinet Name: " << it->second.getNickname() << std::endl;
-    //     ++it;
-    // }
-    // std::cout << "Users Map Size: " << this->_userMap.size() << std::endl;
+    
     _client.setOpPrivilegePermission(privilege);
     if (privilege)
         this->_operator = _client;
@@ -159,18 +152,13 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 // 	return -1;
 // };
 
-
 std::string Channel::usersList() const
 {
-	std::string userslist = ":";
-	userMap::const_iterator it = _userMap.begin();
-    while(it != _userMap.end())
+    std::string userList = ":";
+    userMap::const_iterator it;
+    for (it = _userMap.begin(); it != _userMap.end(); ++it)
     {
-        if(it->second.getNickname() == _operator.getNickname())
-            userslist += "@" + it->second.getNickname() + " ";
-        else
-            userslist += it->second.getNickname() + " ";
+        userList += " " + it->second.getNickname();
     }
-    userslist += "\r\n";
-    return userslist;
-};
+    return userList;
+}
