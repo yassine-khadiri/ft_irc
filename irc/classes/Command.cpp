@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/15 18:51:26 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/16 16:09:29 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,32 +226,6 @@ void Command::passCommand()
 	}
 };
 
-// void Command::joinCommand()
-// {
-// 	if (this->_args.size() == 1 && _client.isMemberOfChannel(this->_args[0], _client.getFd()) != 1) // Joining A New Channel
-// 	{
-//         sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + this->_args[0] + "\r\n");
-// 		int privilege;
-// 		if (_client.isMemberOfChannel(this->_args[0], _client.getFd()) == -1)
-// 		{
-//         	sendReply(":localhost MODE " + this->_args[0] + " +nt\r\n");
-//         	sendReply(":localhost 353 " + _client.getNickname() + " = " + this->_args[0] + " :@" + this->_client.getNickname() + "\r\n");
-// 			_channelObj = Channel(this->_args[0], "", "", _client);
-// 			_channelObj.joinChannel();
-// 			privilege = OPERATOR;
-// 		}
-// 		else // 0
-// 		{
-// 			this->_channelObj._channelMap[this->_args[0]].setChannelCreationTime(this->getCurrentUnixTimestamp());
-//         	sendReply(":localhost 333 " + _client.getNickname() + " " + this->_args[0] + " " + _channelObj.getOperator().getNickname() + "!localhost " + this->_channelObj._channelMap[this->_args[0]].getChannelCreationTime() + "\r\n");
-//         	sendReply(":localhost 353 " + _client.getNickname() + " @ " + this->_args[0] + " :" + this->_client.getNickname() + " " + _channelObj.getOperator().getNickname() + "\r\n");
-// 			privilege = CLIENT;
-// 		}
-// 		sendReply(":localhost 366 " + _client.getNickname() + " " + this->_args[0] + " :End of /NAMES list.\r\n");
-// 		_channelObj.addUserToChannelMap(this->_client, privilege);
-// 	}
-// };
-
 std::string getChannelKey(const std::vector<std::string>& channelKeys, int channelMapSize)
 {
     std::string chKey = "";
@@ -261,7 +235,7 @@ std::string getChannelKey(const std::vector<std::string>& channelKeys, int chann
         chKey = channelKeys[index];
     }
     return chKey;
-}
+};
 
 void Command::joinCommand() 
 {
