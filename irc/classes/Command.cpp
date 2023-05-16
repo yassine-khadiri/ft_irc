@@ -460,8 +460,6 @@ std::string getTime()
 
 void Command::botCommand()
 {
-	// std::cout << this->_args.size() << std::endl;
-	std::string message = "The current time is " + getTime();
 	if(this->_args.size() < 1)
 	{
         sendReply(":localhost 461 " + _client.getNickname() + " BOT :Not enough parameters\r\n");
@@ -469,15 +467,15 @@ void Command::botCommand()
     }
 	std::stringstream channelSplitter(this->_args[0]);
 	std::string cmd = channelSplitter.str();
-	std::cout << cmd << std::endl;
-	if (cmd != "time")
+	if (cmd != "time" && cmd != "nokta")
 	{
-		sendReply(":localhost Available Bots Now : [time - nokta]>\r\n");
+		sendReply("300 RPL_NONE: Available Bots Now : [time - nokta]\r\n");
+		return ;
 	}
 	if (cmd == "time")
-		sendReply("PRIVMSG" + message);
-	if(cmd == "nokta")
-		sendReply(":" + getJokeQuote() + "\r\n");	 
+		sendReply("300 RPL_NONE :" + getTime());
+	if (cmd == "nokta")
+		sendReply("300 RPL_NONE :" + getJokeQuote() + "\r\n");	 
 };
 
 void Command::nickCommand()
