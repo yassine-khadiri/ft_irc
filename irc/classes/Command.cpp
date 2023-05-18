@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 19:31:51 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:35:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,7 +410,6 @@ void Command::inviteCommand()
 			sendReply(":localhost 442 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not on that channel\r\n"); //ERR_NOTONCHANNEL (442)
 		else if (this->searchClientByName(this->_args[0]))
 		{
-			std::cout << "here1\n";
 			if (this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])) == 1)
 				sendReply(":localhost 443 " + this->_client.getNickname() + " " + this->_args[1] + " :is already on channel\r\n"); //ERR_USERONCHANNEL (443)
 			else if (!this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])))
@@ -418,10 +417,7 @@ void Command::inviteCommand()
 				if (this->_channelObj._channelMap[this->_args[1]].getMode() == "+i" && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
 					sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 				else
-				{
-					std::cout << "here2\n";
 					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@localhost INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
-				}
 			}
 		}
 	}
