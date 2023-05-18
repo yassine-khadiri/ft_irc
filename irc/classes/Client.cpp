@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/12 18:43:22 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:36:41 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,4 +142,4 @@ int Client::isMemberOfChannel( std::string channelName, int clientFd )
 	else
 		return -1; // channel not found
 	return 0; // channel found but the client doesn't belong to this channel
-}
+};

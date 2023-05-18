@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/16 16:09:29 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:31:51 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("PONG");
 	_basicCommand.push_back("KICK");
 	_basicCommand.push_back("TOPIC");
+	_basicCommand.push_back("INVITE");
 	_basicCommand.push_back("BOT");
 };
 
@@ -121,6 +122,9 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		break;
 	case (TOPIC):
 		topicCommand();
+		break;
+	case (INVITE):
+		inviteCommand();
 		break;
 	case (QUIT):
 		quitCommand();
@@ -381,6 +385,48 @@ void Command::topicCommand()
 	}
 };
 
+int	Command::searchClientByName( std::string clientName )
+{
+	std::vector<Client>::iterator it = this->_clients.begin();
+
+	while (it != this->_clients.end())
+	{
+		if (it->getNickname() == clientName)
+			return it->getFd();
+		++it;
+	}
+	return 0;
+};
+
+void Command::inviteCommand()
+{
+	if (this->_args.size() == 1)
+		sendReply(":localhost 461 " + this->_client.getNickname() + " " + this->_args[1] + " :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+	else if (this->_args.size() == 2)
+	{
+		if (this->_client.isMemberOfChannel(this->_args[1], this->_client.getFd()) == -1)
+			sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[1] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
+		else if (!this->_client.isMemberOfChannel(this->_args[1], this->_client.getFd()))
+			sendReply(":localhost 442 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not on that channel\r\n"); //ERR_NOTONCHANNEL (442)
+		else if (this->searchClientByName(this->_args[0]))
+		{
+			std::cout << "here1\n";
+			if (this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])) == 1)
+				sendReply(":localhost 443 " + this->_client.getNickname() + " " + this->_args[1] + " :is already on channel\r\n"); //ERR_USERONCHANNEL (443)
+			else if (!this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])))
+			{
+				if (this->_channelObj._channelMap[this->_args[1]].getMode() == "+i" && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
+					sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
+				else
+				{
+					std::cout << "here2\n";
+					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@localhost INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
+				}
+			}
+		}
+	}
+};
+
 void Command::kickCommand()
 {
 	if (this->_args.size() < 3)
@@ -393,7 +439,7 @@ void Command::kickCommand()
     std::string channelName;
 	
 	if(this->_client.getOpPriviligePermission() == CLIENT)
-		sendReply(":localhost 482" + _client.getNickname() + " " + channelName + " :You're not channel operator");
+		sendReply(":localhost 482 " + _client.getNickname() + " " + channelName + " :You're not channel operator");
 	while (std::getline(channelSplitter, channelName, ','))
     {
 		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
@@ -549,6 +595,7 @@ void	Command::noticeCommand()
 		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 };
+
 void	Command::quitCommand()
 {
 	std::vector<Client>::iterator it = this->_clients.begin();
@@ -597,14 +644,14 @@ void	Command::modeCommand()
 			int i = 1;
 			while(this->_args[1][i] && this->_args[1][i] == '+')
 				i++;
-			if ((this->_args[1].substr(i)).find_first_not_of("b") != std::string::npos)
+			if ((this->_args[1].substr(i)).find_first_not_of("i") != std::string::npos)
 			{
 				// Error
 				return;
 			}
-			mode = "+b";
+			mode = "+i";
 			_channelObj._channelMap[this->_args[0]].setMode(mode);
-			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +b " + this->_args[2] + "!*@*\r\n");
+			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i " + this->_args[2] + "!*@*\r\n");
 			// sendReply(":Guest45756!~usr@5c8c-aff4-7127-3c3-1c20.230.197.ip MODE #rgatnaou +b usr2!*@*");
 		}
 		else if (this->_args[1][0] == '-')

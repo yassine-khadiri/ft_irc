@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/15 18:34:18 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:29:43 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef enum
 	PONG,
 	KICK,
 	TOPIC,
+	INVITE,
 	BOT,
 } e_Command;
 
@@ -80,10 +81,12 @@ class Command
 		void						quitCommand();
 		void						kickCommand();
 		void						topicCommand();
+		void						inviteCommand();
 		void						botCommand();
 		void						modeCommand();
+		void						broadcast( std::string const &channel, std::string const &msg );
 		std::string					getCurrentUnixTimestamp();
-		void broadcast( std::string const &channel, std::string const &msg );
+		int							searchClientByName( std::string clientName );
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);
