@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 19:35:50 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:04:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -611,11 +611,17 @@ void	Command::quitCommand()
 	}
 };
 
+// void Command::modeAnalyzer()
+// {
+// 	if ()
+// }
+
 void	Command::modeCommand()
 {
 	// std::cout << "nick :" << this->_args[0] << ":" << std::endl;
 	// std::cout << "nick :" <<nickExist(this->_args[0])<< ":" << std::endl;
 	std::string mode;
+
 	if (this->_args[0] != _client.getNickname()  && _client.isMemberOfChannel(this->_args[0], _client.getFd()) == -1)
 	{
 		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " * No such channel\r\n");
@@ -634,25 +640,23 @@ void	Command::modeCommand()
 	}
 	else if (this->_args.size() > 1)
 	{
-		
 		if (this->_args[1][0] == '+')
 		{
 			int i = 1;
-			while(this->_args[1][i] && this->_args[1][i] == '+')
-				i++;
+
+			while(this->_args[1][i] && this->_args[1][i] == '+') i++;
 			if ((this->_args[1].substr(i)).find_first_not_of("i") != std::string::npos)
 			{
 				// Error
 				return;
 			}
-			mode = "+i";
+			mode = "+i"; // invite only
 			_channelObj._channelMap[this->_args[0]].setMode(mode);
-			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i " + this->_args[2] + "!*@*\r\n");
-			// sendReply(":Guest45756!~usr@5c8c-aff4-7127-3c3-1c20.230.197.ip MODE #rgatnaou +b usr2!*@*");
+			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i\r\n");
 		}
 		else if (this->_args[1][0] == '-')
 		{
-			int i = 1;
+			int i = 1;        
 			while(this->_args[1][i] && this->_args[1][i] == '-')
 				i++;
 			if ((this->_args[1].substr(i)).find_first_not_of("b") != std::string::npos)
@@ -660,9 +664,9 @@ void	Command::modeCommand()
 				// Error
 				return;
 			}
-			mode = "-b";
+			mode = "-i";
 			_channelObj._channelMap[this->_args[0]].setMode(mode);
-			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -b " + this->_args[2] + "!*@*\r\n");
+			sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -i\r\n");
 			// sendReply(":Guest45756!~usr@5c8c-aff4-7127-3c3-1c20.230.197.ip MODE #rgatnaou +b usr2!*@*");
 		}
 	}

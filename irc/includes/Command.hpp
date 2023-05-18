@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 16:29:43 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:36:54 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ class Command
 		void						broadcast( std::string const &channel, std::string const &msg );
 		std::string					getCurrentUnixTimestamp();
 		int							searchClientByName( std::string clientName );
+		void 						modeAnalyzer();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);
