@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 20:36:54 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:35:29 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class Command
 		Channel						_channelObj;
 		Client&						_client;
 		std::vector<Client>			&_clients;
+		std::vector<std::string>	modes;
 		std::string					_pass;
 	public :
 		Command(int nbClient,std::string &msg,std::string &pass,std::vector<Client> &clients);
@@ -87,7 +88,7 @@ class Command
 		void						broadcast( std::string const &channel, std::string const &msg );
 		std::string					getCurrentUnixTimestamp();
 		int							searchClientByName( std::string clientName );
-		void 						modeAnalyzer();
+		int 						modeAnalyzer();
 };
 // int		splitCommand(std::string str, std::vector<std::string> &v);
 // int		is_number(std::string str);
