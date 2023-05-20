@@ -6,14 +6,14 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/12 17:12:12 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:53:28 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Ircserv.hpp"
 #include "../includes/Client.hpp"
 
-Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password)
+Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password),cmd(Command(password))
 {
 };
 
@@ -51,6 +51,7 @@ int Ircserv::waitForConnection()
     int max_sd;
 
     std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
+    
     while(1)
     {
         FD_ZERO(&readfds);
@@ -104,7 +105,7 @@ int Ircserv::waitForConnection()
                     str.erase(str.find_last_not_of("\r\n") + 1);
                         // std::cout << str << std::endl;
                     if(!str.empty())
-                        Command cmd(i, str, this->password, this->_clients);
+                        cmd.exec(i, str, this->_clients);
                     memset(buff, 0, sizeof(buff));
                 }
             }

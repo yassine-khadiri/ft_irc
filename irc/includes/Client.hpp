@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 16:29:16 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:13:46 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Client
 		std::string	_username;
 		bool		_isRegistered;
 		int			_fdsocket;
-		int			Operator;
+		int			_privilige;
 	public :
 		Client();
 		Client( int fdSocket );

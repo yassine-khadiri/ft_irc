@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/19 20:55:41 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:14:14 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,20 @@ Channel::Channel( std::string _channelName, std::string _topic, std::string _key
     this->_key = _key;
     this->_member = _member;
 };
+ 
+Channel&  Channel::operator=( Channel const & channel )
+{
+    this->_channelName = channel._channelName;
+    this->_topic = channel._topic ;
+    this->_modes = channel._modes;
+    this->_topicTime = channel._topicTime;
+    this->_channelCreationTime = channel._channelCreationTime;
+    this->_key = channel._key;
+    this->_operator = channel._operator;
+    this->_member = channel._member;
+    this->_userMap = channel._userMap;
+    return *this;
+};
 
 Channel::~Channel()
 {
@@ -40,9 +54,12 @@ std::string Channel::getTopic() const
     return this->_topic;
 };
 
-std::string Channel::getMode() const
+int Channel::findMode( std::string mode )
 {
-    return this->_mode;
+    std::vector<std::string>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), mode);
+    if (it == this->_modes.end())
+        return 0;
+    return 1;
 };
 
 std::string Channel::getTopicTime() const
@@ -82,7 +99,14 @@ void Channel::setTopic( std::string _topic )
 
 void Channel::setMode( std::string _mode )
 {
-	this->_mode = _mode;
+    if (_mode[0] == '-')
+    {
+        std::string revMode = "+" + std::string(1, _mode[1]);
+        std::vector<std::string>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), revMode);
+        this->_modes.erase(it);    
+    }
+    else
+	    this->_modes.push_back(_mode);
 };
 
 void Channel::setTopicTime( std::string _topicTime )

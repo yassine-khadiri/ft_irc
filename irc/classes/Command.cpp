@@ -6,12 +6,17 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/19 20:58:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 20:07:30 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Command.hpp"
 
+Command::Command(std::string	&pass)
+{
+	_pass = pass;
+	initBasicCommand();
+}
 int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::string &cmd)
 {
 	if(msg == "")
@@ -72,11 +77,13 @@ int Command::findCommand(std::string cmd)
 	return (i);
 };
 
-Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Client> &clients):_client(clients[nbClient]), _clients(clients)
+void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 {
-	this->_pass = pass;
-	initBasicCommand();
-	// std::cout << "command : " << msg << std::endl;
+	
+	_clients = clients;
+	_client = _clients[nbClient];
+	_args.clear();
+	_command = "";
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
@@ -87,7 +94,7 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		sendReply(":localhost 451 * :You have not registered\r\n");
 		return ;
 	}
-	std::cout << "Command: " << msg << std::endl;
+	// std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{
@@ -130,13 +137,12 @@ Command::Command(int nbClient,std::string &msg ,std::string &pass,std::vector<Cl
 		quitCommand();
 		break;
 	case (MODE):
-	{
-		std::cout << msg << "here\n";
 		modeCommand();
 		break;
 	}
-	}
-	// std::cout << "AFTER: " << this->_clients.size() << std::endl;
+	_clients[nbClient] = _client; 
+	clients = _clients;
+	// std::cout << "command : " << _args[0] << std::endl;
 };
 
 // std::string Command::joinVectorValues()
@@ -167,11 +173,6 @@ std::vector<std::string> Command::getArgs() const
 	return _args;
 };
 
-std::string Command::getPass() const
-{
-	return _pass;
-};
-
 Client& Command::getClient()
 {
 	return _client;
@@ -185,11 +186,6 @@ void Command::setCommand(std::string command)
 void Command::setArgs(std::vector<std::string> args)
 {
 	this->_args = args;
-};
-
-void Command::setPass(std::string pass)
-{
-	this->_pass = pass;
 };
 
 void Command::setClient( Client &client )
@@ -273,31 +269,31 @@ void Command::joinCommand()
         }
 		if (_client.isMemberOfChannel(channelName, _client.getFd()) == -1)
 		{
-			std::cout  << "oper :" <<   _client.getNickname() <<std::endl;
-			_channelObj = Channel(channelName, "", getChannelKey(channelKeys, _channelObj._channelMap.size()), _client);
-			_channelObj.addChannelToChannelMap();
-			_channelObj.addUserToUserMap(_client, OPERATOR);
-			std::cout  << "oper2 :" <<   _channelObj.getOperator().getNickname() <<std::endl;
+			// std::cout  << "join oper :" <<   _client.getNickname() <<std::endl;
+			this->_channelObj = Channel(channelName, "", getChannelKey(channelKeys, this->_channelObj._channelMap.size()), _client);
+			this->_channelObj.addUserToUserMap(_client, OPERATOR);
+			this->_channelObj.addChannelToChannelMap();
+			std::cout  << "oper2 :" <<   this->_channelObj.getOperator().getNickname() <<std::endl;
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
         	sendReply(":localhost MODE " + channelName + " +nt\r\n");
         	sendReply(":localhost 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
 			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
-			// _channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
+			// this->_channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
 		}
 		else if (!_client.isMemberOfChannel(channelName, _client.getFd())) // 0
 		{
-			_channelObj = _channelObj._channelMap[channelName];
-			std::string  checkKey = getChannelKey(channelKeys, _channelObj._channelMap.size());
-			if (!_channelObj.verifyKey(checkKey))
+			this->_channelObj = this->_channelObj._channelMap[channelName];
+			std::string  checkKey = getChannelKey(channelKeys, this->_channelObj._channelMap.size());
+			if (!this->_channelObj.verifyKey(checkKey))
 			{
-				sendReply(":localhost 474 " + _client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+				sendReply(":localhost 474 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
 				return ;
 			}
-			_channelObj.addUserToUserMap(_client, CLIENT);
+			this->_channelObj.addUserToUserMap(_client, CLIENT);
 			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
 
-			this->broadcast(channelName, ":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + _channelObj.usersList() + "\r\n");
+			this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");
 			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 		}
     }
@@ -419,7 +415,7 @@ void Command::inviteCommand()
 				sendReply(":localhost 443 " + this->_client.getNickname() + " " + this->_args[1] + " :is already on channel\r\n"); //ERR_USERONCHANNEL (443)
 			else if (!this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])))
 			{
-				if (this->_channelObj._channelMap[this->_args[1]].getMode() == "+i" && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
+				if (this->_channelObj._channelMap[this->_args[1]].findMode("+i") && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
 					sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 				else
 					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@localhost INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
@@ -619,7 +615,7 @@ void	Command::quitCommand()
 int Command::modeAnalyzer()
 {
 	// if ((this->_args[1].find_first_not_of("+-itkol") != std::string::npos))
-	if (this->_args[1].size() == 1)
+	if (this->_args[1].size() == 1 || this->_args[1].find_first_not_of("+-sn") == std::string::npos)
 		return -1;	
 	if ((this->_args[1].find_first_not_of("+-itkol") == std::string::npos))
 	{
@@ -636,7 +632,9 @@ int Command::modeAnalyzer()
 				if (sign)
 				{
 					mode = std::string(1, sign) + this->_args[1][i];
-					this->modes.push_back(mode);
+					std::vector<std::string>::iterator it = std::find(this->modes.begin(), this->modes.end(), mode);
+					if (it == this->modes.end())
+						this->modes.push_back(mode);
 				}
 			}
 		}
@@ -647,20 +645,39 @@ int Command::modeAnalyzer()
 
 void	Command::modeCommand()
 {
+	// case if the user wants to see channel modes only!
 	if (this->_args.size() == 2)
 	{
 		if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 			sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
 		else if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1)
 		{
-			std::cout << "OPerator: " << this->_channelObj.getOperator().getNickname() << std::endl;
+			// std::cout << "OPerator: " << this->_channelObj.getOperator().getNickname() << std::endl;
 			if (this->_client. getFd() != this->_channelObj.getOperator().getFd())
 				sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[0] + " :You must have channel halfop access or above to set channel mode " + this->_args[1][1] + "\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 			else
 			{
 				if (this->modeAnalyzer() == 1)
 				{
-					// Valid Mode
+					std::vector<std::string>::iterator it = this->modes.begin();
+
+					while (it != this->modes.end())
+					{
+						if ((*it)[1] == 'i') // Invite-Only Mode
+						{
+							if (*it == "+i" && !this->_channelObj._channelMap[this->_args[0]].findMode("+i"))
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i\r\n");
+								this->_channelObj._channelMap[this->_args[0]].setMode(*it);
+							}
+							if (*it == "-i" && this->_channelObj._channelMap[this->_args[0]].findMode("+i"))
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -i\r\n");
+								this->_channelObj._channelMap[this->_args[0]].setMode(*it);
+							}
+						}
+						++it;
+					}
 				}
 				else if (!this->modeAnalyzer())
 					sendReply(":localhost 472 " + this->_client.getNickname() + " " + this->_args[1] + " :is not a recognised channel mode.\r\n"); //ERR_UNKNOWNMODE (472)

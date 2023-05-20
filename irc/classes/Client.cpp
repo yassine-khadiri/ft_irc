@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/18 16:36:41 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:14:54 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,14 @@ int Client::getFd() const
 	return (this->_fdsocket);
 }
 
-void Client::setOpPrivilegePermission(int OpPrivilege)
+void Client::setOpPrivilegePermission( int privilige )
 {
-	this->Operator = OpPrivilege;
+	this->_privilige = privilige;
 }
 
 int Client::getOpPriviligePermission() const
 {
-	return(this->Operator);
+	return(this->_privilige);
 }
 
 // void Client::joinChannel(Channel &_Channel)

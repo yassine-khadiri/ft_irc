@@ -6,14 +6,14 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/15 18:47:15 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:08:09 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#define channelMap std::map<std::string, Channel>
+#define channelMap std::map<std::string,Channel>
 #define userMap std::map<int, Client>
 #define OPERATOR 1
 #define CLIENT 0
@@ -23,14 +23,14 @@
 
 class Channel
 {
-        std::string         _channelName;
-        std::string         _topic;
-        std::string 		_mode;
-        std::string         _topicTime;
-        std::string         _channelCreationTime;
-        std::string         _key;
-        Client              _operator;
-        Client              _member;
+        std::string                 _channelName;
+        std::string                 _topic;
+        std::vector<std::string>    _modes;
+        std::string                 _topicTime;
+        std::string                 _channelCreationTime;
+        std::string                 _key;
+        Client                      _operator;
+        Client                      _member;
     public:
         userMap              _userMap;
         static channelMap   _channelMap;
@@ -39,10 +39,11 @@ class Channel
 
         Channel();
         Channel( std::string channelName, std::string _topic, std::string key, Client _member);
+        Channel& operator=( Channel const &channel );
         ~Channel();
         std::string getChannelName() const;
         std::string getTopic() const;
-        std::string getMode() const;
+        int         findMode( std::string mode );
         std::string getTopicTime() const;
         std::string getChannelCreationTime() const;
         std::string getKey() const;

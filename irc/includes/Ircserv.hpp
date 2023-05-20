@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/04/20 20:51:50 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:57:33 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@
 #include "Command.hpp"
 #include <vector>
 
+// class Command;
+
 class Ircserv : public Tcp
 {
     std::string password;
     std::vector<Client> _clients;
     int waitForConnection();
-    int checkMessageInfos( std::string recvMessage );
+    Command     cmd;
 public:
     Ircserv( int port, std::string password );
     ~Ircserv();
