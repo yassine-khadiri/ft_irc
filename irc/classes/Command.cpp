@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/20 20:07:30 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 18:47:23 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 	_client = _clients[nbClient];
 	_args.clear();
 	_command = "";
+	this->modes.clear();
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
@@ -261,7 +262,6 @@ void Command::joinCommand()
 
     while (std::getline(channelSplitter, channelName, ','))
     {
-			std::cout << channelName << std::endl;
         if (channelName.empty() || channelName[0] != '#')
         {
             sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
@@ -272,13 +272,14 @@ void Command::joinCommand()
 			// std::cout  << "join oper :" <<   _client.getNickname() <<std::endl;
 			this->_channelObj = Channel(channelName, "", getChannelKey(channelKeys, this->_channelObj._channelMap.size()), _client);
 			this->_channelObj.addUserToUserMap(_client, OPERATOR);
+			this->_channelObj.setChannelCreationTime(this->getCurrentUnixTimestamp());
 			this->_channelObj.addChannelToChannelMap();
-			std::cout  << "oper2 :" <<   this->_channelObj.getOperator().getNickname() <<std::endl;
+			// this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
+			//  std::cout << "operator :" <<   this->_channelObj.getOperator().getNickname() << std::endl;
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
         	sendReply(":localhost MODE " + channelName + " +nt\r\n");
         	sendReply(":localhost 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
 			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
-			// this->_channelObj._channelMap[channelName].setChannelCreationTime(this->getCurrentUnixTimestamp());
 		}
 		else if (!_client.isMemberOfChannel(channelName, _client.getFd())) // 0
 		{
@@ -295,6 +296,7 @@ void Command::joinCommand()
 			this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
 			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");
 			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
+			this->_channelObj._channelMap[channelName] = this->_channelObj;
 		}
     }
 };
@@ -520,7 +522,7 @@ void Command::nickCommand()
 		}
 		else if(_client.getNickname() != "" && _client.getUsername() != "")
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NICK " + this->_args[0] + "\r\n"); 
-		this->_client.setNickname(this->_args[0]); 
+		this->_client.setNickname(this->_args[0]);
 	}
 };
 
@@ -602,10 +604,10 @@ void	Command::quitCommand()
 	{
 		if (it->getNickname() == _client.getNickname())
 		{
-			it->setIsRegistered(false);
-			it->setNickname("");
-			it->setPassword("");
-			it->setUsername("");
+			_client.setIsRegistered(false);
+			_client.setNickname("");
+			_client.setPassword("");
+			_client.setUsername("");
 			break;
 		}
 		++it;
@@ -633,6 +635,7 @@ int Command::modeAnalyzer()
 				{
 					mode = std::string(1, sign) + this->_args[1][i];
 					std::vector<std::string>::iterator it = std::find(this->modes.begin(), this->modes.end(), mode);
+					// std::vector<std::string>::iterator modeFound = std::find(this->_channelObj.getModes(), this->modes.end(), mode);
 					if (it == this->modes.end())
 						this->modes.push_back(mode);
 				}
@@ -646,13 +649,22 @@ int Command::modeAnalyzer()
 void	Command::modeCommand()
 {
 	// case if the user wants to see channel modes only!
-	if (this->_args.size() == 2)
+	if (this->_args.size() && this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
-		if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
-			sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
-		else if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1)
+		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
+		return ;
+	}
+	else
+		this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
+	if (this->_args.size() == 1)
+	{
+		sendReply(":localhost 324 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getModes() + "\r\n"); //RPL_CHANNELMODEIS (324)
+		sendReply(":localhost 329 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getChannelCreationTime() + "\r\n"); //RPL_CREATIONTIME (329)
+	}
+	else if (this->_args.size() >= 2)
+	{
+		if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1)
 		{
-			// std::cout << "OPerator: " << this->_channelObj.getOperator().getNickname() << std::endl;
 			if (this->_client. getFd() != this->_channelObj.getOperator().getFd())
 				sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[0] + " :You must have channel halfop access or above to set channel mode " + this->_args[1][1] + "\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 			else
@@ -665,17 +677,63 @@ void	Command::modeCommand()
 					{
 						if ((*it)[1] == 'i') // Invite-Only Mode
 						{
-							if (*it == "+i" && !this->_channelObj._channelMap[this->_args[0]].findMode("+i"))
+							if (*it == "+i" && !this->_channelObj.findMode("+i"))
 							{
 								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i\r\n");
-								this->_channelObj._channelMap[this->_args[0]].setMode(*it);
+								this->_channelObj.setMode(*it);
 							}
-							if (*it == "-i" && this->_channelObj._channelMap[this->_args[0]].findMode("+i"))
+							if (*it == "-i" && this->_channelObj.findMode("+i"))
 							{
 								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -i\r\n");
-								this->_channelObj._channelMap[this->_args[0]].setMode(*it);
+								this->_channelObj.setMode(*it);
 							}
 						}
+						else if ((*it)[1] == 'l') // Limit-Channel Mode
+						{
+							if (this->_args.size() == 2 && (*it) == "+l")
+							{
+								sendReply(":localhost 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								return ;
+							}
+							if (this->_args.size() > 1)
+							{
+								int tmp = atoi(this->_args[2].c_str());
+								std::stringstream limitClients(tmp);
+
+								if (*it == "+l" && tmp > 0)
+								{
+									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
+									// std::string mode = "+l " + limitClients.str();;
+									this->_channelObj.setMode("+l");
+									this->_channelObj.setLimitUsers(tmp);
+								}
+								if (*it == "-l" && this->_channelObj.findMode("+l"))
+								{
+									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -l\r\n");
+									this->_channelObj.setMode("-l");
+									this->_channelObj.setLimitUsers(0);
+								}
+							}
+						}
+						// else if ((*it)[1] == 'o') // Set Operator Privileges
+						// {
+						// 	if (this->_args.size() <  3)
+						// 	{
+						// 		sendReply(":localhost 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+						// 		return ;
+						// 	}
+						// 	if (*it == "+o")
+						// 	{
+						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
+						// 		this->_channelObj.getUserMap[].setOpPrivilegePermission(OPERATOR);
+						
+						// 	}
+						// 	if (*it == "-o" && this->_client.getOpPriviligePermission())
+						// 	{
+						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -o\r\n");
+						// 		this->_client.setOpPrivilegePermission(CLIENT);
+						// 	}
+						// }
 						++it;
 					}
 				}
@@ -684,6 +742,7 @@ void	Command::modeCommand()
 			}
 		}	
 	}
+	this->_channelObj._channelMap[this->_args[0]] = this->_channelObj;
 };
 
 void Command::broadcast( std::string const &channel, std::string const &msg)

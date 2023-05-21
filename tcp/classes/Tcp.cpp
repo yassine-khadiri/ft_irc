@@ -6,11 +6,15 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/05 19:58:35 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 15:50:11 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Tcp.hpp"
+
+Tcp::Tcp()
+{  
+};
 
 Tcp::Tcp( int port ): port(port)
 {

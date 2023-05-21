@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/20 18:14:14 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 18:03:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 channelMap Channel::_channelMap;
 
-Channel::Channel() : _channelName(""), _topic(""), _key("")
+Channel::Channel() : _channelName(""), _topic(""),_limitUsers(0), _key("")
 {
+};
+
+Channel::Channel( Channel const &channel )
+{
+    *this = channel;
 };
 
 Channel::Channel( std::string _channelName, std::string _topic, std::string _key, Client _member )
@@ -24,6 +29,7 @@ Channel::Channel( std::string _channelName, std::string _topic, std::string _key
     this->_topic = _topic;
     this->_key = _key;
     this->_member = _member;
+    this->_limitUsers = 0;
 };
  
 Channel&  Channel::operator=( Channel const & channel )
@@ -54,9 +60,27 @@ std::string Channel::getTopic() const
     return this->_topic;
 };
 
+std::string Channel::getModes() const
+{
+    int i = -1;
+    std::string mode = "+nt";
+
+    while (++i < (int)this->_modes.size())
+        mode +=  this->_modes[i];
+    if (_limitUsers)
+    {
+        std::stringstream ss;
+        ss << _limitUsers;
+        std::cout << ss.str() << std::endl;
+        mode += " " + ss.str();
+    }
+    std::cout << mode << std::endl;
+    return mode;
+};
+
 int Channel::findMode( std::string mode )
 {
-    std::vector<std::string>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), mode);
+    std::vector<char>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), mode[1]);
     if (it == this->_modes.end())
         return 0;
     return 1;
@@ -99,16 +123,27 @@ void Channel::setTopic( std::string _topic )
 
 void Channel::setMode( std::string _mode )
 {
+    std::vector<char>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), _mode[1]);
     if (_mode[0] == '-')
     {
-        std::string revMode = "+" + std::string(1, _mode[1]);
-        std::vector<std::string>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), revMode);
-        this->_modes.erase(it);    
+        if (it != this->_modes.end())
+            this->_modes.erase(it);
     }
     else
-	    this->_modes.push_back(_mode);
+    {
+        if (it == this->_modes.end() )
+            this->_modes.push_back(_mode[1]);
+    }
+	    
 };
-
+int Channel::getLimitUsers() const
+{
+    return _limitUsers;
+}
+void Channel::setLimitUsers(int limit)
+{
+    _limitUsers = limit;
+}
 void Channel::setTopicTime( std::string _topicTime )
 {
     this->_topicTime = _topicTime;
@@ -136,7 +171,8 @@ int Channel::verifyKey( std::string &_key ) const
 
 void Channel::addUserToUserMap( Client &_client, int privilege )
 {
-    this->_channelMap[this->getChannelName()]._userMap.insert(std::make_pair(_client.getFd(), _client));
+    // this->_channelMap[this->getChannelName()]._userMap.insert(std::make_pair(_client.getFd(), _client));
+    this->_userMap.insert(std::make_pair(_client.getFd(), _client));
     
     _client.setOpPrivilegePermission(privilege);
     if (privilege)
@@ -160,27 +196,6 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 	return 0;
 };
 
-// void Channel::removeUser( Client &_client )
-// {
-//     this->_userMap.erase(_client.getFd());
-//     _client.channelSegment(*this);
-// };
-
-// int Channel::channelFound( std::string channelName )
-// {
-// 	channelMap::iterator it = this->_channelMap.begin();
-
-// 	while(it != this->_channelMap.end())
-// 	{
-// 		// std::cout << "key: " << it->first << std::endl;
-// 		// std::cout <<  "value: " << it->second.getChannelName() << std::endl;
-// 		if (channelName == it->first)
-// 			return std::distance(this->_channelMap.begin(), it);
-// 		it++;
-// 	}
-// 	return -1;
-// };
-
 std::string Channel::usersList() const
 {
     std::string userList = ":",
@@ -195,6 +210,6 @@ std::string Channel::usersList() const
             userList += it->second.getNickname() + " ";
     }
     userList += "@" + userOper;
-    std::cout << userList << std::endl;
+
     return userList;
-}
+};

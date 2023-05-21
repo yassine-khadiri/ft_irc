@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Tcp.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbouqssi <hbouqssi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:20:55 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/06 06:47:54 by hbouqssi         ###   ########.fr       */
+/*   Updated: 2023/05/21 15:49:55 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ protected:
     int port;
     struct sockaddr_in addr;
 public:
+    Tcp();
     Tcp( int port );
     ~Tcp();
     int initialize();

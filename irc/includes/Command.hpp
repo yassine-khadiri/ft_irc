@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/20 18:59:51 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 17:01:08 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iterator>
 #include <vector>
 #include <ctime>
+#include <sstream>
 // #include "Ircserv.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
@@ -58,6 +59,7 @@ class Command
 		std::vector<Client>			_clients;
 		std::vector<std::string>	modes;
 	public :
+		Command();
 		Command(std::string	&pass);
 		void exec(int nbClient,std::string &msg,std::vector<Client> &clients);
 		void						toUpper(std::string &str);

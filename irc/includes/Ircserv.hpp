@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/20 18:57:33 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 15:47:10 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Ircserv : public Tcp
     int waitForConnection();
     Command     cmd;
 public:
+    Ircserv();
     Ircserv( int port, std::string password );
     ~Ircserv();
     int createServerSocket();

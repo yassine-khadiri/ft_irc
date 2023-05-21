@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/20 18:08:09 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/21 17:51:00 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ class Channel
 {
         std::string                 _channelName;
         std::string                 _topic;
-        std::vector<std::string>    _modes;
+        std::vector<char>           _modes;
+        int                         _limitUsers;
         std::string                 _topicTime;
         std::string                 _channelCreationTime;
         std::string                 _key;
@@ -40,9 +41,13 @@ class Channel
         Channel();
         Channel( std::string channelName, std::string _topic, std::string key, Client _member);
         Channel& operator=( Channel const &channel );
+        Channel( Channel const &channel );
         ~Channel();
+        int getLimitUsers() const ;
+        void setLimitUsers(int limit);
         std::string getChannelName() const;
         std::string getTopic() const;
+        std::string getModes() const;
         int         findMode( std::string mode );
         std::string getTopicTime() const;
         std::string getChannelCreationTime() const;
