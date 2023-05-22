@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/21 18:47:23 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 16:46:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ Command::Command(std::string	&pass)
 {
 	_pass = pass;
 	initBasicCommand();
-}
+};
+
 int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::string &cmd)
 {
 	if(msg == "")
@@ -36,6 +37,16 @@ int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::
 	if(tab > 0)
 		arg.push_back(msg.substr(tab , msg.length()));
 	return (arg.size()); 
+};
+
+std::string getMachineHostName()
+{
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) != 0) {
+        // Error occurred while retrieving the hostname
+        return "";
+    }
+    return hostname;
 };
 
 void Command::toUpper(std::string &str)
@@ -87,15 +98,15 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 	this->modes.clear();
 	if (splitParams(msg, _args, _command) == -1)
 	{
-		sendReply(":localhost 421 * : " + _command + " Unknown command\r\n");
+		sendReply(":" + getMachineHostName() + " 421 * : " + _command + " Unknown command\r\n");
 		return ;
 	}
 	if (!_client.getIsRegistered() &&  this->_indexCmd != USER  && this->_indexCmd != NICK && this->_indexCmd != PASS)
 	{
-		sendReply(":localhost 451 * :You have not registered\r\n");
+		sendReply(":" + getMachineHostName() + " 451 * :You have not registered\r\n");
 		return ;
 	}
-	// std::cout << "Command: " << msg << std::endl;
+	 std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{
@@ -216,17 +227,17 @@ int	Command::nickExist(std::string nick)
 void Command::passCommand()
 {
 	if (this->_client.getIsRegistered())
-		sendReply(":localhost 462 * :You are already registered\r\n");
+		sendReply(":" + getMachineHostName() + " 462 * :You are already registered\r\n");
 	else if(this->_client.getPassword() != "")
-		sendReply(":localhost 462 * :You are already give me password\r\n");
+		sendReply(":" + getMachineHostName() + " 462 * :You are already give me password\r\n");
 	else
 	{
 		if(this->_args.size() != 1 || this->_args[0] == "")
-			sendReply(":localhost 461 * :PASS <password>\r\n");
+			sendReply(":" + getMachineHostName() + " 461 * :PASS <password>\r\n");
 		else if (this->_args[0] == this->_pass)
 			this->_client.setPassword(this->_args[0]);
 		else
-			sendReply(":localhost 464 * :Password incorrect\r\n");
+			sendReply(":" + getMachineHostName() + " 464 * :Password incorrect\r\n");
 	}
 };
 
@@ -245,7 +256,7 @@ void Command::joinCommand()
 {
     if (this->_args.size() < 1)
     {
-        sendReply(":localhost 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+        sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
         return;
     }
     std::stringstream channelSplitter(this->_args[0]);
@@ -264,7 +275,7 @@ void Command::joinCommand()
     {
         if (channelName.empty() || channelName[0] != '#')
         {
-            sendReply(":localhost 476 " + channelName + " Invalid channel name\r\n");
+            sendReply(":" + getMachineHostName() + " 476 " + channelName + " Invalid channel name\r\n");
             continue;
         }
 		if (_client.isMemberOfChannel(channelName, _client.getFd()) == -1)
@@ -276,10 +287,10 @@ void Command::joinCommand()
 			this->_channelObj.addChannelToChannelMap();
 			// this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
 			//  std::cout << "operator :" <<   this->_channelObj.getOperator().getNickname() << std::endl;
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-        	sendReply(":localhost MODE " + channelName + " +nt\r\n");
-        	sendReply(":localhost 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
-			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
+        	sendReply(":" + getMachineHostName() + " MODE " + channelName + " +nt\r\n");
+        	sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
+			sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 		}
 		else if (!_client.isMemberOfChannel(channelName, _client.getFd())) // 0
 		{
@@ -287,15 +298,15 @@ void Command::joinCommand()
 			std::string  checkKey = getChannelKey(channelKeys, this->_channelObj._channelMap.size());
 			if (!this->_channelObj.verifyKey(checkKey))
 			{
-				sendReply(":localhost 474 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+				sendReply(":" + getMachineHostName() + " 474 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
 				return ;
 			}
 			this->_channelObj.addUserToUserMap(_client, CLIENT);
-			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
+			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 
-			this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost JOIN " + channelName + "\r\n");
-			sendReply(":localhost 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");
-			sendReply(":localhost 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
+			this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
+			sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");
+			sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 			this->_channelObj._channelMap[channelName] = this->_channelObj;
 		}
     }
@@ -307,7 +318,7 @@ void Command::partCommand()
 	if (!this->_args.size())
 	{
 		// ERR_NEEDMOREPARAMS (461)
-        sendReply(":localhost 461 " + _client.getNickname() + " PART :Not enough parameters\r\n");
+        sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " PART :Not enough parameters\r\n");
 		return;
 	}
 	std::string message = "";
@@ -322,23 +333,23 @@ void Command::partCommand()
     {
 		// Parting A Channel You’re Not Joined To: (ERR_NOTONCHANNEL (442))
 		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
-			message = ":localhost 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
+			message = ":" + getMachineHostName() + " 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
 		else if (this->getClient().isMemberOfChannel(channelName, _client.getFd()) == -1)
 		{
 			// Parting A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
 			if (channelName[0] == ':' && !channelName[1])
-				message = ":localhost 403 " + this->_client.getNickname() + " * No such channel\r\n";
+				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " * No such channel\r\n";
 			else
-				message = ":localhost 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
+				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
 		}
 		else
 		{
 			// Parting With No Reason (Already Joined!):
-			message = ":" + this->_client.getNickname() + "!@localhost PART " + channelName + "\r\n";
+			message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
 			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 			// Parting With A Reason:
 			if (this->_args[1][0] == ':')
-				message = ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost PART " + channelName + " " + this->_args[1] + "\r\n";
+				message = ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " PART " + channelName + " " + this->_args[1] + "\r\n";
 		}																			
 		sendReply(message);
 	}
@@ -357,7 +368,7 @@ void Command::topicCommand()
 	// Set A Topic To A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
 	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
-		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " No such channel\r\n");
+		sendReply(":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + this->_args[0] + " No such channel\r\n");
 		return;
 	}
 	// Setting A Topic
@@ -372,18 +383,18 @@ void Command::topicCommand()
 			topic = this->_args[1];
 		_channelObj._channelMap[this->_args[0]].setTopic(topic);
 		_channelObj._channelMap[this->_args[0]].setTopicTime(this->getCurrentUnixTimestamp());
-		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@localhost TOPIC " + this->_args[0] + " " + this->_args[1] + "\r\n");
+		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " TOPIC " + this->_args[0] + " " + this->_args[1] + "\r\n");
 	}
 	else if (this->_args.size() == 1)
 	{
 		if (_channelObj._channelMap[this->_args[0]].getTopic().empty())
-			sendReply(":localhost 331 " + this->_client.getNickname() + " " + this->_args[0] + " :No topic is set\r\n");
+			sendReply(":" + getMachineHostName() + " 331 " + this->_client.getNickname() + " " + this->_args[0] + " :No topic is set\r\n");
 		else
 		{
 			//RPL_TOPIC (332)
-			sendReply(":localhost 332 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getTopic() + "\r\n");
+			sendReply(":" + getMachineHostName() + " 332 " + this->_client.getNickname() + " " + this->_args[0] + " " + _channelObj._channelMap[this->_args[0]].getTopic() + "\r\n");
 			// RPL_TOPICTIME (333)
-			sendReply(":localhost 333 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_client.getNickname() + " " + _channelObj._channelMap[this->_args[0]].getTopicTime() + "\r\n");
+			sendReply(":" + getMachineHostName() + " 333 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_client.getNickname() + " " + _channelObj._channelMap[this->_args[0]].getTopicTime() + "\r\n");
 		}
 	}
 };
@@ -404,23 +415,23 @@ int	Command::searchClientByName( std::string clientName )
 void Command::inviteCommand()
 {
 	if (this->_args.size() == 1)
-		sendReply(":localhost 461 " + this->_client.getNickname() + " " + this->_args[1] + " :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+		sendReply(":" + getMachineHostName() + " 461 " + this->_client.getNickname() + " " + this->_args[1] + " :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 	else if (this->_args.size() == 2)
 	{
 		if (this->_client.isMemberOfChannel(this->_args[1], this->_client.getFd()) == -1)
-			sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[1] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
+			sendReply(":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + this->_args[1] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
 		else if (!this->_client.isMemberOfChannel(this->_args[1], this->_client.getFd()))
-			sendReply(":localhost 442 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not on that channel\r\n"); //ERR_NOTONCHANNEL (442)
+			sendReply(":" + getMachineHostName() + " 442 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not on that channel\r\n"); //ERR_NOTONCHANNEL (442)
 		else if (this->searchClientByName(this->_args[0]))
 		{
 			if (this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])) == 1)
-				sendReply(":localhost 443 " + this->_client.getNickname() + " " + this->_args[1] + " :is already on channel\r\n"); //ERR_USERONCHANNEL (443)
+				sendReply(":" + getMachineHostName() + " 443 " + this->_client.getNickname() + " " + this->_args[1] + " :is already on channel\r\n"); //ERR_USERONCHANNEL (443)
 			else if (!this->_client.isMemberOfChannel(this->_args[1], this->searchClientByName(this->_args[0])))
 			{
 				if (this->_channelObj._channelMap[this->_args[1]].findMode("+i") && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
-					sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
+					sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 				else
-					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@localhost INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
+					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@" + getMachineHostName() + " INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
 			}
 		}
 	}
@@ -430,7 +441,7 @@ void Command::kickCommand()
 {
 	if (this->_args.size() < 3)
     {
-        sendReply(":localhost 461 " + _client.getNickname() + " KICK :Not enough parameters\r\n");
+        sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " KICK :Not enough parameters\r\n");
         return;
     }
 	std::string message = "";
@@ -438,16 +449,16 @@ void Command::kickCommand()
     std::string channelName;
 	
 	if(this->_client.getOpPriviligePermission() == CLIENT)
-		sendReply(":localhost 482 " + _client.getNickname() + " " + channelName + " :You're not channel operator");
+		sendReply(":" + getMachineHostName() + " 482 " + _client.getNickname() + " " + channelName + " :You're not channel operator");
 	while (std::getline(channelSplitter, channelName, ','))
     {
 		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
-			message = ":localhost 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
+			message = ":" + getMachineHostName() + " 442 " + this->_client.getNickname() + " " + channelName + " :You're not on that channel\r\n";
 		else if (this->getClient().isMemberOfChannel(channelName, _client.getFd()) == -1)
-			message = ":localhost 403 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n";
+			message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + channelName + " :No such channel\r\n";
 		else
 		{
-			message = ":" + this->_client.getNickname() + "!@localhost PART " + channelName + "\r\n";
+			message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
 			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 			//kick a user by specifying the reason why ...
 		}																			
@@ -477,16 +488,23 @@ std::string getTime()
     return std::string(time_str) + " \r\n";
 };
 
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output)
+{
+    size_t totalSize = size * nmemb;
+    output->append(static_cast<char*>(contents), totalSize);
+    return totalSize;
+};
+
 void Command::botCommand()
 {
 	if(this->_args.size() < 1)
 	{
-        sendReply(":localhost 461 " + _client.getNickname() + " BOT :Not enough parameters\r\n");
+        sendReply(":"+ getMachineHostName() +" 461 " + _client.getNickname() + " BOT :Not enough parameters\r\n");
         return;
     }
 	std::stringstream channelSplitter(this->_args[0]);
 	std::string cmd = channelSplitter.str();
-	if (cmd != "time" && cmd != "nokta")
+	if (cmd != "time" && cmd != "nokta"  && cmd != "jokes")
 	{
 		sendReply("300 RPL_NONE: Available Bots Now : [time - nokta]\r\n");
 		return ;
@@ -494,35 +512,81 @@ void Command::botCommand()
 	if (cmd == "time")
 		sendReply("300 RPL_NONE :" + getTime());
 	if (cmd == "nokta")
-		sendReply("300 RPL_NONE :" + getJokeQuote() + "\r\n");	 
+		sendReply("300 RPL_NONE :" + getJokeQuote() + "\r\n");	
+	if (cmd == "jokes")
+	{
+		 std::string url = "https://api.api-ninjas.com/v1/jokes?limit";
+
+    // Initialize cURL
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        // Set the URL
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        // Set the headers
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, "X-Api-Key: KjtJWjMZe7WLG0ucyGyHvcOuhssaEopZZKXnCUhu");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        // Set the response callback
+        std::string response;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        // Perform the request
+        CURLcode res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "Error: " << curl_easy_strerror(res) << std::endl;
+        } else {
+            std::string clean = response.erase(response.size() - 3);
+			std::string output = clean.substr(11, -1);
+			sendReply("300 RPL_NONE: " + output + "\r\n");
+        }
+
+        // Clean up
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(headers);
+    } 
+	} 
 };
 
 void Command::nickCommand()
 {
+	std::string hostname = getMachineHostName();
+	std::cout << "\nHOOOO: "  << hostname << std::endl;
 	if(this->_client.getPassword() == "")
 	{
-		sendReply(":localhost ERROR * :You must enter a password first\r\n");
+		sendReply(":"+ getMachineHostName() +" ERROR * :You must enter a password first\r\n");
 		return ;
 	}
 	if (this->_args.size() != 1 || this->_args[0] == "")
-		sendReply(":localhost 431 " + _client.getNickname() + ": NICK <nickname>\r\n");
+		sendReply(":"+ getMachineHostName() +" 431 " + _client.getNickname() + ": NICK <nickname>\r\n");
 	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
-		sendReply(":localhost 432 " + _client.getNickname() + ": Nickname invalid\r\n");
+		sendReply(":"+ getMachineHostName() +" 432 " + _client.getNickname() + ": Nickname invalid\r\n");
 	else if(nickExist(this->_args[0]) != -1)
-		sendReply(":localhost 433 " + _client.getNickname()+ " Nickname already in use\r\n");
+		sendReply(":"+ getMachineHostName() +" 433 " + _client.getNickname()+ " Nickname already in use\r\n");
 	else
 	{
 		if (_client.getNickname() == "" && _client.getUsername() != "")
 		{
-			sendReply(":localhost 001 " + this->_args[0] + " :Welcome to the Internet Relay Network " + this->_args[0] + "!\r\n");
-			sendReply(":localhost 002 " + this->_args[0] + " :Your host is localhost, running version 0.1\r\n");
-			sendReply(":localhost 003 " + this->_args[0] + " :This server was created 2019-10-10\r\n");
-			sendReply(":localhost 004 " + this->_args[0] + " :localhost 0.1\r\n");
+			sendReply(":"+ hostname + " 001 " + this->_args[0] + " :Welcome to the Internet Relay Network " + this->_args[0] + "!\r\n");
+			sendReply(":"+ hostname + " 002 " + this->_args[0] + " :Your host is "+ getMachineHostName() +", running version 0.1\r\n");
+			sendReply(":"+ hostname + " 003 " + this->_args[0] + " :This server was created 2019-10-10\r\n");
+			sendReply(":"+ hostname + " 004 " + this->_args[0] + " :"+ getMachineHostName() +" 0.1\r\n");
+			sendReply(":"+ hostname + " 251 " + this->_args[0] + " :There are 1 users and 1 server\r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :         	       _       _                            ___ ____   ____   ____                           \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :              | | ___ (_)_ __     ___  _   _ _ __  |_ _|  _ \\ / ___| / ___|  ___ _ ____   _____ _ __ \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :           _  | |/ _ \\| | '_ \\   / _ \\| | | | '__|  | || |_) | |     \\___ \\ / _ \\ '__\\ \\ / / _ \\ '__|\r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :          | |_| | (_) | | | | | | (_) | |_| | |     | ||  _ <| |___   ___) |  __/ |   \\ V /  __/ |   \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :           \\___/ \\___/|_|_| |_|  \\___/ \\__,_|_|    |___|_| \\_\\____| |____/ \\___|_|    \\_/ \\___|_|   \r\n");
+			sendReply(":"+ hostname + " 372 " + this->_args[0] + " :                        Please enjoy your stay!\r\n");
+			sendReply(":"+ hostname + " 372 " + this->_args[0] + " :you can use bot command (BOT) to get time && jokes && nokta!\r\n");
+			sendReply(":"+ hostname + " 376 " + this->_args[0] + " :Made by hbouqssi && ykhadiri && rgatnaou\r\n");
 			this->_client.setIsRegistered(true);
 		}
 		else if(_client.getNickname() != "" && _client.getUsername() != "")
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NICK " + this->_args[0] + "\r\n"); 
-		this->_client.setNickname(this->_args[0]);
+			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@"+ getMachineHostName() +"" + " NICK " + this->_args[0] + "\r\n"); 
+		this->_client.setNickname(this->_args[0]); 
 	}
 };
 
@@ -530,21 +594,31 @@ void	Command::userCommand()
 {
 	if(this->_client.getPassword() == "")
 	{
-		sendReply(":localhost ERROR * :You must enter a password first\r\n");
+		sendReply(":"+ getMachineHostName() +" ERROR * :You must enter a password first\r\n");
 		return ;
 	}
 	if (this->_args.size() != 4)
-		sendReply(":localhost 461 " + _client.getNickname() + ": USER <username> <hostname> <servername> <realname>\r\n");
+		sendReply(":"+ getMachineHostName() +" 461 " + _client.getNickname() + ": USER <username> <hostname> <servername> <realname>\r\n");
 	else if (this->_client.getUsername() != "" && this->_client.getNickname() != "")
-		sendReply(":localhost 462 " + _client.getNickname() + ":You are already registered\r\n");
+		sendReply(":"+ getMachineHostName() +" 462 " + _client.getNickname() + ":You are already registered\r\n");
 	else
 	{
 		if (_client.getNickname() != "" && _client.getUsername() == "")
 		{
-			sendReply(":localhost 001 " + _client.getNickname() + " :Welcome to the Internet Relay Network " + _client.getNickname() + "!\r\n");
-			sendReply(":localhost 002 " + _client.getNickname() + " :Your host is localhost, running version 0.1\r\n");
-			sendReply(":localhost 003 " + _client.getNickname() + " :This server was created 2019-10-10\r\n");
-			sendReply(":localhost 004 " + _client.getNickname() + " :localhost 0.1\r\n");
+			sendReply(":"+ getMachineHostName() +" 001 " + _client.getNickname() + " :Welcome to the Internet Relay Network " + _client.getNickname() + "!\r\n");
+			sendReply(":"+ getMachineHostName() +" 002 " + _client.getNickname() + " :Your host is "+ getMachineHostName() +", running version 0.1\r\n");
+			sendReply(":"+ getMachineHostName() +" 003 " + _client.getNickname() + " :This server was created 2019-10-10\r\n");
+			sendReply(":"+ getMachineHostName() +" 251 " + _client.getNickname() +" :There are 1 users and 1 server\r\n");
+			sendReply(":"+ getMachineHostName() +" 004 " + _client.getNickname() + " :"+ getMachineHostName() +" 0.1\r\n");                                                                                 
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :         	       _       _                            ___ ____   ____   ____                           \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :              | | ___ (_)_ __     ___  _   _ _ __  |_ _|  _ \\ / ___| / ___|  ___ _ ____   _____ _ __ \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :           _  | |/ _ \\| | '_ \\   / _ \\| | | | '__|  | || |_) | |     \\___ \\ / _ \\ '__\\ \\ / / _ \\ '__|\r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :          | |_| | (_) | | | | | | (_) | |_| | |     | ||  _ <| |___   ___) |  __/ |   \\ V /  __/ |   \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :           \\___/ \\___/|_|_| |_|  \\___/ \\__,_|_|    |___|_| \\_\\____| |____/ \\___|_|    \\_/ \\___|_|   \r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :                        Please enjoy your stay!\r\n");
+			sendReply(":"+ getMachineHostName() +" 372 " + _client.getNickname() +  " :you can use bot command (BOT) to get time && jokes && nokta!\r\n");
+			sendReply(":"+ getMachineHostName() +" 376 " + _client.getNickname() +  " :Made by hbouqssi && ykhadiri && rgatnaou\r\n");
+
 			this->_client.setIsRegistered(true);
 		}
 		this->_client.setUsername(this->_args[0]);
@@ -554,44 +628,44 @@ void	Command::userCommand()
 void	Command::privmsgCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
-		sendReply(":localhost 461 " + _client.getNickname() + ": PRIVMSG <nick/channel> <message>\r\n");
+		sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + ": PRIVMSG <nick/channel> <message>\r\n");
 	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == - 1)
-		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
+		sendReply(":" + getMachineHostName() + " 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
 		if ((this->_args[0][0] == '#') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
-				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
+				sendReply(":" + getMachineHostName() + " 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
 		else
 		{
-			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + "" + " PRIVMSG " + this->_args[0] + " :" + this->_args[1] + "\r\n");
 			if (this->_args[0][0] == '#')
 				this->broadcast(this->_args[0],tmp);
 			else
 				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		}
-		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
+		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@" + getMachineHostName() + "" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 }
 
 void	Command::noticeCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
-		sendReply(":localhost 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");
+		sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");
 	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
-		sendReply(":localhost 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
+		sendReply(":" + getMachineHostName() + " 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
 	else
 	{
 		if ((this->_args[0][0] == '#') && !_client.isMemberOfChannel(this->_args[0], this->_client.getFd()))
-				sendReply(":localhost 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
+				sendReply(":" + getMachineHostName() + " 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
 		else
 		{
-			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
+			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + "" + " NOTICE " + this->_args[0] + " :" + this->_args[1] + "\r\n");
 			if (this->_args[0][0] == '#')
 				this->broadcast(this->_args[0],tmp);
 			else
 				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);	
 		}
-		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@localhost" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
+		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@" + getMachineHostName() + "" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 };
 
@@ -599,7 +673,7 @@ void	Command::quitCommand()
 {
 	std::vector<Client>::iterator it = this->_clients.begin();
 
-	sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@localhost" + " QUIT " + this->_args[0] + "\r\n");
+	sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + "" + " QUIT " + this->_args[0] + "\r\n");
 	while(it != this->_clients.end())
 	{
 		if (it->getNickname() == _client.getNickname())
@@ -648,25 +722,24 @@ int Command::modeAnalyzer()
 
 void	Command::modeCommand()
 {
-	// case if the user wants to see channel modes only!
 	if (this->_args.size() && this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
-		sendReply(":localhost 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
+		sendReply(":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)
 		return ;
 	}
 	else
 		this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
 	if (this->_args.size() == 1)
 	{
-		sendReply(":localhost 324 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getModes() + "\r\n"); //RPL_CHANNELMODEIS (324)
-		sendReply(":localhost 329 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getChannelCreationTime() + "\r\n"); //RPL_CREATIONTIME (329)
+		sendReply(":" + getMachineHostName() + " 324 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getModes() + "\r\n"); //RPL_CHANNELMODEIS (324)
+		sendReply(":" + getMachineHostName() + " 329 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getChannelCreationTime() + "\r\n"); //RPL_CREATIONTIME (329)
 	}
 	else if (this->_args.size() >= 2)
 	{
 		if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1)
 		{
 			if (this->_client. getFd() != this->_channelObj.getOperator().getFd())
-				sendReply(":localhost 482 " + this->_client.getNickname() + " " + this->_args[0] + " :You must have channel halfop access or above to set channel mode " + this->_args[1][1] + "\r\n"); //ERR_CHANOPRIVSNEEDED (482)
+				sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[0] + " :You must have channel halfop access or above to set channel mode " + this->_args[1][1] + "\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 			else
 			{
 				if (this->modeAnalyzer() == 1)
@@ -679,12 +752,12 @@ void	Command::modeCommand()
 						{
 							if (*it == "+i" && !this->_channelObj.findMode("+i"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +i\r\n");
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +i\r\n");
 								this->_channelObj.setMode(*it);
 							}
 							if (*it == "-i" && this->_channelObj.findMode("+i"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -i\r\n");
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -i\r\n");
 								this->_channelObj.setMode(*it);
 							}
 						}
@@ -692,7 +765,7 @@ void	Command::modeCommand()
 						{
 							if (this->_args.size() == 2 && (*it) == "+l")
 							{
-								sendReply(":localhost 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
 							}
 							if (this->_args.size() > 1)
@@ -702,14 +775,14 @@ void	Command::modeCommand()
 
 								if (*it == "+l" && tmp > 0)
 								{
-									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
+									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
 									// std::string mode = "+l " + limitClients.str();;
 									this->_channelObj.setMode("+l");
 									this->_channelObj.setLimitUsers(tmp);
 								}
 								if (*it == "-l" && this->_channelObj.findMode("+l"))
 								{
-									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -l\r\n");
+									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -l\r\n");
 									this->_channelObj.setMode("-l");
 									this->_channelObj.setLimitUsers(0);
 								}
@@ -719,18 +792,18 @@ void	Command::modeCommand()
 						// {
 						// 	if (this->_args.size() <  3)
 						// 	{
-						// 		sendReply(":localhost 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+						// 		sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 						// 		return ;
 						// 	}
 						// 	if (*it == "+o")
 						// 	{
-						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
+						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
 						// 		this->_channelObj.getUserMap[].setOpPrivilegePermission(OPERATOR);
 						
 						// 	}
 						// 	if (*it == "-o" && this->_client.getOpPriviligePermission())
 						// 	{
-						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@localhost MODE " + this->_args[0] + " -o\r\n");
+						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o\r\n");
 						// 		this->_client.setOpPrivilegePermission(CLIENT);
 						// 	}
 						// }
@@ -738,7 +811,7 @@ void	Command::modeCommand()
 					}
 				}
 				else if (!this->modeAnalyzer())
-					sendReply(":localhost 472 " + this->_client.getNickname() + " " + this->_args[1] + " :is not a recognised channel mode.\r\n"); //ERR_UNKNOWNMODE (472)
+					sendReply(":" + getMachineHostName() + " 472 " + this->_client.getNickname() + " " + this->_args[1] + " :is not a recognised channel mode.\r\n"); //ERR_UNKNOWNMODE (472)
 			}
 		}	
 	}
@@ -751,7 +824,10 @@ void Command::broadcast( std::string const &channel, std::string const &msg)
 
 	while (it != this->_channelObj._channelMap[channel]._userMap.end())
 	{
-			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+			if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
+				continue;
+			else
+				send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;
 	}
 };

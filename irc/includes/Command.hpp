@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/21 17:01:08 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 16:32:54 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <vector>
 #include <ctime>
 #include <sstream>
+#include <curl/curl.h>
 // #include "Ircserv.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"

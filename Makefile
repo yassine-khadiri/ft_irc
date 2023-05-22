@@ -6,7 +6,7 @@
 #    By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/05/04 19:34:42 by ykhadiri         ###   ########.fr        #
+#    Updated: 2023/05/22 16:35:11 by ykhadiri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ OBJ = $(SRC:.cpp=.o)
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CPP) $(OBJ) -o $(NAME)
+	$(CPP) $(OBJ) -lcurl -o $(NAME)
 
 all : $(NAME)
 
