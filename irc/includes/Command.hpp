@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/22 16:32:54 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 16:54:31 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 
 class Ircserv;
 
-// #define channelMap std::map<std::string, Channel>
-// #define Map		   std::map<int, Client>
 #define _iterator   Map::iterator
 typedef enum
 {
@@ -97,5 +95,3 @@ class Command
 		int							searchClientByName( std::string clientName );
 		int 						modeAnalyzer();
 };
-// int		splitCommand(std::string str, std::vector<std::string> &v);
-// int		is_number(std::string str);

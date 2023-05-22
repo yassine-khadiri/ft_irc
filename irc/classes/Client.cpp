@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/21 15:17:48 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 18:06:44 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Client::Client()
 {	
 }
 
-Client::Client( int fdSocket ): _password(""), _nickname(""), _username(""), _isRegistered(false), _fdsocket(fdSocket)
+Client::Client( int fdSocket ): _password(""), _nickname(""), _username(""), _isRegistered(false), _fdsocket(fdSocket), _privilige(0)
 {
 	
 }
@@ -40,6 +40,7 @@ Client& Client::operator=(Client const &src)
 		this->_username = src._username;
 		this->_isRegistered = src._isRegistered;
 		this->_fdsocket = src._fdsocket;
+		this->_privilige = src._privilige;
 	}
 	return (*this);
 }

@@ -6,13 +6,17 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/22 16:46:35 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:22:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Command.hpp"
 
-Command::Command(std::string	&pass)
+Command::Command()
+{
+};
+
+Command::Command(std::string &pass)
 {
 	_pass = pass;
 	initBasicCommand();
@@ -157,24 +161,6 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 	// std::cout << "command : " << _args[0] << std::endl;
 };
 
-// std::string Command::joinVectorValues()
-// {
-// 	std::string joinedValues = "\"";
-
-// 	if (this->_args.size() > 2)
-// 	{
-// 		std::vector<std::string>::iterator it = this->_args.begin() + 1;
-// 		while (it != this->_args.end())
-// 		{
-// 			joinedValues += *it + ' ';
-// 			++it;
-// 		}
-// 	}
-// 	else
-// 		joinedValues = this->_args[1];
-// 	return joinedValues;
-// }
-
 std::string Command::getCommand() const
 {
 	return _command;
@@ -280,10 +266,11 @@ void Command::joinCommand()
         }
 		if (_client.isMemberOfChannel(channelName, _client.getFd()) == -1)
 		{
-			// std::cout  << "join oper :" <<   _client.getNickname() <<std::endl;
 			this->_channelObj = Channel(channelName, "", getChannelKey(channelKeys, this->_channelObj._channelMap.size()), _client);
 			this->_channelObj.addUserToUserMap(_client, OPERATOR);
 			this->_channelObj.setChannelCreationTime(this->getCurrentUnixTimestamp());
+			this->_channelObj.setMode("+n");
+			this->_channelObj.setMode("+t");
 			this->_channelObj.addChannelToChannelMap();
 			// this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
 			//  std::cout << "operator :" <<   this->_channelObj.getOperator().getNickname() << std::endl;
@@ -296,18 +283,19 @@ void Command::joinCommand()
 		{
 			this->_channelObj = this->_channelObj._channelMap[channelName];
 			std::string  checkKey = getChannelKey(channelKeys, this->_channelObj._channelMap.size());
+
 			if (!this->_channelObj.verifyKey(checkKey))
 			{
 				sendReply(":" + getMachineHostName() + " 474 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
 				return ;
 			}
 			this->_channelObj.addUserToUserMap(_client, CLIENT);
+			this->_channelObj._channelMap[channelName] = this->_channelObj;
 			// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 
 			this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 			sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");
 			sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
-			this->_channelObj._channelMap[channelName] = this->_channelObj;
 		}
     }
 };
@@ -504,6 +492,7 @@ void Command::botCommand()
     }
 	std::stringstream channelSplitter(this->_args[0]);
 	std::string cmd = channelSplitter.str();
+
 	if (cmd != "time" && cmd != "nokta"  && cmd != "jokes")
 	{
 		sendReply("300 RPL_NONE: Available Bots Now : [time - nokta]\r\n");
@@ -515,38 +504,40 @@ void Command::botCommand()
 		sendReply("300 RPL_NONE :" + getJokeQuote() + "\r\n");	
 	if (cmd == "jokes")
 	{
-		 std::string url = "https://api.api-ninjas.com/v1/jokes?limit";
+		std::string url = "https://api.api-ninjas.com/v1/jokes?limit";
 
-    // Initialize cURL
-    CURL* curl = curl_easy_init();
-    if (curl) {
-        // Set the URL
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		// Initialize cURL
+		CURL* curl = curl_easy_init();
 
-        // Set the headers
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, "X-Api-Key: KjtJWjMZe7WLG0ucyGyHvcOuhssaEopZZKXnCUhu");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+		if (curl)
+		{
+			// Set the URL
+			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-        // Set the response callback
-        std::string response;
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+			// Set the headers
+			struct curl_slist* headers = nullptr;
+			headers = curl_slist_append(headers, "X-Api-Key: KjtJWjMZe7WLG0ucyGyHvcOuhssaEopZZKXnCUhu");
+			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-        // Perform the request
-        CURLcode res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "Error: " << curl_easy_strerror(res) << std::endl;
-        } else {
-            std::string clean = response.erase(response.size() - 3);
-			std::string output = clean.substr(11, -1);
-			sendReply("300 RPL_NONE: " + output + "\r\n");
-        }
+			// Set the response callback
+			std::string response;
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-        // Clean up
-        curl_easy_cleanup(curl);
-        curl_slist_free_all(headers);
-    } 
+			// Perform the request
+			CURLcode res = curl_easy_perform(curl);
+			if (res != CURLE_OK) {
+				std::cerr << "Error: " << curl_easy_strerror(res) << std::endl;
+			} else {
+				std::string clean = response.erase(response.size() - 3);
+				std::string output = clean.substr(11, -1);
+				sendReply("300 RPL_NONE: " + output + "\r\n");
+			}
+
+			// Clean up
+			curl_easy_cleanup(curl);
+			curl_slist_free_all(headers);
+		}
 	} 
 };
 
@@ -669,7 +660,7 @@ void	Command::noticeCommand()
 	}
 };
 
-void	Command::quitCommand()
+void Command::quitCommand()
 {
 	std::vector<Client>::iterator it = this->_clients.begin();
 
@@ -690,7 +681,6 @@ void	Command::quitCommand()
 
 int Command::modeAnalyzer()
 {
-	// if ((this->_args[1].find_first_not_of("+-itkol") != std::string::npos))
 	if (this->_args[1].size() == 1 || this->_args[1].find_first_not_of("+-sn") == std::string::npos)
 		return -1;	
 	if ((this->_args[1].find_first_not_of("+-itkol") == std::string::npos))
@@ -718,9 +708,9 @@ int Command::modeAnalyzer()
 		return 1;
 	}
 	return 0;
-}
+};
 
-void	Command::modeCommand()
+void Command::modeCommand()
 {
 	if (this->_args.size() && this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
@@ -738,7 +728,8 @@ void	Command::modeCommand()
 	{
 		if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1)
 		{
-			if (this->_client. getFd() != this->_channelObj.getOperator().getFd())
+			std::cout << this->_client.getNickname() << " : " << this->_channelObj._userMap[this->_client.getFd()].getOpPriviligePermission() <<std::endl;
+			if (!this->_channelObj._userMap[this->_client.getFd()].getOpPriviligePermission())
 				sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[0] + " :You must have channel halfop access or above to set channel mode " + this->_args[1][1] + "\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 			else
 			{
@@ -788,25 +779,62 @@ void	Command::modeCommand()
 								}
 							}
 						}
-						// else if ((*it)[1] == 'o') // Set Operator Privileges
-						// {
-						// 	if (this->_args.size() <  3)
-						// 	{
-						// 		sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
-						// 		return ;
-						// 	}
-						// 	if (*it == "+o")
-						// 	{
-						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
-						// 		this->_channelObj.getUserMap[].setOpPrivilegePermission(OPERATOR);
+						else if ((*it)[1] == 'o') // Set/Remove Operator Privileges
+						{
+							int fdClient = this->searchClientByName(this->_args[2]);
+
+							if (this->_args.size() <  3)
+							{
+								sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								return ;
+							}
+							if (!fdClient || this->_client.isMemberOfChannel(this->_args[0], fdClient) != 1)
+							{
+								sendReply(":" + getMachineHostName() + " 401 " + this->_client.getNickname() + " " + this->_args[2] + " :No such nick/channel\r\n"); //ERR_NOSUCHNICK (401)
+								return;
+							}
+							if (*it == "+o")
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
+								this->_channelObj._userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(OPERATOR);
+							}
+							else if (*it == "-o" && this->_client.getOpPriviligePermission())
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o\r\n");
+								this->_channelObj._userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(CLIENT);
+							}
+						}
+						else if ((*it)[1] == 't') // Set/Remove Topic
+						{
+							if (*it == "+t" && !this->_channelObj.findMode("+t"))
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +t\r\n");
+								this->_channelObj.setMode("+t");
+							}
+							else if (*it == "-t" && this->_channelObj.findMode("+t"))
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -t\r\n");
+								this->_channelObj.setMode("-t");
+							}
+						}
+						else if ((*it)[1] == 'k') // Set/Remove Channel Key
+						{
+							if (*it == "+k" && this->_args.size() > 2)
+							{
+								std::string channelKey = this->_args[2];
+
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +k " + channelKey + "\r\n");
+								this->_channelObj.setKey(channelKey);
+								this->_channelObj.setMode("+k");
+							}
+							else if (*it == "-k" && this->_channelObj.findMode("+k"))
+							{
+								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -k\r\n");
+								this->_channelObj.setKey("");
+								this->_channelObj.setMode("-k");
+							}
+						}
 						
-						// 	}
-						// 	if (*it == "-o" && this->_client.getOpPriviligePermission())
-						// 	{
-						// 		sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o\r\n");
-						// 		this->_client.setOpPrivilegePermission(CLIENT);
-						// 	}
-						// }
 						++it;
 					}
 				}
@@ -821,13 +849,16 @@ void	Command::modeCommand()
 void Command::broadcast( std::string const &channel, std::string const &msg)
 {
 	userMap::iterator it = this->_channelObj._channelMap[channel]._userMap.begin();
-
 	while (it != this->_channelObj._channelMap[channel]._userMap.end())
 	{
-			if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
-				continue;
-			else
-				send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+			// if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
+			// 	continue;
+			// else
+			// {
+				std::cout << "broadcast :" << it->second.getNickname() << " : "  << msg ;
+				 send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+			// }
+			
 		++it;
 	}
 };

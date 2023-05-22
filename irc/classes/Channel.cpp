@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/21 18:03:18 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:21:12 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ std::string Channel::getTopic() const
 std::string Channel::getModes() const
 {
     int i = -1;
-    std::string mode = "+nt";
+    std::string mode = "+";
 
     while (++i < (int)this->_modes.size())
         mode +=  this->_modes[i];
@@ -124,6 +124,7 @@ void Channel::setTopic( std::string _topic )
 void Channel::setMode( std::string _mode )
 {
     std::vector<char>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), _mode[1]);
+
     if (_mode[0] == '-')
     {
         if (it != this->_modes.end())
@@ -131,7 +132,7 @@ void Channel::setMode( std::string _mode )
     }
     else
     {
-        if (it == this->_modes.end() )
+        if (it == this->_modes.end())
             this->_modes.push_back(_mode[1]);
     }
 	    
@@ -173,7 +174,7 @@ void Channel::addUserToUserMap( Client &_client, int privilege )
 {
     // this->_channelMap[this->getChannelName()]._userMap.insert(std::make_pair(_client.getFd(), _client));
     this->_userMap.insert(std::make_pair(_client.getFd(), _client));
-    
+    this->_userMap[_client.getFd()].setOpPrivilegePermission(privilege);
     _client.setOpPrivilegePermission(privilege);
     if (privilege)
         this->_operator = _client;
@@ -202,7 +203,7 @@ std::string Channel::usersList() const
                 userOper;
     userMap::const_iterator it;
 
-    for (it = this->_channelMap[this->getChannelName()]._userMap.begin(); it != this->_channelMap[this->getChannelName()]._userMap.end(); ++it)
+    for (it = this->_userMap.begin(); it != this->_userMap.end(); ++it)
     {
         if (it->second.getOpPriviligePermission())
             userOper = it->second.getNickname();
