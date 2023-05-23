@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/22 19:21:12 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/23 14:26:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 	if (it != this->_channelMap.end())
 	{
 		it->second._userMap.erase(clientFd);
-        if(this->_channelMap[channelName]._userMap.size() == 1)
+        if (this->_channelMap[channelName]._userMap.size() == 0)
         {
             this->_channelMap.erase(channelName);
             this->_operator = NULL;
