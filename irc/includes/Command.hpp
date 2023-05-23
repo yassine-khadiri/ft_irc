@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/23 17:04:43 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:37:24 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,6 @@ class Command
 		std::string					getCurrentUnixTimestamp();
 		int							searchClientByName( std::string clientName );
 		int 						modeAnalyzer();
-		void						getAllChannelUser();
+		int							leaveAllChannels();
+		void						sendMesgToCommunClients(std::string &msg);
 };

@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/23 14:26:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:06:27 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 std::string Channel::usersList() const
 {
     std::string userList = ":",
-                userOper;
+                userOper = "";
     userMap::const_iterator it;
 
     for (it = this->_userMap.begin(); it != this->_userMap.end(); ++it)
@@ -210,7 +210,8 @@ std::string Channel::usersList() const
         else
             userList += it->second.getNickname() + " ";
     }
-    userList += "@" + userOper;
+    if (!userOper.empty())
+        userList += "@" + userOper;
 
     return userList;
 };

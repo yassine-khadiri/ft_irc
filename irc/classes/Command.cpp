@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/23 18:03:34 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:47:29 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,19 +239,19 @@ std::string getChannelKey(const std::vector<std::string>& channelKeys, int chann
     return chKey;
 };
 
-void Command::getAllChannelUser()
-{
-	this->_args.clear();
-	this->_args.push_back("");
-	channelMap::iterator it = this->_channelObj._channelMap.begin();
+// void Command::getAllChannelUser()
+// {
+// 	this->_args.clear();
+// 	this->_args.push_back("");
+// 	channelMap::iterator it = this->_channelObj._channelMap.begin();
 
-	while (it != this->_channelObj._channelMap.end())
-	{
-		if (this->_client.isMemberOfChannel(it->first, this->_client.getFd()) == 1)
-			this->_args[0] += it->first + ",";
-		++it;
-	}
-};
+// 	while (it != this->_channelObj._channelMap.end())
+// 	{
+// 		if (this->_client.isMemberOfChannel(it->first, this->_client.getFd()) == 1)
+// 			this->_args[0] += it->first + ",";
+// 		++it;
+// 	}
+// };
 
 void Command::joinCommand() 
 {
@@ -259,10 +259,7 @@ void Command::joinCommand()
     {
 		if (this->_args.size() == 1 && this->_args[0] == "0")
 		{
-			this->getAllChannelUser();
-			if (!this->_args[0].empty())
-				this->partCommand();
-			else
+			if (!leaveAllChannels())
 				sendReply(":" + getMachineHostName() + " 476 " + _client.getNickname() + " 0 :Invalid channel name\r\n");
         	return;
 		}
@@ -383,7 +380,7 @@ void Command::partCommand()
 			if (this->_args[1][0] == ':')
 				message = ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " PART " + channelName + " " + this->_args[1] + "\r\n";
 		}																			
-		sendReply(message);
+		broadcast(channelName,message);
 	}
 };
 
@@ -397,6 +394,11 @@ std::string Command::getCurrentUnixTimestamp()
 
 void Command::topicCommand()
 {
+	int i = -1;
+	while(++i < (int)this->_args.size())
+	{
+		std::cout << _args[i] <<std::endl;
+	}
 	// Set A Topic To A Non-existent Channel: (ERR_NOSUCHCHANNEL (403))
 	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
@@ -709,23 +711,67 @@ void	Command::noticeCommand()
 	}
 };
 
+
+void Command::sendMesgToCommunClients(std::string &msg)
+{
+	channelMap::iterator it1 = this->_channelObj._channelMap.begin();
+	std::vector<int> clients;
+
+	while (it1 != this->_channelObj._channelMap.end())
+	{
+		this->_channelObj = this->_channelObj._channelMap[it1->first];
+		if (this->_channelObj._userMap[_client.getFd()].isMemberOfChannel(it1->first,_client.getFd()) == 1)
+		{
+			userMap::iterator it2 = this->_channelObj._userMap.begin();
+			while (it2 != this->_channelObj._userMap.end())
+			{
+				if (!std::count (clients.begin(), clients.end(), it2->first))
+					clients.push_back(_client.getFd());
+				it2++;
+			}
+		}
+		it1++;
+	}
+	int i = 0;
+	while (i < (int)clients.size())
+	{
+		std::cout << "client " << i << " :" << clients[i] << std::endl;
+		if (clients[i] != _client.getFd())
+			send(clients[i],msg.c_str(),msg.length(),0);
+		i++;
+	}
+	
+}
+
 void Command::quitCommand()
 {
-	std::vector<Client>::iterator it = this->_clients.begin();
+	std::string msg = ":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " QUIT " + this->_args[0] + "\r\n";
+	sendMesgToCommunClients(msg);
+	leaveAllChannels();
+	sendReply(msg);
+	_client.setIsRegistered(false);
+	_client.setNickname("");
+	_client.setPassword("");
+	_client.setUsername("");
+};
 
-	sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + "" + " QUIT " + this->_args[0] + "\r\n");
-	while(it != this->_clients.end())
+int Command::leaveAllChannels()
+{
+	this->_args.clear();
+	this->_args.push_back("");
+	channelMap::iterator it = this->_channelObj._channelMap.begin();
+
+	while (it != this->_channelObj._channelMap.end())
 	{
-		if (it->getNickname() == _client.getNickname())
-		{
-			_client.setIsRegistered(false);
-			_client.setNickname("");
-			_client.setPassword("");
-			_client.setUsername("");
-			break;
-		}
+		if (this->_client.isMemberOfChannel(it->first, this->_client.getFd()) == 1)
+			this->_args[0] += it->first + ",";
 		++it;
 	}
+	if (!this->_args[0].empty())
+		this->partCommand();
+	else
+		return 0;
+	return 1;
 };
 
 int Command::modeAnalyzer()
