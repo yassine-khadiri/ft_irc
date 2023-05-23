@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/23 16:08:29 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:03:34 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,12 +239,38 @@ std::string getChannelKey(const std::vector<std::string>& channelKeys, int chann
     return chKey;
 };
 
+void Command::getAllChannelUser()
+{
+	this->_args.clear();
+	this->_args.push_back("");
+	channelMap::iterator it = this->_channelObj._channelMap.begin();
+
+	while (it != this->_channelObj._channelMap.end())
+	{
+		if (this->_client.isMemberOfChannel(it->first, this->_client.getFd()) == 1)
+			this->_args[0] += it->first + ",";
+		++it;
+	}
+};
+
 void Command::joinCommand() 
 {
-    if (this->_args.size() < 1)
+    if (this->_args.size() <= 1)
     {
-        sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
-        return;
+		if (this->_args.size() == 1 && this->_args[0] == "0")
+		{
+			this->getAllChannelUser();
+			if (!this->_args[0].empty())
+				this->partCommand();
+			else
+				sendReply(":" + getMachineHostName() + " 476 " + _client.getNickname() + " 0 :Invalid channel name\r\n");
+        	return;
+		}
+		else if (this->_args.size() < 1)
+		{	
+        	sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+			return ;
+		}
     }
     std::stringstream channelSplitter(this->_args[0]);
     std::string channelName;
@@ -254,6 +280,7 @@ void Command::joinCommand()
     {
         std::stringstream keySplitter(this->_args[1]);
         std::string key;
+
         while (std::getline(keySplitter, key, ','))
 		{
             channelKeys.push_back(key);
@@ -296,7 +323,6 @@ void Command::joinCommand()
 			}
 			else if (this->_channelObj.getModes().find("l") != std::string::npos && (int)this->_channelObj._userMap.size() >= this->_channelObj.getLimitUsers())
 				sendReply(":" + getMachineHostName() + " 471 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+l)\r\n"); //ERR_CHANNELISFULL (471)
-			
 			else
 			{
 				std::string  checkKey = getChannelKey(channelKeys, this->_channelObj._channelMap.size());
@@ -381,6 +407,11 @@ void Command::topicCommand()
 	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1
 		&& this->_args.size() > 1)
 	{
+		if (!this->_channelObj._channelMap[this->_args[0]]._userMap[_client.getFd()].getOpPriviligePermission() && this->_channelObj.findMode("+t"))
+		{
+			sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
+			return;
+		}
 		// Add The Topic To The Channel Map
 		std::string topic;
 		if (this->_args[1].length() == 1 && this->_args[1][0] == ':')
