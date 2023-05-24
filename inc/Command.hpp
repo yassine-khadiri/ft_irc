@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/24 15:37:12 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:25:23 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <ctime>
 #include <sstream>
 #include <curl/curl.h>
-// #include "Ircserv.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 
@@ -59,22 +58,23 @@ class Command
 		std::vector<std::string>	modes;
 	public :
 		Command();
-		Command(std::string	&pass);
-		void exec(int nbClient,std::string &msg,std::vector<Client> &clients);
-		void						toUpper(std::string &str);
-		int							splitParams(std::string msg, std::vector<std::string> &args, std::string &cmd);
+		Command( std::string &pass );
+		~Command();
+		void						exec( int nbClient,std::string &msg,std::vector<Client> &clients );
+		void						toUpper( std::string &str );
+		int							splitParams( std::string msg, std::vector<std::string> &args, std::string &cmd );
 		void						initBasicCommand();
-		int							findCommand(std::string cmd);
-		userMap::iterator			searchForUser(std::string name, int fd);
+		int							findCommand( std::string cmd );
+		userMap::iterator			searchForUser( std::string name, int fd );
 		std::string					joinVectorValues();
 		std::string 				getCommand() const;
 		std::vector<std::string>	getArgs() const;
 		Client						&getClient();
-		void						setCommand(std::string Command);
-		void						setArgs(std::vector<std::string> args);
-		void						setClient(Client &client);
-		void						setMsg(std::string &msg);
-		void						setClients(std::vector<Client>	&clients);
+		void						setCommand( std::string Command );
+		void						setArgs( std::vector<std::string> args );
+		void						setClient( Client &client );
+		void						setMsg( std::string &msg );
+		void						setClients( std::vector<Client>	&clients );
 		void						sendReply(std::string msg);
 		int							nickExist(std::string nick);
 		void						passCommand();
@@ -95,5 +95,6 @@ class Command
 		int							searchClientByName( std::string clientName );
 		int 						modeAnalyzer();
 		int							leaveAllChannels();
-		std::vector<int>			communClients();
+		void						communClients( std::vector<int>&clients );
+		std::string					getMachineHostName();
 };

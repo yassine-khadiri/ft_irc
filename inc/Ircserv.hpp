@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/21 15:47:10 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:57:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define IRCSERV_HPP
 
 #define MAX_CLIENTS 30
-#include "../../tcp/includes/Tcp.hpp"
+#include "Tcp.hpp"
 #include <sys/select.h>
 #include "Client.hpp"
 #include "Command.hpp"

@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/21 17:51:00 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:58:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #define OPERATOR 1
 #define CLIENT 0
 
-#include "../../tcp/includes/Tcp.hpp"
+#include "Tcp.hpp"
 #include "Client.hpp"
 
 class Channel
@@ -33,8 +33,8 @@ class Channel
         Client                      _operator;
         Client                      _member;
     public:
-        userMap              _userMap;
-        static channelMap   _channelMap;
+        userMap                     _userMap;
+        static channelMap           _channelMap;
 
 		// ############################################################### //
 
@@ -65,8 +65,6 @@ class Channel
         int  verifyKey( std::string &key )const;
         void addUserToUserMap( Client &_client, int Privilege );
         int removeUserFromUserMap( std::string channelName, int clientFd );
-        // void removeUser( Client &_client );
-        // int channelFound( std::string channelName );
 };
 
 #endif

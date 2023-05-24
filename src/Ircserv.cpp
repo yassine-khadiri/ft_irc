@@ -6,12 +6,12 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/21 15:54:40 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:31:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Ircserv.hpp"
-#include "../includes/Client.hpp"
+#include "../inc/Ircserv.hpp"
+#include "../inc/Client.hpp"
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password),cmd(Command(password))
 {
@@ -103,7 +103,6 @@ int Ircserv::waitForConnection()
                 {
                     std::string str(buff);
                     str.erase(str.find_last_not_of("\r\n") + 1);
-                        // std::cout << str << std::endl;
                     if(!str.empty())
                         cmd.exec(i, str, this->_clients);
                     memset(buff, 0, sizeof(buff));

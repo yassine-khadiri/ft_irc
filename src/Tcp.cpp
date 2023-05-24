@@ -6,11 +6,11 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/21 15:50:11 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:27:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Tcp.hpp"
+#include "../inc/Tcp.hpp"
 
 Tcp::Tcp()
 {  
@@ -84,4 +84,3 @@ int Tcp::createServerSocket()
 //     }
 //     return EXIT_FAILURE;
 // };
-

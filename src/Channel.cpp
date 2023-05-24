@@ -6,11 +6,11 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/23 19:06:27 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:28:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Channel.hpp"
+#include "../inc/Channel.hpp"
 
 channelMap Channel::_channelMap;
 
@@ -71,10 +71,8 @@ std::string Channel::getModes() const
     {
         std::stringstream ss;
         ss << _limitUsers;
-        std::cout << ss.str() << std::endl;
         mode += " " + ss.str();
     }
-    std::cout << mode << std::endl;
     return mode;
 };
 
@@ -137,14 +135,17 @@ void Channel::setMode( std::string _mode )
     }
 	    
 };
+
 int Channel::getLimitUsers() const
 {
     return _limitUsers;
-}
+};
+
 void Channel::setLimitUsers(int limit)
 {
     _limitUsers = limit;
-}
+};
+
 void Channel::setTopicTime( std::string _topicTime )
 {
     this->_topicTime = _topicTime;
