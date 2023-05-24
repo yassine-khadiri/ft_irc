@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/23 19:47:29 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:47:22 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -712,7 +712,7 @@ void	Command::noticeCommand()
 };
 
 
-void Command::sendMesgToCommunClients(std::string &msg)
+std::vector<int> Command::communClients()
 {
 	channelMap::iterator it1 = this->_channelObj._channelMap.begin();
 	std::vector<int> clients;
@@ -732,23 +732,26 @@ void Command::sendMesgToCommunClients(std::string &msg)
 		}
 		it1++;
 	}
-	int i = 0;
-	while (i < (int)clients.size())
+	return clients;
+}
+
+void sendReplyToCommunClient(std::vector<int> &clients, std::string msg)
+{
+	std::vector<int>::iterator it = clients.begin();
+
+	while (it != clients.end())
 	{
-		std::cout << "client " << i << " :" << clients[i] << std::endl;
-		if (clients[i] != _client.getFd())
-			send(clients[i],msg.c_str(),msg.length(),0);
-		i++;
+		send(*it, msg.c_str(), msg.length(), 0);
+		it++;
 	}
-	
 }
 
 void Command::quitCommand()
 {
 	std::string msg = ":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " QUIT " + this->_args[0] + "\r\n";
-	sendMesgToCommunClients(msg);
+	std::vector<int> clients = communClients();
 	leaveAllChannels();
-	sendReply(msg);
+	sendReplyToCommunClient(clients,msg);
 	_client.setIsRegistered(false);
 	_client.setNickname("");
 	_client.setPassword("");
