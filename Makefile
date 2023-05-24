@@ -6,7 +6,7 @@
 #    By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/05/24 17:20:25 by ykhadiri         ###   ########.fr        #
+#    Updated: 2023/05/24 18:47:13 by ykhadiri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,18 +26,18 @@ SRC = main.cpp \
 	src/Client.cpp\
 	src/Channel.cpp \
 	src/Command.cpp \
-	src/cmds/inviteCommand.cpp \
-	src/cmds/botCommand.cpp \
-	src/cmds/joinCommand.cpp \
-	src/cmds/kickCommand.cpp \
-	src/cmds/modeCommand.cpp \
-	src/cmds/msgCommand.cpp \
-	src/cmds/nickCommand.cpp \
-	src/cmds/partCommand.cpp \
-	src/cmds/topicCommand.cpp \
-	src/cmds/userCommand.cpp \
-	src/cmds/quitCommand.cpp \
-	src/cmds/passCommand.cpp
+	src/commands/invite.cpp \
+	src/commands/bot.cpp \
+	src/commands/join.cpp \
+	src/commands/kick.cpp \
+	src/commands/mode.cpp \
+	src/commands/msg.cpp \
+	src/commands/nick.cpp \
+	src/commands/part.cpp \
+	src/commands/topic.cpp \
+	src/commands/user.cpp \
+	src/commands/quit.cpp \
+	src/commands/pass.cpp
 
 
 OBJ = $(SRC:.cpp=.o)
