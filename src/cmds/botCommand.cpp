@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:51:47 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 17:02:01 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:53:00 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ std::string getTime()
 std::string getJokeQuote()
 {
 	std::vector<std::string>nokat_7amdin; // link : http://nokat-mawadi3-amtal.blogspot.com/2011/10/nokat-maghribiya-bi-darija-l-maghribiya.html
+
 	nokat_7amdin.push_back("galek hadou wahed jouj bnat mchaw ychoufou natija nta3 lbac wehda l9at rasseha sa9ta wlokhra saroute");
 	nokat_7amdin.push_back("galk hada wa7d zizoun ila bgha igoul gar3a tigoul liha ga3a");
 	nokat_7amdin.push_back("hada wahed dar ouhowa itekra");
@@ -84,9 +85,10 @@ void Command::botCommand()
 
 			// Perform the request
 			CURLcode res = curl_easy_perform(curl);
-			if (res != CURLE_OK) {
+			if (res != CURLE_OK)
 				std::cerr << "Error: " << curl_easy_strerror(res) << std::endl;
-			} else {
+			else
+			{
 				std::string clean = response.erase(response.size() - 3);
 				std::string output = clean.substr(11, -1);
 				sendReply("300 RPL_NONE: " + output + "\r\n");
