@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/24 15:47:22 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:11:56 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -711,7 +711,6 @@ void	Command::noticeCommand()
 	}
 };
 
-
 std::vector<int> Command::communClients()
 {
 	channelMap::iterator it1 = this->_channelObj._channelMap.begin();
@@ -750,6 +749,7 @@ void Command::quitCommand()
 {
 	std::string msg = ":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " QUIT " + this->_args[0] + "\r\n";
 	std::vector<int> clients = communClients();
+
 	leaveAllChannels();
 	sendReplyToCommunClient(clients,msg);
 	_client.setIsRegistered(false);
@@ -947,16 +947,15 @@ void Command::modeCommand()
 void Command::broadcast( std::string const &channel, std::string const &msg)
 {
 	userMap::iterator it = this->_channelObj._channelMap[channel]._userMap.begin();
+
+	if (this->_indexCmd == PART)
+		 send(_client.getFd(), msg.c_str(), msg.length(), 0);
 	while (it != this->_channelObj._channelMap[channel]._userMap.end())
 	{
 			if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
 				continue;
 			else
-			{
-				std::cout << "broadcast :" << it->second.getNickname() << " : "  << msg ;
 				 send(it->second.getFd(), msg.c_str(), msg.length(), 0);
-			}
-			
 		++it;
 	}
 };
