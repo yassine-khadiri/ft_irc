@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/24 17:25:23 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:03:21 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ class Command
 		void						setCommand( std::string Command );
 		void						setArgs( std::vector<std::string> args );
 		void						setClient( Client &client );
-		void						setMsg( std::string &msg );
-		void						setClients( std::vector<Client>	&clients );
 		void						sendReply(std::string msg);
 		int							nickExist(std::string nick);
 		void						passCommand();

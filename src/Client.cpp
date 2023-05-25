@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/24 17:29:43 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:04:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ std::string	Client::getNickname() const
 void Client::setUsername(std::string user)
 {
 	this->_username = user;
-}
+};
 
 std::string	Client::getUsername() const
 {
 	return (this->_username);
-}
+};
 
 void Client::setIsRegistered(bool isRegistered)
 {

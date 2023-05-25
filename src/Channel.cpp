@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/24 17:28:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:04:26 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ void Channel::setMode( std::string _mode )
         if (it == this->_modes.end())
             this->_modes.push_back(_mode[1]);
     }
-	    
 };
 
 int Channel::getLimitUsers() const
@@ -168,7 +167,7 @@ void Channel::addChannelToChannelMap()
 
 int Channel::verifyKey( std::string &_key ) const
 {
-   return (this->_key == _key) ? 1 : 0;
+    return (this->_key == _key) ? 1 : 0;
 };
 
 void Channel::addUserToUserMap( Client &_client, int privilege )

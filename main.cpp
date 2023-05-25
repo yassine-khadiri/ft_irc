@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 17:15:50 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 11:55:57 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 			std::cerr << "The Port Must Be A Positive Integer Between 0 && 65536 :)" << std::endl;
 		else
 		{
-	        Ircserv ircserv = Ircserv(atoi(argv[1]), argv[2]);
+            Ircserv ircserv = Ircserv(atoi(argv[1]), argv[2]);
 			ircserv.createServerSocket();
 		}
     }

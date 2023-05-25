@@ -6,12 +6,16 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 17:31:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:06:01 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Ircserv.hpp"
 #include "../inc/Client.hpp"
+
+Ircserv::Ircserv()
+{
+};
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password),cmd(Command(password))
 {

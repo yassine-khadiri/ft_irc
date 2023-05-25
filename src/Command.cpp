@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/24 17:31:59 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:05:37 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ void	Command::sendReply(std::string msg)
 int	Command::nickExist(std::string nick)
 {
 	int i = 0;
+
 	if (nick.empty())
 		return (-1);
 	while (i < (int)_clients.size())
@@ -217,6 +218,7 @@ std::string Command::getCurrentUnixTimestamp()
 {
 	std::time_t now = std::time(NULL);
 	std::stringstream ss;
+
 	ss << now;
 	return ss.str();
 };
@@ -258,13 +260,13 @@ void Command::broadcast( std::string const &channel, std::string const &msg)
 	userMap::iterator it = this->_channelObj._channelMap[channel]._userMap.begin();
 
 	if (this->_indexCmd == PART)
-		 send(_client.getFd(), msg.c_str(), msg.length(), 0);
+		send(_client.getFd(), msg.c_str(), msg.length(), 0);
 	while (it != this->_channelObj._channelMap[channel]._userMap.end())
 	{
 			if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
 				continue;
 			else
-				 send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+				send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;
 	}
 };

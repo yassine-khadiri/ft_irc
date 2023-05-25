@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/20 18:13:46 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:17:48 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,5 @@ class Client
 		void		setFd( int fdsocket );
 		void		setOpPrivilegePermission( int privilege );
 		void		channelSegment( Channel &_channel );
-		void		joinChannel( Channel &_channel );
 		int			isMemberOfChannel( std::string channelName, int clientFd );
 };
