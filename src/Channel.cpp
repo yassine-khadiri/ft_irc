@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/25 12:04:26 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:25:11 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Channel::Channel( std::string _channelName, std::string _topic, std::string _key
     this->_member = _member;
     this->_limitUsers = 0;
 };
- 
+
 Channel&  Channel::operator=( Channel const & channel )
 {
     this->_channelName = channel._channelName;
