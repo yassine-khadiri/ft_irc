@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:46:32 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/25 12:24:35 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:04:06 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,6 @@ void Command::userCommand()
 
 			this->_client.setIsRegistered(true);
 		}
-		this->_client.setUsername(this->_args[0]);
+		this->_client.setUsername(this->_args[0]); 
 	}
 };

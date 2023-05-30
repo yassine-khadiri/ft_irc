@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:18 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:45:20 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:02:17 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void Command::nickCommand()
 	{
 		if (_client.getNickname() == "" && _client.getUsername() != "")
 		{
+			this->_client.setNickname(this->_args[0]);  
 			sendReply(":"+ hostname + " 001 " + this->_args[0] + " :Welcome to the Internet Relay Network " + this->_args[0] + "!\r\n");
 			sendReply(":"+ hostname + " 002 " + this->_args[0] + " :Your host is "+ getMachineHostName() +", running version 0.1\r\n");
 			sendReply(":"+ hostname + " 003 " + this->_args[0] + " :This server was created 2019-10-10\r\n");
@@ -46,8 +47,10 @@ void Command::nickCommand()
 			sendReply(":"+ hostname + " 376 " + this->_args[0] + " :Made by hbouqssi && ykhadiri && rgatnaou\r\n");
 			this->_client.setIsRegistered(true);
 		}
-		else if(_client.getNickname() != "" && _client.getUsername() != "")
+		else
+		{
+			this->_client.setNickname(this->_args[0]); 
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@"+ getMachineHostName() +"" + " NICK " + this->_args[0] + "\r\n"); 
-		this->_client.setNickname(this->_args[0]); 
+		}
 	}
 };
