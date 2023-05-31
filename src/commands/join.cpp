@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/31 16:35:07 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/31 18:42:52 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void Command::joinCommand()
 		{
 			if (!leaveAllChannels())
 				sendReply(":" + getMachineHostName() + " 476 " + _client.getNickname() + " 0 :Invalid channel name\r\n");
-        	return;
+			return;
 		}
 		else if (this->_args.size() < 1)
 		{	
-        	sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
+			sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " JOIN :Not enough parameters\r\n");
 			return ;
 		}
     }

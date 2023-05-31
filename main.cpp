@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:40:58 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/25 11:55:57 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/31 19:17:39 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int isNumber(std::string str)
     while (str[++i])
     {
         if (!isdigit(str[i]))
-            return 0;   
+            return 0;
     }
     return 1;
 }

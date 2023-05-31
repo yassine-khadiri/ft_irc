@@ -6,7 +6,7 @@
 #    By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/11 21:40:31 by ykhadiri          #+#    #+#              #
-#    Updated: 2023/05/24 18:47:13 by ykhadiri         ###   ########.fr        #
+#    Updated: 2023/05/31 19:14:52 by ykhadiri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,6 @@ SRC = main.cpp \
 	src/commands/user.cpp \
 	src/commands/quit.cpp \
 	src/commands/pass.cpp
-
 
 OBJ = $(SRC:.cpp=.o)
 
