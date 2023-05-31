@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:44:42 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:35:07 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void Command::joinCommand()
 				this->_channelObj.setMode("+k");
 			this->_channelObj.addChannelToChannelMap();
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
-        	sendReply(":" + getMachineHostName() + " MODE " + channelName + " " + this->_channelObj.getModes() + "\r\n");
-        	sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
+			sendReply(":" + getMachineHostName() + " MODE " + channelName + " " + this->_channelObj.getModes() + "\r\n");
+			sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
 			sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 		}
 		else if (!this->_client.isMemberOfChannel(channelName, this->_client.getFd())) // 0
@@ -89,7 +89,7 @@ void Command::joinCommand()
 
 				if (!this->_channelObj.verifyKey(checkKey))
 				{
-					sendReply(":" + getMachineHostName() + " 474 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel\r\n");
+					sendReply(":" + getMachineHostName() + " 475 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+k) - bad key\r\n");
 					return ;
 				}
 				this->_channelObj.addUserToUserMap(_client, CLIENT);

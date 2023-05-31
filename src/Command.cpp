@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/30 16:03:48 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/05/31 17:16:52 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 		sendReply(":" + getMachineHostName() + " 451 * :You have not registered\r\n");
 		return ;
 	}
-	//  std::cout << "Command: " << msg << std::endl;
+	 std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{
@@ -263,10 +263,8 @@ void Command::broadcast( std::string const &channel, std::string const &msg)
 		send(_client.getFd(), msg.c_str(), msg.length(), 0);
 	while (it != this->_channelObj._channelMap[channel]._userMap.end())
 	{
-			if((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
-				continue;
-			else
-				send(it->second.getFd(), msg.c_str(), msg.length(), 0);
+		if(!(this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
+			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;
 	}
 };
