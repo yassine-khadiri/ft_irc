@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:53 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 18:57:29 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 19:01:55 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Command::kickCommand()
 		}
 		else
 		{
-			std::cout << "case4\n";
+			std::cout << "case4\n"; 
 			this->broadcast(channelName, ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " KICK " + channelName + " " + this->_args[1] + " " + this->_args[2] + "\r\n");
 			_channelObj.removeUserFromUserMap(channelName, searchClientByName(this->_args[1]));
 			//kick a user by specifying the reason why ...
