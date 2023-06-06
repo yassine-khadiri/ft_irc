@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/06 13:48:22 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:22:41 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,6 @@ int Channel::verifyKey( std::string &_key ) const
 
 void Channel::addUserToUserMap( Client &_client, int privilege )
 {
-    // this->_channelMap[this->getChannelName()]._userMap.insert(std::make_pair(_client.getFd(), _client));
     this->_userMap.insert(std::make_pair(_client.getFd(), _client));
     this->_userMap[_client.getFd()].setOpPrivilegePermission(privilege);
     _client.setOpPrivilegePermission(privilege);

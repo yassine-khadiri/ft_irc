@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/06 15:49:40 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:54:35 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,22 @@ Command::~Command()
 
 int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::string &cmd)
 {
-	if(msg == "")
+	if (msg == "")
 		return (-1);
 	msg.erase(0, msg.find_first_not_of(' '));
 	std::string tmp = msg;
-	int tab = msg.find(':');
-	if(tab > 0)
-		tmp = msg.substr(0, tab);
+	int semicolon = msg.find(':');
+	if(semicolon > 0)
+		tmp = msg.substr(0, semicolon);
 	std::stringstream ss(tmp);
 	std::getline(ss, cmd, ' '); 
 	this->toUpper(cmd);
-	if(cmd.empty() || this->findCommand(cmd) == -1)
+	if (cmd.empty() || this->findCommand(cmd) == -1)
 		return (-1);
 	while(std::getline(ss, tmp, ' ') && tmp.empty() == false)
 		arg.push_back(tmp);
-	if(tab > 0)
-		arg.push_back(msg.substr(tab , msg.length()));
+	if (semicolon > 0)
+		arg.push_back(msg.substr(semicolon, msg.length()));
 	return (arg.size()); 
 };
 
@@ -258,6 +258,7 @@ int Command::leaveAllChannels()
 void Command::broadcast( std::string const &channel, std::string const &msg)
 {
 	userMap::iterator it = this->_channelObj._channelMap[channel]->_userMap.begin();
+
 	while (it != this->_channelObj._channelMap[channel]->_userMap.end())
 	{
 		if(!((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd()))	
