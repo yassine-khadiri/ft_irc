@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:30 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 14:30:53 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:49:51 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Command::partCommand()
 
 	//####################################################=====> CHECK THE ARGUMENTS | if the user typed just KICK or if he typed a lot of Params !!!!!!!!
 
- 	while (std::getline(channelSplitter, channelName, ','))
+	while (std::getline(channelSplitter, channelName, ','))
     {
 		// Parting A Channel You’re Not Joined To: (ERR_NOTONCHANNEL (442))
 		if (!this->getClient().isMemberOfChannel(channelName, _client.getFd()))
@@ -38,8 +38,11 @@ void Command::partCommand()
 			if (channelName[0] == ':' && !channelName[1])
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " * No such channel\r\n";
 			else
+			{
+				std::cout << "remove channel2" << std::endl;
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
-			broadcast(channelName,message);
+			}
+			sendReply(message);
 		}			
 		else
 		{
@@ -49,7 +52,8 @@ void Command::partCommand()
 			// Parting With No Reason (Already Joined!):
 			else
 				message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
-			broadcast(channelName,message);
+			broadcast(channelName, message);
+			std::cout << "remove channel: \n" <<std::endl;
 			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 		}																			
 	}

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 14:22:20 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:27:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#define channelMap std::map<std::string,Channel *>
+#define channelMap std::map<std::string, Channel* >
 #define userMap std::map<int, Client >
 #define OPERATOR 1
 #define CLIENT 0

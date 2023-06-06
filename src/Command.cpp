@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/06 14:24:57 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:49:40 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,9 +258,6 @@ int Command::leaveAllChannels()
 void Command::broadcast( std::string const &channel, std::string const &msg)
 {
 	userMap::iterator it = this->_channelObj._channelMap[channel]->_userMap.begin();
-
-	if (this->_indexCmd == PART)
-		send(_client.getFd(), msg.c_str(), msg.length(), 0);
 	while (it != this->_channelObj._channelMap[channel]->_userMap.end())
 	{
 		if(!((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd()))	
