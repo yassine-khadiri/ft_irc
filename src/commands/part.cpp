@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:30 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:45:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:30:53 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,18 @@ void Command::partCommand()
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " * No such channel\r\n";
 			else
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
+			broadcast(channelName,message);
 		}			
 		else
 		{
-			// Parting With No Reason (Already Joined!):
-			message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
-			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 			// Parting With A Reason:
 			if (this->_args[1][0] == ':')
 				message = ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " PART " + channelName + " " + this->_args[1] + "\r\n";
+			// Parting With No Reason (Already Joined!):
+			else
+				message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
+			broadcast(channelName,message);
+			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 		}																			
-		broadcast(channelName,message);
 	}
 };

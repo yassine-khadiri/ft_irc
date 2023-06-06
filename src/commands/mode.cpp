@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:45:02 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:50:13 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Command::modeCommand()
 		return ;
 	}
 	else
-		this->_channelObj = this->_channelObj._channelMap[this->_args[0]];
+		this->_channelObj = *this->_channelObj._channelMap[this->_args[0]];
 	if (this->_args.size() == 1)
 	{
 		sendReply(":" + getMachineHostName() + " 324 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_channelObj.getModes() + "\r\n"); //RPL_CHANNELMODEIS (324)
@@ -174,5 +174,5 @@ void Command::modeCommand()
 			}
 		}	
 	}
-	this->_channelObj._channelMap[this->_args[0]] = this->_channelObj;
+	this->_channelObj._channelMap[this->_args[0]] = &this->_channelObj;
 };

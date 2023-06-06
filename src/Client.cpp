@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/30 15:38:37 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:47:58 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ int Client::isMemberOfChannel( std::string channelName, int clientFd )
 	channelMap::iterator it1 = channelObj._channelMap.find(channelName);
 	if (it1 != channelObj._channelMap.end())
 	{
-		userMap::iterator it2 = it1->second._userMap.find(clientFd);
-		if (it2 != it1->second._userMap.end())
+		userMap::iterator it2 = it1->second->_userMap.find(clientFd);
+		if (it2 != it1->second->_userMap.end())
 			return 1;
 	}
 	else

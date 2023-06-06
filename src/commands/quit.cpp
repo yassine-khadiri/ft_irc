@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:45 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:45:46 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:57:12 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void Command::communClients( std::vector<int>&clients )
 
 	while (it1 != this->_channelObj._channelMap.end())
 	{
-		this->_channelObj = this->_channelObj._channelMap[it1->first];
+		this->_channelObj = *this->_channelObj._channelMap[it1->first];
 		if (this->_channelObj._userMap[_client.getFd()].isMemberOfChannel(it1->first,_client.getFd()) == 1)
 		{
 			userMap::iterator it2 = this->_channelObj._userMap.begin();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/05/25 12:25:11 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:48:22 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void Channel::setKey( std::string _key )
 
 void Channel::addChannelToChannelMap()
 {
-	this->_channelMap.insert(std::make_pair(this->getChannelName(), *this));
+	this->_channelMap[this->getChannelName()] = this;
 };
 
 int Channel::verifyKey( std::string &_key ) const
@@ -186,8 +186,9 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
 
 	if (it != this->_channelMap.end())
 	{
-		it->second._userMap.erase(clientFd);
-        if (this->_channelMap[channelName]._userMap.size() == 0)
+		it->second->_userMap.erase(clientFd);
+        std::cout << "user removed from channel :" <<  this->_channelMap[channelName]->_userMap.size() << std::endl;
+        if (this->_channelMap[channelName]->_userMap.size() == 0)
         {
             this->_channelMap.erase(channelName);
             this->_operator = NULL;

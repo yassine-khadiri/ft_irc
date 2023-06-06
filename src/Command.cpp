@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/31 19:13:54 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:24:57 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 		sendReply(":" + getMachineHostName() + " 451 * :You have not registered\r\n");
 		return ;
 	}
-	//  std::cout << "Command: " << msg << std::endl;
+	 std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{
@@ -257,13 +257,13 @@ int Command::leaveAllChannels()
 
 void Command::broadcast( std::string const &channel, std::string const &msg)
 {
-	userMap::iterator it = this->_channelObj._channelMap[channel]._userMap.begin();
+	userMap::iterator it = this->_channelObj._channelMap[channel]->_userMap.begin();
 
 	if (this->_indexCmd == PART)
 		send(_client.getFd(), msg.c_str(), msg.length(), 0);
-	while (it != this->_channelObj._channelMap[channel]._userMap.end())
+	while (it != this->_channelObj._channelMap[channel]->_userMap.end())
 	{
-		if(!(this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd())	
+		if(!((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd()))	
 			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;
 	}

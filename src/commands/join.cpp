@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/31 18:42:52 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:59:30 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void Command::joinCommand()
 		}
 		else if (!this->_client.isMemberOfChannel(channelName, this->_client.getFd())) // 0
 		{
-			this->_channelObj = this->_channelObj._channelMap[channelName];
+			this->_channelObj = *this->_channelObj._channelMap[channelName];
 
 			if (this->_channelObj.getModes().find("i") != std::string::npos)
 				sendReply(":" + getMachineHostName() + " 473 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+i)\r\n"); //ERR_INVITEONLYCHAN (473)
@@ -93,7 +93,7 @@ void Command::joinCommand()
 					return ;
 				}
 				this->_channelObj.addUserToUserMap(_client, CLIENT);
-				this->_channelObj._channelMap[channelName] = this->_channelObj;
+				this->_channelObj._channelMap[channelName] = &this->_channelObj;
 				// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 
 				this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
