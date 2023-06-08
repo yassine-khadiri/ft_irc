@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/06 18:54:35 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/07 12:37:04 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
 		sendReply(":" + getMachineHostName() + " 451 * :You have not registered\r\n");
 		return ;
 	}
-	 std::cout << "Command: " << msg << std::endl;
+	std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{

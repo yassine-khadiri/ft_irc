@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/31 15:59:33 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:41:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,22 @@ int Ircserv::waitForConnection()
             {                
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
+                    
                     std::string str(buff);
-                    str.erase(str.find_last_not_of("\r\n") + 1);
-                    if(!str.empty())
-                        cmd.exec(i, str, this->_clients);
-                    memset(buff, 0, sizeof(buff));
+                    
+                    if (str.find('\n') == std::string::npos)
+                        recvString += str;
+                    else
+                    {
+                        if (!recvString.empty())
+                            str = recvString + str;
+                        str.erase(str.find_last_not_of("\r\n") + 1);
+                        if (!str.empty())
+                            cmd.exec(i, str, this->_clients);
+                        memset(buff, 0, sizeof(buff));
+                        recvString = "";
+                    }
+
                 }
             }
         }

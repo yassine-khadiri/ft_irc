@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 17:09:02 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 17:49:24 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:32:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 class Ircserv : public Tcp
 {
     std::string password;
+    std::string recvString;
     std::vector<Client> _clients;
     int waitForConnection();
     Command     cmd;
