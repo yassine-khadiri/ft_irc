@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/09 19:02:28 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 20:36:44 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,9 +244,11 @@ int Command::leaveAllChannels()
 
 	while (it != this->_channelObj._channelMap.end())
 	{
+		channelMap::iterator itTmp = it;
+		itTmp++;
 		if (this->_client.isMemberOfChannel(it->first, this->_client.getFd()) == 1)
 			it->second->removeUserFromUserMap(it->second->getChannelName(),_client.getFd());
-		++it;
+		it = itTmp;
 	}
 	return 1;
 };

@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/09 18:09:46 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 20:21:17 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,9 @@ int Ircserv::waitForConnection()
     int max_sd;
 
     std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
-    
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
     while(1)
     {
         FD_ZERO(&readfds);
@@ -70,8 +72,7 @@ int Ircserv::waitForConnection()
             if (sd > max_sd)
                 max_sd = sd;
         }
-
-        int activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+        int activity = select(max_sd + 1, &readfds, NULL, NULL, &timeout);
         if (activity < 0)
         {
             std::cout << "Select Error!" << std::endl;
@@ -106,8 +107,7 @@ int Ircserv::waitForConnection()
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
                     
-                    std::string str(buff);
-                    
+                    std::string str(buff);  
                     if (str.find('\n') == std::string::npos)
                         recvString += str;
                     else
@@ -117,10 +117,9 @@ int Ircserv::waitForConnection()
                         str.erase(str.find_last_not_of("\r\n") + 1);
                         if (!str.empty())
                             cmd.exec(i, str, this->_clients);
-                        memset(buff, 0, sizeof(buff));
                         recvString = "";
                     }
-
+                    memset(buff, 0, sizeof(buff));
                 }
             }
         }
