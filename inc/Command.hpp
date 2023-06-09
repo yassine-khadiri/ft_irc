@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/05/25 12:03:21 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 12:50:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ class Command
 		int							splitParams( std::string msg, std::vector<std::string> &args, std::string &cmd );
 		void						initBasicCommand();
 		int							findCommand( std::string cmd );
-		userMap::iterator			searchForUser( std::string name, int fd );
-		std::string					joinVectorValues();
 		std::string 				getCommand() const;
 		std::vector<std::string>	getArgs() const;
 		Client						&getClient();
