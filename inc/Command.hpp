@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/09 15:32:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 18:47:12 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ class Command
 		int							searchClientByName( std::string clientName );
 		int 						modeAnalyzer();
 		int							leaveAllChannels();
-		void						communClients( std::vector<int>&clients );
+		void						communClients( std::string msg );
 		std::string					getMachineHostName();
 };

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:45 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 13:57:12 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/09 18:46:50 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Command.hpp"
 
-void Command::communClients( std::vector<int>&clients )
+void Command::communClients( std::string msg )
 {
 	channelMap::iterator it1 = this->_channelObj._channelMap.begin();
 	// std::vector<int> clients;
@@ -21,39 +21,20 @@ void Command::communClients( std::vector<int>&clients )
 	{
 		this->_channelObj = *this->_channelObj._channelMap[it1->first];
 		if (this->_channelObj._userMap[_client.getFd()].isMemberOfChannel(it1->first,_client.getFd()) == 1)
-		{
-			userMap::iterator it2 = this->_channelObj._userMap.begin();
-			while (it2 != this->_channelObj._userMap.end())
-			{
-				if (!std::count (clients.begin(), clients.end(), it2->first))
-					clients.push_back(_client.getFd());
-				it2++;
-			}
-		}
+			broadcast(this->_channelObj.getChannelName(), msg);
 		it1++;
 	}
 	// return clients;
 };
 
-void sendReplyToCommunClient(std::vector<int> &clients, std::string msg)
-{
-	std::vector<int>::iterator it = clients.begin();
 
-	while (it != clients.end())
-	{
-		send(*it, msg.c_str(), msg.length(), 0);
-		it++;
-	}
-};
 
 void Command::quitCommand()
 {
 	std::string msg = ":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " QUIT " + this->_args[0] + "\r\n";
-	std::vector<int> clients;
-    communClients(clients);
+    communClients(msg);
 
 	leaveAllChannels();
-	sendReplyToCommunClient(clients,msg);
 	_client.setIsRegistered(false);
 	_client.setNickname("");
 	_client.setPassword("");

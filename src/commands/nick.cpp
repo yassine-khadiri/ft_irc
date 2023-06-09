@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:18 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/30 16:02:17 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/09 18:47:36 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,8 @@ void Command::nickCommand()
 			sendReply(":"+ hostname + " 376 " + this->_args[0] + " :Made by hbouqssi && ykhadiri && rgatnaou\r\n");
 			this->_client.setIsRegistered(true);
 		}
-		else
-		{
-			this->_client.setNickname(this->_args[0]); 
-			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@"+ getMachineHostName() +"" + " NICK " + this->_args[0] + "\r\n"); 
-		}
+		else if(_client.getIsRegistered())
+			communClients(":" + _client.getNickname() + "!" + _client.getUsername() + "@"+ getMachineHostName() +"" + " NICK " + this->_args[0] + "\r\n"); 
+		this->_client.setNickname(this->_args[0]);
 	}
 };
