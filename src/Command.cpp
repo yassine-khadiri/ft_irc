@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/07 12:37:04 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 15:43:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int Command::findCommand(std::string cmd)
 	return (i);
 };
 
-void Command::exec(int nbClient,std::string &msg ,std::vector<Client> &clients)
+void Command::exec(int nbClient, std::string &msg ,std::vector<Client> &clients)
 {
 	
 	_clients = clients;

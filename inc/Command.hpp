@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/09 12:50:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 15:32:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 class Ircserv;
 
 #define _iterator   Map::iterator
+
 typedef enum
 {
 	USER,

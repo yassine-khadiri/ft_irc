@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:30 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 15:49:51 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/09 18:39:29 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ void Command::partCommand()
 			if (channelName[0] == ':' && !channelName[1])
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " * No such channel\r\n";
 			else
-			{
-				std::cout << "remove channel2" << std::endl;
 				message = ":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + channelName.substr(1) + " :No such channel\r\n";
-			}
 			sendReply(message);
 		}			
 		else

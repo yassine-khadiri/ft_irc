@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 13:50:13 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/09 18:33:20 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,12 @@ void Command::modeCommand()
 						{
 							if (*it == "+i" && !this->_channelObj.findMode("+i"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +i\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +i\r\n");
 								this->_channelObj.setMode(*it);
 							}
 							if (*it == "-i" && this->_channelObj.findMode("+i"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -i\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -i\r\n");
 								this->_channelObj.setMode(*it);
 							}
 						}
@@ -87,7 +87,7 @@ void Command::modeCommand()
 						{
 							if (this->_args.size() == 2 && (*it) == "+l")
 							{
-								sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								broadcast(this->_channelObj.getChannelName(), ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
 							}
 							if (this->_args.size() > 1)
@@ -97,14 +97,14 @@ void Command::modeCommand()
 
 								if (*it == "+l" && tmp > 0)
 								{
-									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
+									broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
 									// std::string mode = "+l " + limitClients.str();;
 									this->_channelObj.setMode("+l");
 									this->_channelObj.setLimitUsers(tmp);
 								}
 								if (*it == "-l" && this->_channelObj.findMode("+l"))
 								{
-									sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -l\r\n");
+									broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -l\r\n");
 									this->_channelObj.setMode("-l");
 									this->_channelObj.setLimitUsers(0);
 								}
@@ -116,22 +116,22 @@ void Command::modeCommand()
 
 							if (this->_args.size() <  3)
 							{
-								sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								broadcast(this->_channelObj.getChannelName(), ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
 							}
 							if (!fdClient || this->_client.isMemberOfChannel(this->_args[0], fdClient) != 1)
 							{
-								sendReply(":" + getMachineHostName() + " 401 " + this->_client.getNickname() + " " + this->_args[2] + " :No such nick/channel\r\n"); //ERR_NOSUCHNICK (401)
+								broadcast(this->_channelObj.getChannelName(), ":" + getMachineHostName() + " 401 " + this->_client.getNickname() + " " + this->_args[2] + " :No such nick/channel\r\n"); //ERR_NOSUCHNICK (401)
 								return;
 							}
-							if (*it == "+o")
+							if (*it == "+o" && !this->_channelObj._userMap[this->searchClientByName(this->_args[2])].getOpPriviligePermission())
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
 								this->_channelObj._userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(OPERATOR);
 							}
-							else if (*it == "-o" && this->_client.getOpPriviligePermission())
+							else if (*it == "-o" && this->_client.getOpPriviligePermission() && this->_channelObj._userMap[this->searchClientByName(this->_args[2])].getOpPriviligePermission())
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o " +  this->_args[2] + "\r\n");
 								this->_channelObj._userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(CLIENT);
 							}
 						}
@@ -139,12 +139,12 @@ void Command::modeCommand()
 						{
 							if (*it == "+t" && !this->_channelObj.findMode("+t"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +t\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +t\r\n");
 								this->_channelObj.setMode("+t");
 							}
 							else if (*it == "-t" && this->_channelObj.findMode("+t"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -t\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -t\r\n");
 								this->_channelObj.setMode("-t");
 							}
 						}
@@ -154,13 +154,13 @@ void Command::modeCommand()
 							{
 								std::string channelKey = this->_args[2];
 
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +k " + channelKey + "\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +k " + channelKey + "\r\n");
 								this->_channelObj.setKey(channelKey);
 								this->_channelObj.setMode("+k");
 							}
 							else if (*it == "-k" && this->_channelObj.findMode("+k"))
 							{
-								sendReply(":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -k\r\n");
+								broadcast(this->_channelObj.getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -k\r\n");
 								this->_channelObj.setKey("");
 								this->_channelObj.setMode("-k");
 							}
