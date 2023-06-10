@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/09 20:21:17 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/10 16:03:17 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ Ircserv::Ircserv()
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password),cmd(Command(password))
 {
+    recvString ="";
 };
 
 Ircserv::~Ircserv()
@@ -58,6 +59,7 @@ int Ircserv::waitForConnection()
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
+
     while(1)
     {
         FD_ZERO(&readfds);
@@ -97,27 +99,33 @@ int Ircserv::waitForConnection()
         }
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            // if (client_sockets[i] == 0)
-            // {
-            //     client_sockets[i] = socketClient;
-            //     break;
-            // }
             if (FD_ISSET(client_sockets[i], &readfds))
             {                
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
-                    
                     std::string str(buff);  
                     if (str.find('\n') == std::string::npos)
                         recvString += str;
                     else
                     {
                         if (!recvString.empty())
+                        {
                             str = recvString + str;
+                            recvString = "";
+                        }
                         str.erase(str.find_last_not_of("\r\n") + 1);
+                        if (str.find('\n'))
+                        {
+                            std::cout << "error 431\n";
+                            std::stringstream ss(str);
+                            while(std::getline(ss,str))
+                            {
+                                if (!str.empty())
+                                    cmd.exec(i, str, this->_clients);
+                            }
+                        }
                         if (!str.empty())
                             cmd.exec(i, str, this->_clients);
-                        recvString = "";
                     }
                     memset(buff, 0, sizeof(buff));
                 }
