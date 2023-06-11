@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/10 16:03:17 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/11 13:47:14 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ int Ircserv::waitForConnection()
                         str.erase(str.find_last_not_of("\r\n") + 1);
                         if (str.find('\n'))
                         {
-                            std::cout << "error 431\n";
                             std::stringstream ss(str);
                             while(std::getline(ss,str))
                             {
@@ -124,7 +123,7 @@ int Ircserv::waitForConnection()
                                     cmd.exec(i, str, this->_clients);
                             }
                         }
-                        if (!str.empty())
+                        else if (!str.empty())
                             cmd.exec(i, str, this->_clients);
                     }
                     memset(buff, 0, sizeof(buff));
