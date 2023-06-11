@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 18:58:09 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/11 13:58:06 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void Command::joinCommand()
     {
         if (channelName.empty() || channelName[0] != '#')
         {
-            sendReply(":" + getMachineHostName() + " 476 " + channelName + " Invalid channel name\r\n");
+            sendReply(":" + getMachineHostName() + " 476 " + channelName + " :Invalid channel name\r\n");
             continue;
         }
 		if (this->_client.isMemberOfChannel(channelName, this->_client.getFd()) == -1)

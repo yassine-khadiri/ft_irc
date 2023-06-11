@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:18 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/09 18:47:36 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/11 13:56:45 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void Command::nickCommand()
 	else if (this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != std::string::npos)
 		sendReply(":"+ getMachineHostName() +" 432 " + _client.getNickname() + ": Nickname invalid\r\n");
 	else if(nickExist(this->_args[0]) != -1)
-		sendReply(":"+ getMachineHostName() +" 433 " + _client.getNickname()+ " Nickname already in use\r\n");
+		sendReply(":"+ getMachineHostName() +" 433 " + _client.getNickname()+ " : Nickname already in use\r\n");
 	else
 	{
 		if (_client.getNickname() == "" && _client.getUsername() != "")
