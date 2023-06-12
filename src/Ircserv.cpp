@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 16:27:33 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:25:03 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,10 @@ int Ircserv::createServerSocket()
     }
     return EXIT_FAILURE;
 };
-
 int Ircserv::waitForConnection()
 {
-    // int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd, num_clients = 0;
     int socketClient, sd, num_clients = 0;
-    std::vector<int> client_sockets(MAX_CLIENTS, 0);
+    std::vector<int>  client_sockets(MAX_CLIENTS);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
     fd_set readfds;
@@ -94,19 +92,17 @@ int Ircserv::waitForConnection()
             if (num_clients < MAX_CLIENTS)
             {
                 this->_clients.push_back(Client(socketClient));
-                client_sockets.push_back(socketClient);
+                client_sockets[num_clients] = socketClient;
                 num_clients++;
             }
-            else
-                close(socketClient);
         }
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
             if (FD_ISSET(client_sockets[i], &readfds))
-            {                
+            {
                 if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
                 {
-                    std::string str(buff);  
+                    std::string str(buff);
                     if (str.find('\n') == std::string::npos)
                         recvString += str;
                     else
@@ -133,29 +129,16 @@ int Ircserv::waitForConnection()
                 }
                 else
                 {
-                    std::cout << "HERE\n";
+                    std::cout << "Client Disconnected!" << std::endl;
                     close(client_sockets[i]);
-                    // std::vector<Client>::ite[r]it = this->_clients.begin();
-                    // std::cout << (it + i)->getNickname() << std::endl;
-                    // this->_clients.erase(it + i);
-                    // client_sockets.erase(std::remove(client_sockets->begin(), client_sockets->end(), client_sockets-[i]), client_sockets->end());
+                    FD_CLR(client_sockets[i], &readfds);
+                    num_clients--;
                     client_sockets.erase(std::remove(client_sockets.begin(), client_sockets.end(), client_sockets[i]), client_sockets.end());
-                    // client_sockets[i] = 0;
-                    // if( i != num_clients - 1)
-                    // {
-                    //     int tmp = i;
-                    //     while(tmp < num_clients - 1)
-                    //     {
-                    //         client_sockets[tmp] = client_sockets[tmp + 1];
-                    //     }
-                    // }
-                    num_clients = num_clients - 1;
-                    // if(num_clients < 0)
-                    //     num_clients = 0;
-                    // FD_CLR(client_sockets[i], &readfds);
+                    this->_clients.erase(this->_clients.begin() + i);
                 }
             }
         }
+
     }
     return EXIT_SUCCESS;
 };
