@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/12 14:54:35 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:27:08 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ Channel&  Channel::operator=( Channel const & channel )
     this->_topicTime = channel._topicTime;
     this->_channelCreationTime = channel._channelCreationTime;
     this->_key = channel._key;
+    this->_invitedUsers = channel._invitedUsers;
     this->_operator = channel._operator;
     this->_member = channel._member;
     this->_userMap = channel._userMap;
@@ -97,6 +98,11 @@ std::string Channel::getChannelCreationTime() const
 std::string Channel::getKey() const
 {
     return this->_key;
+};
+
+std::vector<std::string> Channel::getInvitedUsers() const
+{
+    return this->_invitedUsers;
 };
 
 Client Channel::getOperator() const
@@ -158,6 +164,23 @@ void Channel::setChannelCreationTime( std::string _channelCreationTime )
 void Channel::setKey( std::string _key )
 {
     this->_key = _key;
+};
+
+void Channel::setInvitedUsers( std::string userName )
+{
+    this->_channelMap[this->getChannelName()]->_invitedUsers.push_back(userName);
+};
+
+int Channel::isAnInvitedUser( std::string userName )
+{
+    std::vector<std::string>::iterator it = std::find(this->_channelMap[this->getChannelName()]->_invitedUsers.begin(), this->_channelMap[this->getChannelName()]->_invitedUsers.end(), userName);
+
+    return (it != this->_channelMap[this->getChannelName()]->_invitedUsers.end()) ? 1 : 0;
+};
+
+void Channel::removeInvitedUser(std::string userName)
+{
+    this->_invitedUsers.erase(std::remove(this->_invitedUsers.begin(), this->_invitedUsers.end(), userName), this->_invitedUsers.end());
 };
 
 void Channel::addChannelToChannelMap()

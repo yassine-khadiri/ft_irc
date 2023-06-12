@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:32 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 13:48:46 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:26:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,13 @@ void Command::inviteCommand()
 				if (this->_channelObj._channelMap[this->_args[1]]->findMode("+i") && this->_client.getNickname() != this->_channelObj.getOperator().getNickname())
 					sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 				else
-					sendReply(":" + _client.getNickname() + "!" + this->_args[0] + "@" + getMachineHostName() + " INVITE " + this->_args[0] + " " + this->_args[1] + "\r\n"); //RPL_INVITING (341)
+				{
+					this->_channelObj._channelMap[this->_args[1]]->setInvitedUsers(this->_args[0]);
+					std::cout << "Invited for cha1: " << this->_channelObj._channelMap[this->_args[1]]->isAnInvitedUser(this->_args[0]) << std::endl;
+					std::string msg = ":" + _client.getNickname() + "!" + this->_args[0] + "@" + getMachineHostName() + " INVITE " + this->_args[0] + " :" + this->_args[1] + "\r\n";
+					broadcast(this->_args[1], ":" + getMachineHostName() + " 341 " + this->_client.getNickname() + " " + this->_args[0] + " " + this->_args[1] + "\r\n" ); //RPL_INVITING (341)
+					send(this->searchClientByName(this->_args[0]), msg.c_str(), msg.length(), 0);
+				}
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/09 15:46:10 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:27:30 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Channel
         std::string                 _topicTime;
         std::string                 _channelCreationTime;
         std::string                 _key;
+        std::vector<std::string>    _invitedUsers;
         Client                      _operator;
         Client                      _member;
     public:
@@ -52,6 +53,7 @@ class Channel
         std::string getTopicTime() const;
         std::string getChannelCreationTime() const;
         std::string getKey() const;
+        std::vector<std::string> getInvitedUsers() const;
         Client getOperator() const;
         userMap getUserMap() const;
         std::string	usersList() const;
@@ -61,6 +63,9 @@ class Channel
         void setTopicTime( std::string _topicTime );
         void setChannelCreationTime( std::string _channelCreationTime );
         void setKey( std::string _key );
+        void setInvitedUsers( std::string userName );
+        int isAnInvitedUser( std::string userName );
+        void removeInvitedUser( std::string userName );
         void addChannelToChannelMap();
         int  verifyKey( std::string &key )const;
         void addUserToUserMap( Client &_client, int Privilege );

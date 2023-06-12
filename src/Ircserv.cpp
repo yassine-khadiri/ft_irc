@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/11 13:47:14 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:28:40 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,27 @@ int Ircserv::waitForConnection()
                             cmd.exec(i, str, this->_clients);
                     }
                     memset(buff, 0, sizeof(buff));
+                }
+                else if (recv(client_sockets[i], buff, sizeof(buff), 0) <= 0)
+                {
+                    std::cout << "HERE\n";
+                    close(client_sockets[i]);
+                    std::vector<Client>::iterator it = this->_clients.begin();
+                    std::cout << (it + i)->getNickname() << std::endl;
+                    this->_clients.erase(it + i);
+                    // client_sockets[i] = 0;
+                    // if( i != num_clients - 1)
+                    // {
+                    //     int tmp = i;
+                    //     while(tmp < num_clients - 1)
+                    //     {
+                    //         client_sockets[tmp] = client_sockets[tmp + 1];
+                    //     }
+                    // }
+                    num_clients = num_clients - 1;
+                    // if(num_clients < 0)
+                    //     num_clients = 0;
+                    FD_CLR(client_sockets[i], &readfds);
                 }
             }
         }
