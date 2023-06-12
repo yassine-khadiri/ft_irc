@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 15:28:40 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/12 16:17:21 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ int Ircserv::createServerSocket()
 
 int Ircserv::waitForConnection()
 {
-    int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd, num_clients = 0;
+    // int socketClient, client_sockets[MAX_CLIENTS] = {0}, sd, num_clients = 0;
+    int socketClient, sd, num_clients = 0;
+    std::vector<int>client_sockets;
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
     fd_set readfds;
@@ -68,7 +70,7 @@ int Ircserv::waitForConnection()
         max_sd = this->socket_fd;
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            sd = client_sockets[i];
+            sd = client_sockets.at(i);
             if (sd > 0)
                 FD_SET(sd, &readfds);
             if (sd > max_sd)
@@ -91,7 +93,7 @@ int Ircserv::waitForConnection()
             if (num_clients < MAX_CLIENTS)
             {
                 this->_clients.push_back(Client(socketClient));
-                client_sockets[num_clients] = socketClient;
+                client_sockets.push_back(socketClient);
                 num_clients++;
             }
             else
@@ -99,9 +101,9 @@ int Ircserv::waitForConnection()
         }
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            if (FD_ISSET(client_sockets[i], &readfds))
+            if (FD_ISSET(client_sockets.at(i), &readfds))
             {                
-                if (recv(client_sockets[i], buff, sizeof(buff), 0) > 0)
+                if (recv(client_sockets.at(i), buff, sizeof(buff), 0) > 0)
                 {
                     std::string str(buff);  
                     if (str.find('\n') == std::string::npos)
@@ -128,13 +130,15 @@ int Ircserv::waitForConnection()
                     }
                     memset(buff, 0, sizeof(buff));
                 }
-                else if (recv(client_sockets[i], buff, sizeof(buff), 0) <= 0)
+                else
                 {
                     std::cout << "HERE\n";
-                    close(client_sockets[i]);
-                    std::vector<Client>::iterator it = this->_clients.begin();
-                    std::cout << (it + i)->getNickname() << std::endl;
-                    this->_clients.erase(it + i);
+                    close(client_sockets.at(i));
+                    // std::vector<Client>::iterator it = this->_clients.begin();
+                    // std::cout << (it + i)->getNickname() << std::endl;
+                    // this->_clients.erase(it + i);
+                    // client_sockets.erase(std::remove(client_sockets->begin(), client_sockets->end(), client_sockets->at(i)), client_sockets->end());
+                    client_sockets.erase(std::remove(client_sockets.begin(), client_sockets.end(), client_sockets.at(i)), client_sockets.end());
                     // client_sockets[i] = 0;
                     // if( i != num_clients - 1)
                     // {
@@ -147,7 +151,7 @@ int Ircserv::waitForConnection()
                     num_clients = num_clients - 1;
                     // if(num_clients < 0)
                     //     num_clients = 0;
-                    FD_CLR(client_sockets[i], &readfds);
+                    // FD_CLR(client_sockets[i], &readfds);
                 }
             }
         }
