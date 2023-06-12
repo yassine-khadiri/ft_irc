@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:30 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/09 18:39:29 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/12 14:57:50 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void Command::partCommand()
 			else
 				message = ":" + this->_client.getNickname() + "!@" + getMachineHostName() + " PART " + channelName + "\r\n";
 			broadcast(channelName, message);
-			std::cout << "remove channel: \n" <<std::endl;
 			_channelObj.removeUserFromUserMap(channelName, _client.getFd());
 		}																			
 	}

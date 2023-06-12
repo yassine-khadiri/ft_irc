@@ -6,7 +6,7 @@
 /*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/10 15:47:35 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:00:50 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ Command::Command(std::string &pass)
 
 Command::~Command()
 {
+	channelMap::iterator it = this->_channelObj._channelMap.begin();
+	while(it != this->_channelObj._channelMap.end())
+	{
+		delete it->second;
+		it++;
+	}
 };
 
 int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::string &cmd)
@@ -98,7 +104,12 @@ int Command::findCommand(std::string cmd)
 
 void Command::exec(int nbClient, std::string &msg ,std::vector<Client> &clients)
 {
-	
+	// channelMap::iterator it = this->_channelObj._channelMap.begin();
+	// while(it != this->_channelObj._channelMap.end())
+	// {
+	// 	std::cout << it->second->getChannelName() << std::endl;
+	// 	it++;
+	// }
 	_clients = clients;
 	_client = _clients[nbClient];
 	_args.clear();
@@ -162,6 +173,12 @@ void Command::exec(int nbClient, std::string &msg ,std::vector<Client> &clients)
 	}
 	_clients[nbClient] = _client; 
 	clients = _clients;
+	// it = this->_channelObj._channelMap.begin();
+	// while(it != this->_channelObj._channelMap.end())
+	// {
+	// 	std::cout << it->second->getChannelName() << std::endl;
+	// 	it++;
+	// }
 };
 
 std::string Command::getCommand() const
