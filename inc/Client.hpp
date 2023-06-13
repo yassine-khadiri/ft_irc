@@ -6,11 +6,12 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:39:54 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/13 14:26:00 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:37:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
 
 #include <iostream>
 #include <string>
@@ -48,3 +49,5 @@ class Client
 		void		setOpPrivilegePermission( int privilege );
 		int			isMemberOfChannel( std::string channelName, int clientFd );
 };
+
+#endif
