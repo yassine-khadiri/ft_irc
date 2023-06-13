@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:47:38 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/31 17:17:04 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:35:09 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	Command::privmsgCommand()
 	}
 };
 
-void	Command::noticeCommand()
+void Command::noticeCommand()
 {
 	if (this->_args.size() != 2 || this->_args[0] == "" )
 		sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");

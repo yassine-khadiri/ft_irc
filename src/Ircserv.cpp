@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 18:25:03 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:33:43 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int Ircserv::createServerSocket()
     }
     return EXIT_FAILURE;
 };
+
 int Ircserv::waitForConnection()
 {
     int socketClient, sd, num_clients = 0;

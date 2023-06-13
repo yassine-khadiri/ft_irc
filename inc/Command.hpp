@@ -6,11 +6,12 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/09 18:47:12 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:27:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef COMMAND_HPP
+#define COMMAND_HPP
 
 #include <iostream>
 #include <string>
@@ -43,7 +44,7 @@ typedef enum
 	TOPIC,
 	INVITE,
 	BOT,
-} e_Command;
+}	e_Command;
 
 class Command
 {
@@ -72,8 +73,8 @@ class Command
 		void						setCommand( std::string Command );
 		void						setArgs( std::vector<std::string> args );
 		void						setClient( Client &client );
-		void						sendReply(std::string msg);
-		int							nickExist(std::string nick);
+		void						sendReply( std::string msg );
+		int							nickExist( std::string nick );
 		void						passCommand();
 		void						userCommand();
 		void						nickCommand();
@@ -95,3 +96,5 @@ class Command
 		void						communClients( std::string msg );
 		std::string					getMachineHostName();
 };
+
+#endif

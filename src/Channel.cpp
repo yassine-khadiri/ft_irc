@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/12 15:27:08 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:30:34 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ std::string Channel::getModes() const
 int Channel::findMode( std::string mode )
 {
     std::vector<char>::iterator it = std::find(this->_modes.begin(), this->_modes.end(), mode[1]);
+
     if (it == this->_modes.end())
         return 0;
     return 1;
@@ -146,7 +147,7 @@ int Channel::getLimitUsers() const
     return _limitUsers;
 };
 
-void Channel::setLimitUsers(int limit)
+void Channel::setLimitUsers( int limit )
 {
     _limitUsers = limit;
 };
@@ -217,7 +218,6 @@ int Channel::removeUserFromUserMap( std::string channelName, int clientFd )
         }
 		return 1;
 	}
-    
 	return 0;
 };
 

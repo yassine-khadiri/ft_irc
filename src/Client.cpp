@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/06 13:47:58 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:31:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ Client::~Client()
 {
 };
 
-void Client::setPassword(std::string pass)
+void Client::setPassword( std::string pass )
 {
 	this->_password = pass;
 };
@@ -57,7 +57,7 @@ std::string	Client::getPassword() const
 	return (this->_password);
 };
 
-void Client::setNickname(std::string nick)
+void Client::setNickname( std::string nick )
 {
 	this->_nickname = nick;
 };
@@ -67,7 +67,7 @@ std::string	Client::getNickname() const
 	return (this->_nickname);
 };
 
-void Client::setUsername(std::string user)
+void Client::setUsername( std::string user )
 {
 	this->_username = user;
 };
@@ -77,7 +77,7 @@ std::string	Client::getUsername() const
 	return (this->_username);
 };
 
-void Client::setIsRegistered(bool isRegistered)
+void Client::setIsRegistered( bool isRegistered )
 {
 	this->_isRegistered = isRegistered;
 	if (isRegistered == true)
@@ -89,7 +89,7 @@ bool Client::getIsRegistered() const
 	return (this->_isRegistered);
 };
 
-void Client::setFd(int fdsocket)
+void Client::setFd( int fdsocket )
 {
 	this->_fdsocket = fdsocket;
 };
@@ -108,11 +108,6 @@ int Client::getOpPriviligePermission() const
 {
 	return(this->_privilige);
 };
-
-// void Client::channelSegment(Channel &_Channel)
-// {
-// 	joined.erase(_Channel.getChannelName());
-// }
 
 int Client::isMemberOfChannel( std::string channelName, int clientFd )
 {

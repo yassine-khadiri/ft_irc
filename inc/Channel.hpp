@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 17:55:40 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 15:27:30 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:25:12 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,36 +40,36 @@ class Channel
 		// ############################################################### //
 
         Channel();
-        Channel( std::string channelName, std::string _topic, std::string key, Client _member);
+        Channel( std::string channelName, std::string _topic, std::string key, Client _member );
         Channel& operator=( Channel const &channel );
         Channel( Channel const &channel );
         ~Channel();
-        int getLimitUsers() const ;
-        void setLimitUsers(int limit);
-        std::string getChannelName() const;
-        std::string getTopic() const;
-        std::string getModes() const;
-        int         findMode( std::string mode );
-        std::string getTopicTime() const;
-        std::string getChannelCreationTime() const;
-        std::string getKey() const;
-        std::vector<std::string> getInvitedUsers() const;
-        Client getOperator() const;
-        userMap getUserMap() const;
-        std::string	usersList() const;
-        void setChannelName( std::string _channelName );
-        void setTopic( std::string _topic );
-        void setMode( std::string _mode );
-        void setTopicTime( std::string _topicTime );
-        void setChannelCreationTime( std::string _channelCreationTime );
-        void setKey( std::string _key );
-        void setInvitedUsers( std::string userName );
-        int isAnInvitedUser( std::string userName );
-        void removeInvitedUser( std::string userName );
-        void addChannelToChannelMap();
-        int  verifyKey( std::string &key )const;
-        void addUserToUserMap( Client &_client, int Privilege );
-        int removeUserFromUserMap( std::string channelName, int clientFd );
+        int                         getLimitUsers() const ;
+        void                        setLimitUsers(int limit);
+        std::string                 getChannelName() const;
+        std::string                 getTopic() const;
+        std::string                 getModes() const;
+        int                         findMode( std::string mode );
+        std::string                 getTopicTime() const;
+        std::string                 getChannelCreationTime() const;
+        std::string                 getKey() const;
+        std::vector<std::string>    getInvitedUsers() const;
+        Client                      getOperator() const;
+        userMap                     getUserMap() const;
+        std::string                 usersList() const;
+        void                        setChannelName( std::string _channelName );
+        void                        setTopic( std::string _topic );
+        void                        setMode( std::string _mode );
+        void                        setTopicTime( std::string _topicTime );
+        void                        setChannelCreationTime( std::string _channelCreationTime );
+        void                        setKey( std::string _key );
+        void                        setInvitedUsers( std::string userName );
+        int                         isAnInvitedUser( std::string userName );
+        void                        removeInvitedUser( std::string userName );
+        void                        addChannelToChannelMap();
+        int                         verifyKey( std::string &key )const;
+        void                        addUserToUserMap( Client &_client, int Privilege );
+        int                         removeUserFromUserMap( std::string channelName, int clientFd );
 };
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:22 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/24 18:44:23 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:34:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Command.hpp"
 
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output)
+size_t WriteCallback( void* contents, size_t size, size_t nmemb, std::string* output )
 {
     size_t totalSize = size * nmemb;
     output->append(static_cast<char*>(contents), totalSize);
@@ -23,6 +23,7 @@ std::string getTime()
 {
     std::time_t t = std::time(NULL);
     char time_str[20];
+
     std::strftime(time_str, sizeof(time_str), "%H:%M:%S", std::localtime(&t));
     return std::string(time_str) + " \r\n";
 };

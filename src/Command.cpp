@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/12 15:00:50 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:33:28 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ Command::Command(std::string &pass)
 Command::~Command()
 {
 	channelMap::iterator it = this->_channelObj._channelMap.begin();
+
 	while(it != this->_channelObj._channelMap.end())
 	{
 		delete it->second;
@@ -32,7 +33,7 @@ Command::~Command()
 	}
 };
 
-int   Command::splitParams(std::string msg, std::vector<std::string> &arg, std::string &cmd)
+int   Command::splitParams( std::string msg, std::vector<std::string> &arg, std::string &cmd )
 {
 	if (msg == "")
 		return (-1);
@@ -63,13 +64,13 @@ std::string Command::getMachineHostName()
     return hostname;
 };
 
-void Command::toUpper(std::string &str)
+void Command::toUpper( std::string &str )
 {
 	for (int i = 0; i < (int)str.length(); i++)
 		str[i] = toupper(str[i]);
 };
 
-void	Command::initBasicCommand()
+void Command::initBasicCommand()
 {
 	_basicCommand.push_back("USER");
 	_basicCommand.push_back("NICK");
@@ -87,9 +88,10 @@ void	Command::initBasicCommand()
 	_basicCommand.push_back("BOT");
 };
 
-int Command::findCommand(std::string cmd)
+int Command::findCommand( std::string cmd )
 {
 	int i = 0;
+
 	while (i < (int)_basicCommand.size())
 	{
 		if (cmd == _basicCommand[i])
@@ -102,7 +104,7 @@ int Command::findCommand(std::string cmd)
 	return (i);
 };
 
-void Command::exec(int nbClient, std::string &msg ,std::vector<Client> &clients)
+void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients )
 {
 	// channelMap::iterator it = this->_channelObj._channelMap.begin();
 	// while(it != this->_channelObj._channelMap.end())
@@ -196,12 +198,12 @@ Client& Command::getClient()
 	return _client;
 };
 
-void Command::setCommand(std::string command)
+void Command::setCommand( std::string command )
 {
 	this->_command = command;
 };
 
-void Command::setArgs(std::vector<std::string> args)
+void Command::setArgs( std::vector<std::string> args )
 {
 	this->_args = args;
 };
@@ -211,12 +213,12 @@ void Command::setClient( Client &client )
 	this->_client = client;
 };
 
-void	Command::sendReply(std::string msg)
+void	Command::sendReply( std::string msg )
 {
 	send(this->_client.getFd(), msg.c_str(), msg.length(), 0);
 };
 
-int	Command::nickExist(std::string nick)
+int	Command::nickExist( std::string nick )
 {
 	int i = 0;
 
@@ -270,7 +272,7 @@ int Command::leaveAllChannels()
 	return 1;
 };
 
-void Command::broadcast( std::string const &channel, std::string const &msg)
+void Command::broadcast( std::string const &channel, std::string const &msg )
 {
 	userMap::iterator it = this->_channelObj._channelMap[channel]->_userMap.begin();
 

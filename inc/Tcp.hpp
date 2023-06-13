@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:20:55 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/25 11:54:56 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:29:25 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,18 @@
 
 class Tcp
 {
-protected:
-    int socket_fd;
-    int port;
-    struct sockaddr_in addr;
-public:
-    Tcp();
-    Tcp( int port );
-    ~Tcp();
-    int initialize();
-    int createServerSocket();
-    // int createClientSocket();
-    virtual int waitForConnection() = 0;
+    protected:
+        int                 socket_fd;
+        int                 port;
+        struct sockaddr_in  addr;
+    public:
+        Tcp();
+        Tcp( int port );
+        ~Tcp();
+        int         initialize();
+        int         createServerSocket();
+        // int createClientSocket();
+        virtual int waitForConnection() = 0;
 };
 
 #endif

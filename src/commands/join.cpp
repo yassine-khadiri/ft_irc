@@ -6,13 +6,13 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 15:26:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:34:39 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Command.hpp"
 
-std::string getChannelKey(const std::vector<std::string>& channelKeys, int channelMapSize)
+std::string getChannelKey( const std::vector<std::string>& channelKeys, int channelMapSize )
 {
     std::string chKey = "";
 
