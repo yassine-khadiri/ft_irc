@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 14:33:43 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 17:12:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,6 @@ int Ircserv::waitForConnection()
     int max_sd;
 
     std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
-    struct timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 0;
 
     while(1)
     {
@@ -76,6 +73,10 @@ int Ircserv::waitForConnection()
             if (sd > max_sd)
                 max_sd = sd;
         }
+        struct timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+
         int activity = select(max_sd + 1, &readfds, NULL, NULL, &timeout);
         if (activity < 0)
         {
@@ -130,12 +131,12 @@ int Ircserv::waitForConnection()
                 }
                 else
                 {
-                    std::cout << "Client Disconnected!" << std::endl;
                     close(client_sockets[i]);
-                    FD_CLR(client_sockets[i], &readfds);
+                    std::cout << "Client Disconnected!" << std::endl;
+                    client_sockets.erase(client_sockets.begin() + i);
                     num_clients--;
-                    client_sockets.erase(std::remove(client_sockets.begin(), client_sockets.end(), client_sockets[i]), client_sockets.end());
                     this->_clients.erase(this->_clients.begin() + i);
+                    i--;
                 }
             }
         }

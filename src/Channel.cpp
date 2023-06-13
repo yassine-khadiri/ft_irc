@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/13 14:30:34 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:05:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,14 +169,14 @@ void Channel::setKey( std::string _key )
 
 void Channel::setInvitedUsers( std::string userName )
 {
-    this->_channelMap[this->getChannelName()]->_invitedUsers.push_back(userName);
+    this->_invitedUsers.push_back(userName);
 };
 
 int Channel::isAnInvitedUser( std::string userName )
 {
-    std::vector<std::string>::iterator it = std::find(this->_channelMap[this->getChannelName()]->_invitedUsers.begin(), this->_channelMap[this->getChannelName()]->_invitedUsers.end(), userName);
+    std::vector<std::string>::iterator it = std::find(this->_invitedUsers.begin(), this->_invitedUsers.end(), userName);
 
-    return (it != this->_channelMap[this->getChannelName()]->_invitedUsers.end()) ? 1 : 0;
+    return (it != this->_invitedUsers.end()) ? 1 : 0;
 };
 
 void Channel::removeInvitedUser(std::string userName)

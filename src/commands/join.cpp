@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 14:34:39 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:01:06 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void Command::joinCommand()
 				this->_channelObj.addUserToUserMap(_client, CLIENT);
 				if (this->_channelObj.isAnInvitedUser(this->_client.getNickname()))
 					this->_channelObj.removeInvitedUser(this->_client.getNickname());
-				this->_channelObj._channelMap[channelName] = &this->_channelObj;
+				*this->_channelObj._channelMap[channelName] = this->_channelObj;
 				// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 
 				this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");

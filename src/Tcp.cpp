@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/05/31 15:55:38 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:33:57 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int Tcp::createServerSocket()
             return EXIT_FAILURE;
         }
 
-        if (listen(this->socket_fd, 1))
+        if (listen(this->socket_fd, SOMAXCONN))
         {
             std::cerr << "Error Listening...!" << std::endl;
             return EXIT_FAILURE;
