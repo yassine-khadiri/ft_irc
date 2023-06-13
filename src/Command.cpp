@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/13 14:33:28 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/13 17:25:47 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,7 @@ int	Command::searchClientByName( std::string clientName )
 
 int Command::leaveAllChannels()
 {
+	std::cout << "leave all channels!" << std::endl;
 	this->_args.clear();
 	this->_args.push_back("");
 	channelMap::iterator it = this->_channelObj._channelMap.begin();
