@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 18:42:03 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:55:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ int Ircserv::waitForConnection()
                             while(std::getline(ss,str))
                             {
                                 if (!str.empty())
-                                    cmd.exec(i, str, this->_clients,client_sockets,num_clients);
+                                    cmd.exec(i, str, this->_clients, client_sockets, num_clients);
                             }
                         }
                         else if (!str.empty())
-                            cmd.exec(i, str, this->_clients,client_sockets,num_clients);
+                            cmd.exec(i, str, this->_clients, client_sockets, num_clients);
                     }
                     memset(buff, 0, sizeof(buff));
                 }
