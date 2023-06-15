@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:47:38 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 14:35:09 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:53:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	Command::privmsgCommand()
 				sendReply(":" + getMachineHostName() + " 404 " + _client.getNickname() + " " + this->_args[0] + " :Cannot send to channel\r\n");
 		else
 		{
-			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + "" + " PRIVMSG " + this->_args[0] + " " + this->_args[1] + "\r\n");
+			std::string tmp(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " PRIVMSG " + this->_args[0] + " " + this->_args[1] + "\r\n");
 			if (this->_args[0][0] == '#')
-				this->broadcast(this->_args[0],tmp);
+				this->broadcast(this->_args[0], tmp);
 			else
 				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		}

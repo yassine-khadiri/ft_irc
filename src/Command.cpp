@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/13 17:25:47 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:53:20 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,6 +279,7 @@ void Command::broadcast( std::string const &channel, std::string const &msg )
 
 	while (it != this->_channelObj._channelMap[channel]->_userMap.end())
 	{
+		
 		if(!((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd()))	
 			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;

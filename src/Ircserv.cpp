@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 17:12:16 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 14:07:55 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Ircserv::Ircserv()
 
 Ircserv::Ircserv( int port, std::string password ): Tcp(port), password(password),cmd(Command(password))
 {
-    recvString ="";
+    recvString = "";
 };
 
 Ircserv::~Ircserv()
