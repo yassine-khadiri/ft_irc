@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:47:38 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 13:53:13 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:35:32 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	Command::privmsgCommand()
 			else
 				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);
 		}
-		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@" + getMachineHostName() + "" + " PRIVMSG " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 };
 
@@ -52,6 +51,5 @@ void Command::noticeCommand()
 			else
 				send(_clients[nickExist(this->_args[0])].getFd(), tmp.c_str(), tmp.length(), 0);	
 		}
-		// sendReply(":" + this->_args[0] + "!" + _clients[nickExist(this->_args[0])].getUsername() + "@" + getMachineHostName() + "" + " NOTICE " + _client.getNickname() + " :" + this->_args[1] + "\r\n");
 	}
 };

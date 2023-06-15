@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/15 13:53:20 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:34:33 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int   Command::splitParams( std::string msg, std::vector<std::string> &arg, std:
 	msg.erase(0, msg.find_first_not_of(' '));
 	std::string tmp = msg;
 	int semicolon = msg.find(':');
+
 	if(semicolon > 0)
 		tmp = msg.substr(0, semicolon);
 	std::stringstream ss(tmp);
@@ -57,10 +58,10 @@ int   Command::splitParams( std::string msg, std::vector<std::string> &arg, std:
 std::string Command::getMachineHostName()
 {
     char hostname[256];
-    if (gethostname(hostname, sizeof(hostname)) != 0) {
+
+    if (gethostname(hostname, sizeof(hostname)) != 0)
         // Error occurred while retrieving the hostname
         return "";
-    }
     return hostname;
 };
 
@@ -106,17 +107,12 @@ int Command::findCommand( std::string cmd )
 
 void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients )
 {
-	// channelMap::iterator it = this->_channelObj._channelMap.begin();
-	// while(it != this->_channelObj._channelMap.end())
-	// {
-	// 	std::cout << it->second->getChannelName() << std::endl;
-	// 	it++;
-	// }
 	_clients = clients;
 	_client = _clients[nbClient];
 	_args.clear();
 	_command = "";
 	this->modes.clear();
+
 	if (splitParams(msg, _args, _command) == -1)
 	{
 		sendReply(":" + getMachineHostName() + " 421 * : " + _command + " Unknown command\r\n");
@@ -127,7 +123,6 @@ void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients
 		sendReply(":" + getMachineHostName() + " 451 * :You have not registered\r\n");
 		return ;
 	}
-	std::cout << "Command: " << msg << std::endl;
 	
 	switch (this->_indexCmd)
 	{
@@ -173,14 +168,9 @@ void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients
 		modeCommand();
 		break;
 	}
+
 	_clients[nbClient] = _client; 
 	clients = _clients;
-	// it = this->_channelObj._channelMap.begin();
-	// while(it != this->_channelObj._channelMap.end())
-	// {
-	// 	std::cout << it->second->getChannelName() << std::endl;
-	// 	it++;
-	// }
 };
 
 std::string Command::getCommand() const
@@ -213,7 +203,7 @@ void Command::setClient( Client &client )
 	this->_client = client;
 };
 
-void	Command::sendReply( std::string msg )
+void Command::sendReply( std::string msg )
 {
 	send(this->_client.getFd(), msg.c_str(), msg.length(), 0);
 };
@@ -257,7 +247,6 @@ int	Command::searchClientByName( std::string clientName )
 
 int Command::leaveAllChannels()
 {
-	std::cout << "leave all channels!" << std::endl;
 	this->_args.clear();
 	this->_args.push_back("");
 	channelMap::iterator it = this->_channelObj._channelMap.begin();
@@ -279,7 +268,6 @@ void Command::broadcast( std::string const &channel, std::string const &msg )
 
 	while (it != this->_channelObj._channelMap[channel]->_userMap.end())
 	{
-		
 		if(!((this->_indexCmd == PRIVMSG || this->_indexCmd == NOTICE) && _client.getFd() == it->second.getFd()))	
 			send(it->second.getFd(), msg.c_str(), msg.length(), 0);
 		++it;

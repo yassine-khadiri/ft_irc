@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 16:33:57 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:34:41 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,28 +59,3 @@ int Tcp::createServerSocket()
     }
     return EXIT_FAILURE;
 };
-
-// int Tcp::createClientSocket()
-// {
-//     std::string _val;
-//     char buff[1024];
-
-//     if (!this->initialize())
-//     {
-//         if (!(connect(this->socket_fd, (const sockaddr *)&this->addr, sizeof(this->addr))))
-//         {
-//             while (1)
-//             {
-//                 if(getline(std::cin, _val) && _val.length())
-//                 {   
-//                     if (send(this->socket_fd, _val.c_str(), _val.length() + 1, 0) > 0)
-//                     {
-//                         if (recv(this->socket_fd, buff, 1024, 0) > 0)
-//                             std::cout << "SERVER SAID: " << buff << std::endl;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return EXIT_FAILURE;
-// };

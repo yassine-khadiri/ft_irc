@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/13 14:27:32 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:50:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ class Command
 		void						partCommand();
 		void						noticeCommand();
 		void						quitCommand();
+		int							leaveAllChannels();
 		void						kickCommand();
 		void						topicCommand();
 		void						inviteCommand();
@@ -92,7 +93,6 @@ class Command
 		std::string					getCurrentUnixTimestamp();
 		int							searchClientByName( std::string clientName );
 		int 						modeAnalyzer();
-		int							leaveAllChannels();
 		void						communClients( std::string msg );
 		std::string					getMachineHostName();
 };

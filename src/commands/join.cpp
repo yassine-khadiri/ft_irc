@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 16:01:06 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:36:30 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,9 @@ void Command::joinCommand()
 			sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " = " + channelName + " :@" + this->_client.getNickname() + "\r\n");
 			sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 		}
-		else if (!this->_client.isMemberOfChannel(channelName, this->_client.getFd())) // 0
+		else if (!this->_client.isMemberOfChannel(channelName, this->_client.getFd()))
 		{
 			this->_channelObj = *this->_channelObj._channelMap[channelName];
-			std::cout << "Invited for cha2: " << this->_channelObj.isAnInvitedUser(this->_client.getNickname()) << std::endl;
-			std::cout << "Is invited: " << this->_channelObj.isAnInvitedUser(this->_client.getNickname()) << std::endl;
 			if (this->_channelObj.getModes().find("i") != std::string::npos && !this->_channelObj.isAnInvitedUser(this->_client.getNickname()))
 				sendReply(":" + getMachineHostName() + " 473 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+i)\r\n"); //ERR_INVITEONLYCHAN (473)
 			else if (this->_channelObj.getModes().find("l") != std::string::npos && (int)this->_channelObj._userMap.size() >= this->_channelObj.getLimitUsers())
@@ -97,7 +95,6 @@ void Command::joinCommand()
 				if (this->_channelObj.isAnInvitedUser(this->_client.getNickname()))
 					this->_channelObj.removeInvitedUser(this->_client.getNickname());
 				*this->_channelObj._channelMap[channelName] = this->_channelObj;
-				// sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 
 				this->broadcast(channelName, ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
 				sendReply(":" + getMachineHostName() + " 353 " + _client.getNickname() + " @ " + channelName + " " + this->_channelObj.usersList() + "\r\n");

@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/13 16:05:13 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:19:10 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ Channel::Channel( std::string _channelName, std::string _topic, std::string _key
 
 Channel&  Channel::operator=( Channel const & channel )
 {
+    if(this == &channel)
+        return *this;
     this->_channelName = channel._channelName;
     this->_topic = channel._topic ;
     this->_modes = channel._modes;

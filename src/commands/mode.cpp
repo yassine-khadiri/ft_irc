@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 18:26:48 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:15:58 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int Command::modeAnalyzer()
 void Command::modeCommand()
 {
 	Channel *channelobj = NULL;
+
 	if (this->_args.size() && this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 	{
 		sendReply(":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + this->_args[0] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)

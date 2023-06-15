@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 14:42:27 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/13 14:31:18 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:29:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ void Client::setIsRegistered( bool isRegistered )
 {
 	this->_isRegistered = isRegistered;
 	if (isRegistered == true)
-		std::cout << "Client " << this->_nickname << " is now registered" << std::endl;
+		std::cout << "Welcome: " << this->_nickname << " To Our IRC Server!" << std::endl;
+	
 };
 
 bool Client::getIsRegistered() const

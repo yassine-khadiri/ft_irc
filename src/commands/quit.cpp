@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:45 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/13 14:35:55 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:04:03 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void Command::communClients( std::string msg )
 {
 	channelMap::iterator it1 = this->_channelObj._channelMap.begin();
-	// std::vector<int> clients;
+
 	if (it1 == this->_channelObj._channelMap.end())
 		return (sendReply(msg));
 	while (it1 != this->_channelObj._channelMap.end())
@@ -25,7 +25,6 @@ void Command::communClients( std::string msg )
 			broadcast(this->_channelObj.getChannelName(), msg);
 		it1++;
 	}
-	// return clients;
 };
 
 void Command::quitCommand()

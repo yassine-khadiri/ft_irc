@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 14:07:55 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:39:16 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ int Ircserv::waitForConnection()
     fd_set readfds;
     char buff[1024] = {0};
     int max_sd;
-
-    std::cout << "Waiting For Incoming IRC Connections...!" << std::endl;
 
     while(1)
     {
@@ -131,11 +129,14 @@ int Ircserv::waitForConnection()
                 }
                 else
                 {
-                    close(client_sockets[i]);
+                    std::string msg = "QUIT Leaving...";
+                    if (!this->_clients[i].getNickname().empty())
+                        cmd.exec(i, msg, this->_clients);
                     std::cout << "Client Disconnected!" << std::endl;
                     client_sockets.erase(client_sockets.begin() + i);
                     num_clients--;
                     this->_clients.erase(this->_clients.begin() + i);
+                    close(client_sockets[i]);
                     i--;
                 }
             }
