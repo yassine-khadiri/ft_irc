@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:07:12 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/15 16:50:45 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:39:05 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ class Command
 		Command();
 		Command( std::string &pass );
 		~Command();
-		void						exec( int nbClient,std::string &msg,std::vector<Client> &clients );
+		void						exec( int nbClient,std::string &msg,std::vector<Client> &clients,std::vector<int> &socketClients, int &nbClients);
 		void						toUpper( std::string &str );
 		int							splitParams( std::string msg, std::vector<std::string> &args, std::string &cmd );
 		void						initBasicCommand();

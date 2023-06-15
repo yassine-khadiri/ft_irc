@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ircserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 17:39:16 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:42:03 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ int Ircserv::waitForConnection()
                             while(std::getline(ss,str))
                             {
                                 if (!str.empty())
-                                    cmd.exec(i, str, this->_clients);
+                                    cmd.exec(i, str, this->_clients,client_sockets,num_clients);
                             }
                         }
                         else if (!str.empty())
-                            cmd.exec(i, str, this->_clients);
+                            cmd.exec(i, str, this->_clients,client_sockets,num_clients);
                     }
                     memset(buff, 0, sizeof(buff));
                 }
@@ -131,13 +131,7 @@ int Ircserv::waitForConnection()
                 {
                     std::string msg = "QUIT Leaving...";
                     if (!this->_clients[i].getNickname().empty())
-                        cmd.exec(i, msg, this->_clients);
-                    std::cout << "Client Disconnected!" << std::endl;
-                    client_sockets.erase(client_sockets.begin() + i);
-                    num_clients--;
-                    this->_clients.erase(this->_clients.begin() + i);
-                    close(client_sockets[i]);
-                    i--;
+                        cmd.exec(i, msg, this->_clients,client_sockets,num_clients);
                 }
             }
         }

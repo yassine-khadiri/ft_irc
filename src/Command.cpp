@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/15 17:34:33 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:42:32 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int Command::findCommand( std::string cmd )
 	return (i);
 };
 
-void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients )
+void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients ,std::vector<int> &socketClients, int &nbClients)
 {
 	_clients = clients;
 	_client = _clients[nbClient];
@@ -171,6 +171,14 @@ void Command::exec( int nbClient, std::string &msg ,std::vector<Client> &clients
 
 	_clients[nbClient] = _client; 
 	clients = _clients;
+	if (_indexCmd == QUIT)
+	{
+		close(_client.getFd());
+		socketClients.erase(socketClients.begin() + nbClient);
+		clients.erase(clients.begin() + nbClient);
+		nbClients--;
+		std::cout << "Client Disconnected!" << std::endl;
+	}
 };
 
 std::string Command::getCommand() const
