@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 17:36:30 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 15:29:42 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/Command.hpp"
 
-std::string getChannelKey( const std::vector<std::string>& channelKeys, int channelMapSize )
+std::string getChannelKey( const std::vector<std::string>& channelKeys, int index )
 {
     std::string chKey = "";
 
     if (channelKeys.size() > 0)
     {
-        int index = channelMapSize % channelKeys.size();
-        chKey = channelKeys[index];
+        chKey = channelKeys[index % channelKeys.size()];
     }
     return chKey;
 };
 
 void Command::joinCommand() 
 {
+	int indexKey = 0;
     if (this->_args.size() <= 1)
     {
 		if (this->_args.size() == 1 && this->_args[0] == "0")
@@ -52,6 +52,8 @@ void Command::joinCommand()
         while (std::getline(keySplitter, key, ','))
             channelKeys.push_back(key);
     }
+	if(channelKeys.size() < 1)
+		channelKeys.push_back("");
 
     while (std::getline(channelSplitter, channelName, ','))
     {
@@ -62,12 +64,12 @@ void Command::joinCommand()
         }
 		if (this->_client.isMemberOfChannel(channelName, this->_client.getFd()) == -1)
 		{
-			this->_channelObj = Channel(channelName, "", getChannelKey(channelKeys, this->_channelObj._channelMap.size()), _client);
+			this->_channelObj = Channel(channelName, "", getChannelKey(channelKeys,indexKey), _client);
 			this->_channelObj.addUserToUserMap(_client, OPERATOR);
 			this->_channelObj.setChannelCreationTime(this->getCurrentUnixTimestamp());
 			this->_channelObj.setMode("+n");
 			this->_channelObj.setMode("+t");
-			if (!getChannelKey(channelKeys, this->_channelObj._channelMap.size()).empty())
+			if (!getChannelKey(channelKeys,indexKey).empty())
 				this->_channelObj.setMode("+k");
 			this->_channelObj.addChannelToChannelMap();
 			sendReply(":" + _client.getNickname() + "!" + _client.getUsername() + "@" + getMachineHostName() + " JOIN " + channelName + "\r\n");
@@ -84,7 +86,7 @@ void Command::joinCommand()
 				sendReply(":" + getMachineHostName() + " 471 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+l)\r\n"); //ERR_CHANNELISFULL (471)
 			else
 			{
-				std::string  checkKey = getChannelKey(channelKeys, this->_channelObj._channelMap.size());
+				std::string  checkKey= getChannelKey(channelKeys,indexKey);
 
 				if (!this->_channelObj.verifyKey(checkKey))
 				{
@@ -101,5 +103,6 @@ void Command::joinCommand()
 				sendReply(":" + getMachineHostName() + " 366 " + _client.getNickname() + " " + channelName + " :End of /NAMES list.\r\n");
 			}
 		}
+		indexKey++;
     }
 };
