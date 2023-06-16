@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 15:29:42 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:55:14 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void Command::joinCommand()
 		else if (!this->_client.isMemberOfChannel(channelName, this->_client.getFd()))
 		{
 			this->_channelObj = *this->_channelObj._channelMap[channelName];
+
 			if (this->_channelObj.getModes().find("i") != std::string::npos && !this->_channelObj.isAnInvitedUser(this->_client.getNickname()))
 				sendReply(":" + getMachineHostName() + " 473 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+i)\r\n"); //ERR_INVITEONLYCHAN (473)
 			else if (this->_channelObj.getModes().find("l") != std::string::npos && (int)this->_channelObj._userMap.size() >= this->_channelObj.getLimitUsers())

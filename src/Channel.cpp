@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:07:29 by hbouqssi          #+#    #+#             */
-/*   Updated: 2023/06/15 17:19:10 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:54:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ Channel&  Channel::operator=( Channel const & channel )
     this->_channelName = channel._channelName;
     this->_topic = channel._topic ;
     this->_modes = channel._modes;
+    this->_limitUsers = channel._limitUsers;
     this->_topicTime = channel._topicTime;
     this->_channelCreationTime = channel._channelCreationTime;
     this->_key = channel._key;
@@ -146,12 +147,12 @@ void Channel::setMode( std::string _mode )
 
 int Channel::getLimitUsers() const
 {
-    return _limitUsers;
+    return this->_limitUsers;
 };
 
 void Channel::setLimitUsers( int limit )
 {
-    _limitUsers = limit;
+    this->_limitUsers = limit;
 };
 
 void Channel::setTopicTime( std::string _topicTime )

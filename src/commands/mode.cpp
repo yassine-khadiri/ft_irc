@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 13:58:34 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:24:48 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ void Command::modeCommand()
 								if (*it == "+l" && tmp > 0)
 								{
 									broadcast(channelobj->getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +l " + limitClients.str() + "\r\n");
-									// std::string mode = "+l " + limitClients.str();;
 									channelobj->setMode("+l");
 									channelobj->setLimitUsers(tmp);
 								}

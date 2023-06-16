@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/15 18:42:32 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:59:41 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,24 @@ Command::~Command()
 
 int   Command::splitParams( std::string msg, std::vector<std::string> &arg, std::string &cmd )
 {
-	if (msg == "")
-		return (-1);
-	msg.erase(0, msg.find_first_not_of(' '));
-	std::string tmp = msg;
-	int semicolon = msg.find(':');
+    std::string tmp = msg;
+    int semicolon = msg.find(':');
 
-	if(semicolon > 0)
-		tmp = msg.substr(0, semicolon);
-	std::stringstream ss(tmp);
-	std::getline(ss, cmd, ' '); 
-	this->toUpper(cmd);
-	if (cmd.empty() || this->findCommand(cmd) == -1)
-		return (-1);
-	while(std::getline(ss, tmp, ' ') && tmp.empty() == false)
-		arg.push_back(tmp);
-	if (semicolon > 0)
-		arg.push_back(msg.substr(semicolon, msg.length()));
-	return (arg.size()); 
+    if(semicolon > 0)
+        tmp = msg.substr(0, semicolon);
+    std::stringstream ss(tmp);
+    std::getline(ss, cmd, ' '); 
+    this->toUpper(cmd);
+    if (cmd.empty() || this->findCommand(cmd) == -1)
+        return (-1);
+    while(std::getline(ss, tmp, ' '))
+    {
+        if(!tmp.empty())
+            arg.push_back(tmp);
+    }
+    if (semicolon > 0)
+        arg.push_back(msg.substr(semicolon, msg.length()));
+    return (arg.size()); 
 };
 
 std::string Command::getMachineHostName()

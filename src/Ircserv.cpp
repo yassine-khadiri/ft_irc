@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 18:55:13 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 18:10:12 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ int Ircserv::waitForConnection()
                 this->_clients.push_back(Client(socketClient));
                 client_sockets[num_clients] = socketClient;
                 num_clients++;
+
+                if (fcntl(socketClient, F_SETFL, O_NONBLOCK) == -1)
+                {
+                    std::cerr << "Error Making Client Socket non-blocking!" << std::endl;
+                    return EXIT_FAILURE;
+                }
             }
         }
         for (int i = 0; i < MAX_CLIENTS; i++)

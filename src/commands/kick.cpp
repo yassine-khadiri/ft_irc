@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:53 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 17:33:27 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:22:27 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void Command::kickCommand()
 {
-	if (this->_args.size() < 3)
+	if (this->_args.size() < 2)
     {
         sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + " KICK :Not enough parameters <channel> <nick> [<reason>]\r\n");
         return;
