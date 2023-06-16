@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 17:15:58 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/16 13:58:34 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ void Command::modeCommand()
 								broadcast(channelobj->getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " +o " + this->_args[2] + "\r\n");
 								channelobj->_userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(OPERATOR);
 							}
-							else if (*it == "-o" && this->_client.getOpPriviligePermission() && channelobj->_userMap[this->searchClientByName(this->_args[2])].getOpPriviligePermission())
+							else if (*it == "-o" && channelobj->_userMap[this->_client.getFd()].getOpPriviligePermission() && channelobj->_userMap[this->searchClientByName(this->_args[2])].getOpPriviligePermission())
 							{
-								broadcast(channelobj->getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername()+ "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o " +  this->_args[2] + "\r\n");
+								broadcast(channelobj->getChannelName(), ":" + this->_client.getNickname() + "!" + this->_client.getUsername() + "@" + getMachineHostName() + " MODE " + this->_args[0] + " -o " +  this->_args[2] + "\r\n");
 								channelobj->_userMap[this->searchClientByName(this->_args[2])].setOpPrivilegePermission(CLIENT);
 							}
 						}
