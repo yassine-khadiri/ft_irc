@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 18:10:12 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 11:19:51 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int Ircserv::createServerSocket()
             return EXIT_FAILURE;
         }
 
-        if (listen(this->socket_fd, 1))
+        if (listen(this->socket_fd, SOMAXCONN))
         {
             std::cerr << "Error Listening...!" << std::endl;
             return EXIT_FAILURE;

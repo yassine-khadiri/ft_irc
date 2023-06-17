@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:21:13 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 12:47:27 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 11:24:39 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,4 @@ int Tcp::initialize()
     // this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     this->addr.sin_addr.s_addr = INADDR_ANY;
     return EXIT_SUCCESS;
-};
-
-int Tcp::createServerSocket()
-{
-    if (!this->initialize())
-    {
-        if (bind(this->socket_fd, (sockaddr *)&this->addr, sizeof(this->addr)))
-        {
-            std::cerr << "Error Binding Socket...!" << std::endl;
-            return EXIT_FAILURE;
-        }
-
-        if (listen(this->socket_fd, SOMAXCONN))
-        {
-            std::cerr << "Error Listening...!" << std::endl;
-            return EXIT_FAILURE;
-        }
-        this->waitForConnection();
-    }
-    return EXIT_FAILURE;
 };
