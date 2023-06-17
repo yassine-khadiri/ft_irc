@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/17 13:20:37 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:55:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ void Command::joinCommand()
 				sendReply(":" + getMachineHostName() + " 471 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+l)\r\n"); //ERR_CHANNELISFULL (471)
 			else
 			{
-				std::string  checkKey= getChannelKey(channelKeys,indexKey);
+				std::string  checkKey = getChannelKey(channelKeys,indexKey);
 
-				if (!this->_channelObj.verifyKey(checkKey))
+				if (!this->_channelObj.verifyKey(checkKey) && !this->_channelObj.getKey().empty())
 				{
 					sendReply(":" + getMachineHostName() + " 475 " + this->_client.getNickname() + " " + channelName + " :Cannot join channel (+k) - bad key\r\n");
 					return ;
