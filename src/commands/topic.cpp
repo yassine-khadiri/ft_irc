@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:46:24 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/06 13:56:59 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/17 17:33:22 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Command::topicCommand()
 	if (this->_client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == 1
 		&& this->_args.size() > 1)
 	{
-		if (!this->_channelObj._channelMap[this->_args[0]]->_userMap[_client.getFd()].getOpPriviligePermission() && this->_channelObj.findMode("+t"))
+		if (!this->_channelObj._channelMap[this->_args[0]]->_userMap[_client.getFd()].getOpPriviligePermission() && this->_channelObj._channelMap[this->_args[0]]->findMode("+t"))
 		{
 			sendReply(":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " " + this->_args[1] + " :You're not channel operator\r\n"); //ERR_CHANOPRIVSNEEDED (482)
 			return;
