@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/17 13:37:54 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/17 16:58:09 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void Command::modeCommand()
 						}
 						else if ((*it)[1] == 'l') // Limit-Channel Mode
 						{
-							if (this->_args.size() >= 2 && (*it) == "+l")
+							if (this->_args.size() <= 2 && (*it) == "+l")
 							{
 								sendReply( ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
