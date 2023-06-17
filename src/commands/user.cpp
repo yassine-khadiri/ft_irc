@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:46:32 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 19:59:20 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:08:25 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void Command::userCommand()
 		sendReply(":" + getMachineHostName() + " ERROR * :You must enter a password first\r\n");
 		return ;
 	}
-	if (this->_args.size() != 4)
+	if (this->_args.size() < 4)
 		sendReply(":" + getMachineHostName() + " 461 " + nickname + " :USER <username> <hostname> <servername> <realname>\r\n");
 	else if(this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
         sendReply(":" + getMachineHostName() + " 432 " + nickname + " : error username\r\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:30 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/12 14:57:50 by rgatnaou         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:07:54 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void Command::partCommand()
 {
-	// For NetCat FuCking Tests:
+	// For NetCat Tests
 	if (!this->_args.size())
 	{
 		// ERR_NEEDMOREPARAMS (461)

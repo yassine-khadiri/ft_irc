@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:32 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/15 17:16:54 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:16:07 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void Command::inviteCommand()
 {
 	if (this->_args.size() == 1)
 		sendReply(":" + getMachineHostName() + " 461 " + this->_client.getNickname() + " " + this->_args[1] + " :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
-	else if (this->_args.size() == 2)
+	else if (this->_args.size() > 1)
 	{
 		if (this->_client.isMemberOfChannel(this->_args[1], this->_client.getFd()) == -1)
 			sendReply(":" + getMachineHostName() + " 403 " + this->_client.getNickname() + " " + this->_args[1] + " :No such channel\r\n"); //ERR_NOSUCHCHANNEL (403)

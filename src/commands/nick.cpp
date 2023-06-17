@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:18 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 19:58:39 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:09:45 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Command::nickCommand()
 		sendReply(":" + hostname + " ERROR * : You must enter a password first\r\n");
 		return ;
 	}
-	if (this->_args.size() != 1 || this->_args[0] == "")
+	if (this->_args.size() < 1 || this->_args[0] == "")
 		sendReply(":" + hostname + " 431 " + nickname + " : NICK <nickname>\r\n");
 	else if(this->_args[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
         sendReply(":" + hostname + " 432 " + nickname + " : Error nickname\r\n");
