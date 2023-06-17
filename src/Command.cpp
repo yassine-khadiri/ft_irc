@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 18:11:58 by rgatnaou          #+#    #+#             */
-/*   Updated: 2023/06/16 19:59:41 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 12:48:18 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ Command::~Command()
 
 int   Command::splitParams( std::string msg, std::vector<std::string> &arg, std::string &cmd )
 {
+	if (msg == "")
+		return (-1);
+
+	msg.erase(0, msg.find_first_not_of(' '));
     std::string tmp = msg;
     int semicolon = msg.find(':');
 

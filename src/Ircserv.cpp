@@ -6,7 +6,7 @@
 /*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:43:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/17 11:19:51 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 12:46:13 by ykhadiri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ int Ircserv::createServerSocket()
         if (bind(this->socket_fd, (sockaddr *)&this->addr, sizeof(this->addr)))
         {
             std::cerr << "Error Binding Socket...!" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        if (fcntl(this->socket_fd, F_SETFL, O_NONBLOCK) == -1)
+        {
+            std::cerr << "Error Making Server Socket non-blocking!" << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -89,17 +95,17 @@ int Ircserv::waitForConnection()
                 std::cout << "Accept Failed!" << std::endl;
                 return EXIT_FAILURE;
             }
+            if (fcntl(socketClient, F_SETFL, O_NONBLOCK) == -1)
+            {
+                std::cerr << "Error Making Client Socket non-blocking!" << std::endl;
+                return EXIT_FAILURE;
+            }
             if (num_clients < MAX_CLIENTS)
             {
                 this->_clients.push_back(Client(socketClient));
                 client_sockets[num_clients] = socketClient;
                 num_clients++;
 
-                if (fcntl(socketClient, F_SETFL, O_NONBLOCK) == -1)
-                {
-                    std::cerr << "Error Making Client Socket non-blocking!" << std::endl;
-                    return EXIT_FAILURE;
-                }
             }
         }
         for (int i = 0; i < MAX_CLIENTS; i++)
@@ -118,18 +124,16 @@ int Ircserv::waitForConnection()
                             str = recvString + str;
                             recvString = "";
                         }
-                        str.erase(str.find_last_not_of("\r\n") + 1);
                         if (str.find('\n'))
                         {
                             std::stringstream ss(str);
                             while(std::getline(ss,str))
                             {
+                                str.erase(str.find_last_not_of("\r") + 1);
                                 if (!str.empty())
                                     cmd.exec(i, str, this->_clients, client_sockets, num_clients);
                             }
                         }
-                        else if (!str.empty())
-                            cmd.exec(i, str, this->_clients, client_sockets, num_clients);
                     }
                     memset(buff, 0, sizeof(buff));
                 }
