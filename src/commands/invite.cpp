@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:32 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/17 13:16:07 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:35:46 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,6 @@ void Command::inviteCommand()
 			}
 		}
 	}
+	else
+		sendReply(":" + getMachineHostName() + " 431 " + this->_client.getNickname() + " : INVITE <channel> <reason>\r\n");
 };

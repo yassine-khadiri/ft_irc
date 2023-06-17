@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:45:01 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 19:24:48 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:37:54 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ void Command::modeCommand()
 						}
 						else if ((*it)[1] == 'l') // Limit-Channel Mode
 						{
-							if (this->_args.size() == 2 && (*it) == "+l")
+							if (this->_args.size() >= 2 && (*it) == "+l")
 							{
-								broadcast(channelobj->getChannelName(), ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								sendReply( ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
 							}
 							if (this->_args.size() > 1)
@@ -117,12 +117,12 @@ void Command::modeCommand()
 
 							if (this->_args.size() <  3)
 							{
-								broadcast(channelobj->getChannelName(), ":" + getMachineHostName() + " 482 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
+								sendReply(":" + getMachineHostName() + " 461 " + this->_client.getNickname() + " MODE :Not enough parameters\r\n"); //ERR_NEEDMOREPARAMS (461)
 								return ;
 							}
 							if (!fdClient || this->_client.isMemberOfChannel(this->_args[0], fdClient) != 1)
 							{
-								broadcast(channelobj->getChannelName(), ":" + getMachineHostName() + " 401 " + this->_client.getNickname() + " " + this->_args[2] + " :No such nick/channel\r\n"); //ERR_NOSUCHNICK (401)
+								sendReply(":" + getMachineHostName() + " 401 " + this->_client.getNickname() + " " + this->_args[2] + " :No such nick/channel\r\n"); //ERR_NOSUCHNICK (401)
 								return;
 							}
 							if (*it == "+o" && !channelobj->_userMap[this->searchClientByName(this->_args[2])].getOpPriviligePermission())

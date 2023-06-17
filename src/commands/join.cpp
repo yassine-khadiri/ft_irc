@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:44:41 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/16 19:55:14 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:20:37 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ void Command::joinCommand()
         while (std::getline(keySplitter, key, ','))
             channelKeys.push_back(key);
     }
-	if(channelKeys.size() < 1)
-		channelKeys.push_back("");
 
     while (std::getline(channelSplitter, channelName, ','))
     {

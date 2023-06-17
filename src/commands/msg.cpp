@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msg.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykhadiri <ykhadiri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgatnaou <rgatnaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:47:38 by ykhadiri          #+#    #+#             */
-/*   Updated: 2023/06/17 13:07:05 by ykhadiri         ###   ########.fr       */
+/*   Updated: 2023/06/17 13:33:04 by rgatnaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	Command::privmsgCommand()
 
 void Command::noticeCommand()
 {
-	if (this->_args.size() != 2 || this->_args[0] == "" )
+	if (this->_args.size() < 2 || this->_args[0] == "" )
 		sendReply(":" + getMachineHostName() + " 461 " + _client.getNickname() + ": NOTICE <nickname> <message>\r\n");
 	else if(nickExist(this->_args[0]) == -1 && _client.isMemberOfChannel(this->_args[0], this->_client.getFd()) == -1)
 		sendReply(":" + getMachineHostName() + " 401 " + _client.getNickname() + " " + this->_args[0] + " :No such nick/channel\r\n");
