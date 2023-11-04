@@ -1,4 +1,4 @@
-# Some Resources For This Projects:
+# Some Resources For This Project:
 
 1- https://modern.ircdocs.horse/ <br/>
 2- https://dd.ircdocs.horse/refs/commands/ <br/>
